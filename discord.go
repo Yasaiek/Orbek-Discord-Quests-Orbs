@@ -19,7 +19,7 @@ import (
 // waits, and nothing at all unless the user switches it on. It talks to the client over its local pipe.
 
 // discordAppID is Orbek's application in the Discord Developer Portal (names the activity, holds its pictures).
-const discordAppID = ""
+const discordAppID = "1574392419363848326"
 
 // The pictures uploaded to that application under Rich Presence > Art Assets.
 const (

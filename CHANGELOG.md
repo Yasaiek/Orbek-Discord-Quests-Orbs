@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1
+- Discord activity is on: Orbek's own Discord application is built in (Settings → Discord activity).
+
 ## 0.3.0
 - Quests page: counters for your Orbs, rewards waiting to be claimed and rewards in quests not done yet (Orbs plus cosmetics, in-game items, codes), and PC usage now, lowest and highest.
 - Settings redone: tick-box chips for rewards, tasks and games ("All games" or only the ticked ones), "how many at once" as buttons.
