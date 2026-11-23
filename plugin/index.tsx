@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.3.0";
+const PLUGIN_VERSION = "0.3.1";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -115,6 +115,7 @@ let loaded = false, loadErr = "", orbs: number | null = null, lastLoad = 0;
 // drzewa, najbliższy obrazek (img, video albo tło). Kandydatów zapisujemy też do orbDebug – Orbek trzyma
 // ich w data/orb-debug.json, żeby dało się sprawdzić, co Discord pokazuje.
 let orbTile = "", orbGlyph = "", orbLook = 0, orbDebug: any[] = [], orbDebugSent = "";
+const orbTiles: Record<string, string> = {}; // ilość Orbów → kafelek, jaki Discord przy niej pokazuje
 function mediaOf(e: Element): string {
     if (e instanceof HTMLImageElement) return e.currentSrc || e.src;
     if (e instanceof HTMLVideoElement) return e.currentSrc || e.src || e.poster || (e.querySelector("source") as HTMLSourceElement | null)?.src || "";
@@ -122,7 +123,7 @@ function mediaOf(e: Element): string {
     return m ? m[1] : "";
 }
 function findOrbIcon() {
-    if (orbTile || Date.now() - orbLook < 4000) return;
+    if (Date.now() - orbLook < (orbTile ? 15000 : 4000)) return;
     orbLook = Date.now();
     if (!/quest/i.test(location.pathname)) return;
     try {
@@ -151,6 +152,11 @@ function findOrbIcon() {
         const big = list.filter(c => c.w >= 36 && c.w <= 200 && Math.abs(c.w - c.h) <= 12 && !/\/avatars\/|\/icons\/|\/app-icons\//.test(c.src));
         const small = list.filter(c => c.w < 36 && /\/assets\//.test(c.src));
         if (big.length) orbTile = big[0].src;
+        for (const c of big) {
+            const m = /(\d[\d\s.,]*)\s*Orbs?/i.exec(c.txt);
+            const n = m ? Number(m[1].replace(/[^\d]/g, "")) : 0;
+            if (n > 0 && c.lvl <= 3 && /\/assets\//.test(c.src) && !orbTiles[n]) orbTiles[n] = c.src;
+        }
         if (!orbGlyph && small.length) orbGlyph = small[0].src;
     } catch (e) { console.error(TAG, "orb icon", e); }
 }
@@ -221,15 +227,50 @@ let refreshMs = 10 * 60_000; // co ile czytać listę zadań od nowa (Orbek to u
 const claimTried = new Map<string, number>();
 let claiming = false;
 
+// Jak dokładnie Discord odbiera nagrodę, plugin uczy się z jednego odebrania ręcznie w Discordzie: zapytania
+// Discorda o „/quests/…/claim…” są podglądane (adres i treść) i zapamiętywane jako wzór. Bez wzoru – próba
+// z domyślną treścią. Wszystko (wzór, ostatni błąd) idzie do Orbka do data/claim-debug.json.
+type ClaimTpl = { url: string; body: any; at: number; ok?: boolean; status?: number; err?: string; };
+let claimTpl: ClaimTpl | null = (() => { try { return JSON.parse(localStorage.getItem("orbek.claimTpl") ?? "null"); } catch { return null; } })();
+let claimDebug: any = { tpl: claimTpl }, claimDebugSent = "";
+let origPost: any = null, ownPost = false;
+function watchClaims() {
+    if (origPost) return;
+    origPost = RestAPI.post;
+    (RestAPI as any).post = function (opts: any, ...rest: any[]) {
+        const p = origPost.call(this, opts, ...rest);
+        const url = String(opts?.url ?? "");
+        const m = /^(.*\/quests\/)(\d+)(\/[^?]*claim[^?]*)/i.exec(url);
+        if (m && !ownPost) {
+            const tpl: ClaimTpl = { url: m[1] + "{id}" + m[3], body: JSON.parse(JSON.stringify(opts?.body ?? null)), at: Date.now() };
+            Promise.resolve(p).then(
+                (r: any) => { tpl.ok = true; tpl.status = r?.status; claimTpl = tpl; try { localStorage.setItem("orbek.claimTpl", JSON.stringify(tpl)); } catch { } claimDebug = { ...claimDebug, tpl, seen: tpl }; },
+                (e: any) => { tpl.ok = false; tpl.status = e?.status; tpl.err = errText(e); claimDebug = { ...claimDebug, seen: tpl }; }
+            );
+        }
+        return p;
+    };
+}
+function unwatchClaims() { if (origPost) (RestAPI as any).post = origPost; origPost = null; }
+
 async function claim(q: Quest, byHand: boolean): Promise<boolean> {
     if (claiming) return false;
     claiming = true;
     claimTried.set(q.id, Date.now());
     try {
-        await RestAPI.post({
-            url: `/quests/${q.id}/claim-reward`,
-            body: { platform: 0, location: 11, is_targeted: false, metadata_raw: null, metadata_sealed: null, traffic_metadata_raw: null, traffic_metadata_sealed: null }
-        });
+        let url = `/quests/${q.id}/claim-reward`;
+        let body: any = { platform: 0, location: 11, is_targeted: false, metadata_raw: null, metadata_sealed: null, traffic_metadata_raw: null, traffic_metadata_sealed: null };
+        if (claimTpl?.ok) { // to, co Discord sam wysłał – z zadaniem podmienionym; zapieczętowane dane były dla tamtego zadania
+            url = claimTpl.url.replace("{id}", q.id);
+            body = JSON.parse(JSON.stringify(claimTpl.body ?? {}));
+            for (const k of Object.keys(body ?? {})) if (/sealed/i.test(k)) body[k] = null;
+        }
+        ownPost = true;
+        try { await RestAPI.post({ url, body }); } catch (e: any) {
+            claimDebug = { ...claimDebug, lastTry: { url, body, at: Date.now(), status: e?.status, code: e?.body?.code, err: errText(e), raw: e?.body } };
+            throw e;
+        } finally { ownPost = false; }
+        claimDebug = { ...claimDebug, lastTry: { url, at: Date.now(), ok: true } };
         known.set(q.id, { ...q, claimedAt: Date.now() });
         say("claimed", q);
         lastLoad = 0; // przeczytaj listę (i Orby) od nowa
@@ -237,7 +278,7 @@ async function claim(q: Quest, byHand: boolean): Promise<boolean> {
     } catch (e: any) {
         const b = e?.body ?? {};
         if (b.captcha_key || b.captcha_sitekey || b.captcha_service) say("claimCaptcha", q);
-        else say("claimFail", q, errText(e));
+        else say(claimTpl?.ok ? "claimFail" : "claimLearn", q, errText(e));
         if (byHand) openQuests();
         return false;
     } finally {
@@ -483,7 +524,8 @@ async function tick() {
             queue: [...queue],
             events: events.splice(0),
             desktop: isDesktop(),
-            orbTile, orbGlyph,
+            orbTile, orbGlyph, orbTiles,
+            claimDebug: (() => { const j = JSON.stringify(claimDebug); if (j === claimDebugSent) return undefined; claimDebugSent = j; return claimDebug; })(),
             orbDebug: (() => { const j = JSON.stringify(orbDebug); if (j === orbDebugSent) return undefined; orbDebugSent = j; return orbDebug; })()
         });
         const raw = await Native.sync(body);
@@ -519,11 +561,13 @@ export default definePlugin({
 
     start() {
         alive = true;
+        watchClaims();
         timer = setTimeout(tick, 3000);
     },
 
     stop() {
         alive = false;
+        unwatchClaims();
         if (timer) clearTimeout(timer);
         stopAll();
     }

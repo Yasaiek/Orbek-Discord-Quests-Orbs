@@ -271,5 +271,6 @@
 "rpc.btn": "Obtenir Orbek",
 "claim.oldplugin": "Le plugin dans Discord est trop ancien pour tester – clique sur « Mettre à jour le plugin » dans l'onglet Installation.",
 "claim.noanswer": "Le plugin n'a pas répondu – vérifie que Discord est lancé et réessaie.",
-"claim.noplugin": "Discord n'est pas connecté à Orbek – impossible de tester."
+"claim.noplugin": "Discord n'est pas connecté à Orbek – impossible de tester.",
+"claim.learn": "Discord n'a pas accepté la façon de récupérer par défaut ({r}). Récupère une récompense à la main dans Discord – le plugin verra comment Discord fait – puis réactive la récupération."
 }

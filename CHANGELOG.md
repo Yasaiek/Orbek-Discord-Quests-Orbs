@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.5
+- Discord's Orbs picture everywhere in the app: counters, rewards, tabs, labels.
+- Claiming learns from Discord: claim one reward by hand in Discord and the plugin copies exactly how Discord asks for it. When the default way is refused, the panel says so. Details go to data/claim-debug.json.
+- The plugin remembers which Orbs tile Discord shows for which amount.
+
 ## 0.3.4
 - CPU and RAM have their own tiles: now, lowest and highest since start, with a range bar.
 - The claim test no longer hangs: with an old plugin it says to update the plugin, and without an answer it stops after 45 s.

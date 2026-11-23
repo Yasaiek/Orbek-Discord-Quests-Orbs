@@ -271,5 +271,6 @@
 "rpc.btn": "下载 Orbek",
 "claim.oldplugin": "Discord 中的插件太旧，无法测试——请在“安装”页点击“更新插件”。",
 "claim.noanswer": "插件没有响应——请确认 Discord 正在运行后再试一次。",
-"claim.noplugin": "Discord 未连接到 Orbek——无法测试。"
+"claim.noplugin": "Discord 未连接到 Orbek——无法测试。",
+"claim.learn": "Discord 不接受默认的领取方式（{r}）。请在 Discord 中手动领取一个奖励——插件会看 Discord 是怎么做的——然后重新开启领取。"
 }

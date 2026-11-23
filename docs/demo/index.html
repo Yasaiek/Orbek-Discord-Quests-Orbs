@@ -82,6 +82,12 @@ body.minimode .kpis { display: none; }
 .stat.use { background: linear-gradient(160deg, rgba(62,207,142,.1), rgba(62,207,142,.03)); border-color: rgba(62,207,142,.22); min-width: 120px; } .stat.use b { color: #c9f5e2; } .stat.use b small { font: 600 11px var(--sans, inherit); color: var(--sub); } .stat.use b span { font: inherit; color: inherit; }
 body.minimode .stat.use { display: none; }
 .orbimg { width: 20px; height: 20px; border-radius: 50%; object-fit: contain; }
+img.i { width: 18px; height: 18px; flex-shrink: 0; }
+img.i.orbpic { object-fit: contain; filter: drop-shadow(0 0 4px rgba(140,110,255,.55)); }
+.im.orbs { background: radial-gradient(circle at 50% 45%, rgba(120,90,255,.35), rgba(13,14,26,1) 70%) !important; }
+.rw .im img.orbpic, .mt .im img.orbpic { object-fit: contain; padding: 5px; filter: drop-shadow(0 0 6px rgba(140,110,255,.6)); }
+.kpi > b .orbimg { border-radius: 0 !important; filter: drop-shadow(0 0 8px rgba(140,110,255,.6)); }
+.orbimg { border-radius: 0; }
 .orbg { width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; flex-shrink: 0; background: radial-gradient(circle at 35% 30%, #8f7bff, #5865f2 55%, #3b2a9e); box-shadow: 0 0 10px rgba(120,100,255,.5); } .orbg img { width: 62%; height: 62%; } .orbg.big { width: 30px; height: 30px; }
 .orbdot.big { width: 26px; height: 26px; box-shadow: 0 0 16px rgba(163,91,255,.7); }
 .orbdot { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #c9b2ff 30%, #7c4dff 70%, #3d1f9e); box-shadow: 0 0 10px rgba(163,91,255,.6); flex-shrink: 0; }
@@ -140,7 +146,7 @@ body.minimode .stat.use { display: none; }
 .claimst #claimTxt { flex: 1; }
 .claimst .dot { width: 9px; height: 9px; border-radius: 50%; background: #8b8fa3; flex-shrink: 0; }
 .claimst.s-ok { border-color: rgba(62,207,142,.35); color: #bff3da; } .claimst.s-ok .dot { background: #3ecf8e; box-shadow: 0 0 10px #3ecf8e; }
-.claimst.s-testing .dot { background: #f0b232; animation: blink 1s infinite; } .claimst.s-oldplugin, .claimst.s-noanswer, .claimst.s-noplugin { border-color: rgba(240,178,50,.4); color: #ffe2a8; } .claimst.s-oldplugin .dot, .claimst.s-noanswer .dot, .claimst.s-noplugin .dot { background: #f0b232; } .claimst.s-none .dot { background: #7cc4ff; }
+.claimst.s-testing .dot { background: #f0b232; animation: blink 1s infinite; } .claimst.s-learn, .claimst.s-oldplugin, .claimst.s-noanswer, .claimst.s-noplugin { border-color: rgba(240,178,50,.4); color: #ffe2a8; } .claimst.s-learn .dot, .claimst.s-oldplugin .dot, .claimst.s-noanswer .dot, .claimst.s-noplugin .dot { background: #f0b232; } .claimst.s-none .dot { background: #7cc4ff; }
 .claimst.s-captcha, .claimst.s-failed { border-color: rgba(242,91,91,.4); color: #ffc9c9; } .claimst.s-captcha .dot, .claimst.s-failed .dot { background: #f25b5b; box-shadow: 0 0 10px #f25b5b; }
 @keyframes blink { 50% { opacity: .3; } }
 small.okc { color: #7fe0b2 !important; }
@@ -420,7 +426,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.3.4";</script>
+<script>window.ORBEK_VERSION = "0.3.5"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -469,7 +475,7 @@ const IC = {
   cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   activity: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'
 };
-const icon = (n, cls) => { const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'i' + (cls ? ' ' + cls : '')); s.innerHTML = IC[n] || ''; return s; };
+const icon = (n, cls) => { if (n === 'orb' && !window.ORBEK_DEMO) { const i = document.createElement('img'); i.src = 'orbs.png'; i.alt = ''; i.className = 'i orbpic' + (cls ? ' ' + cls : ''); return i; } const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'i' + (cls ? ' ' + cls : '')); s.innerHTML = IC[n] || ''; return s; };
 document.querySelectorAll('i[data-ic]').forEach((n) => n.replaceWith(icon(n.dataset.ic)));
 const TASKIC = { WATCH_VIDEO: 'video', WATCH_VIDEO_ON_MOBILE: 'video', PLAY_ON_DESKTOP: 'game', STREAM_ON_DESKTOP: 'game', PLAY_ACTIVITY: 'activity' };
 const withIc = (n, text, cls) => { const b = el('span', cls); b.append(icon(n), text); return b; };
@@ -533,7 +539,20 @@ function progressOf(q) {
 }
 const pct = (q) => (q.target ? Math.min(100, Math.floor(progressOf(q) / q.target * 100)) : q.completedAt ? 100 : 0);
 // Discord's own Orb picture, from the quests that give Orbs
-const orbImg = () => { if (S.orbTile) return S.orbTile; for (const q of S.quests) for (const r of q.rewards || []) if (r.type === 4 && r.img) return r.img; return ''; };
+// Discord's own Orbs tiles (as Discord shows them on its quests page): one for the big rewards of playing
+// quests (the violet orb), one for the small ones of videos (the teal gem). The plugin may learn newer ones.
+const ORB_TILES = { 840: 'https://cdn.discordapp.com/assets/content/864e5841fd9af8da3c50ad6d6220bee54e8c2da2d36d3c85d0a5ae95cdbf095e.webm?format=webp',
+  240: 'https://cdn.discordapp.com/assets/content/d4fc1c99b3e3044530f08ede0156d1d43a13bf78f0f539e240b63f2d4dad3554.webm?format=webp' };
+function orbTileFor(n) {
+  if (window.ORBEK_DEMO) return ''; // the website's preview uses its own drawn orb
+  const tiles = Object.assign({}, ORB_TILES, S.orbTiles || {}), keys = Object.keys(tiles).map(Number).filter((k) => k > 0);
+  if (!keys.length) return '';
+  if (!n) n = 240;
+  let best = keys[0];
+  for (const k of keys) if (Math.abs(Math.log(k / n)) < Math.abs(Math.log(best / n))) best = k; // nearest, by ratio (Nitro shows 700 as 840)
+  return tiles[best];
+}
+const orbImg = (n) => { if (!window.ORBEK_DEMO) return 'orbs.png'; const t = orbTileFor(n); if (t) return t; if (S.orbTile) return S.orbTile; for (const q of S.quests) for (const r of q.rewards || []) if (r.type === 4 && r.img) return r.img; return ''; };
 
 function ring(q, size) {
   const v = pct(q), live = !!runOf(q), R = 18, C = 2 * Math.PI * R;
@@ -561,11 +580,11 @@ function orbDot(big) {
   const w = el('span', 'orbg' + (big ? ' big' : '')), i = el('img'); i.src = S.orbGlyph; i.alt = ''; i.onerror = () => w.replaceWith(el('span', 'orbdot' + (big ? ' big' : ''))); w.append(i); return w;
 }
 function rewardImg(r) {
-  const im = el('div', 'im'), src = r.img || (r.type === 4 ? orbImg() : '');
+  const im = el('div', 'im'), src = r.img || (r.type === 4 ? orbImg(r.orbs) : '');
   const fallback = () => { im.textContent = ''; if (r.type === 4) im.append(orbDot(true)); else im.append(icon(r.type === 3 ? 'spark' : r.type === 2 ? 'game' : 'gift', 'rwi t' + r.type)); };
   if (src) {
     const media = /\.(mp4|webm)(\?|$)/i.test(src) ? Object.assign(el('video'), { autoplay: true, muted: true, loop: true, playsInline: true }) : el('img');
-    media.src = src; media.onerror = fallback; im.append(media);
+    media.src = src; media.onerror = fallback; if (src === 'orbs.png') { media.className = 'orbpic'; im.classList.add('orbs'); } im.append(media);
   } else fallback();
   return im;
 }
@@ -878,7 +897,7 @@ $('claimTest').onclick = () => op({ op: 'claimTest' });
 let claimSeen = +(localStorage.getItem('claimSeen') || 0);
 function claimNotice() {
   const cn = S.claimNote || {};
-  if ((cn.state === 'captcha' || cn.state === 'failed') && cn.at > claimSeen) {
+  if ((cn.state === 'captcha' || cn.state === 'failed' || cn.state === 'learn') && cn.at > claimSeen) {
     claimSeen = cn.at; try { localStorage.setItem('claimSeen', String(cn.at)); } catch (e) {}
     ask(t('claim.offTitle'), t('claim.' + cn.state, { r: cn.reason || '?' }), 'OK', false, true);
   }

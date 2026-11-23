@@ -271,5 +271,6 @@
 "rpc.btn": "Orbekを入手",
 "claim.oldplugin": "Discord内のプラグインが古いためテストできません – セットアップタブで「プラグインを更新」をクリックしてください。",
 "claim.noanswer": "プラグインが応答しませんでした – Discordが起動しているか確認して、もう一度お試しください。",
-"claim.noplugin": "DiscordがOrbekに接続されていません – テストできません。"
+"claim.noplugin": "DiscordがOrbekに接続されていません – テストできません。",
+"claim.learn": "Discordが既定の受け取り方法を受け付けませんでした（{r}）。Discordで報酬を1つ手動で受け取ってください – プラグインがDiscordのやり方を確認します – その後、受け取りを再度オンにしてください。"
 }

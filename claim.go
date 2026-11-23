@@ -19,7 +19,7 @@ type ClaimNote struct {
 // claimResultLocked records a result from the plugin. Call with e.mu held.
 func (e *Engine) claimResultLocked(state, reason string) {
 	e.set.ClaimNote = ClaimNote{State: state, Reason: reason, At: time.Now().UnixMilli()}
-	if (state == "captcha" || state == "failed") && e.set.AutoClaim {
+	if (state == "captcha" || state == "failed" || state == "learn") && e.set.AutoClaim {
 		e.set.AutoClaim = false
 		e.log.Warn("L.claimOff")
 	}

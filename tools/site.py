@@ -49,7 +49,7 @@ with open("docs/i18n.js", "w", encoding="utf-8", newline="\n") as fh:
 # ---- docs/demo ----
 src = open("ui/index.html", encoding="utf-8").read()
 assert src.count("<script>") == 1, "expected exactly one inline script in ui/index.html"
-inject = '<script>window.ORBEK_VERSION = "%s";</script>\n<script src="sim.js"></script>\n<script>' % version
+inject = '<script>window.ORBEK_VERSION = "%s"; window.ORBEK_DEMO = true;</script>\n<script src="sim.js"></script>\n<script>' % version
 out = src.replace("<script>", inject, 1).replace("__KEY__", "demo")
 os.makedirs("docs/demo", exist_ok=True)
 with open("docs/demo/index.html", "w", encoding="utf-8", newline="\n") as fh:

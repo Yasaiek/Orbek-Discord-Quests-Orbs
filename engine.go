@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.3.4"
+var version = "0.3.5"
 
 const appName = "Orbek"
 
@@ -35,15 +35,16 @@ type Settings struct {
 	RefreshMin  int       `json:"refreshMin"` // how often the plugin reads the quest list again (minutes)
 	AutoClaim   bool      `json:"autoClaim"`  // experimental: claim finished quests through Discord's own request
 	// Discord activity: on, and what it shows (quest and progress, Orbs you have, Orbs to get, the buttons)
-	RpcOn      bool   `json:"rpcOn"`
-	RpcQuest   bool   `json:"rpcQuest"`
-	RpcOrbs    bool   `json:"rpcOrbs"`
-	RpcToGet   bool   `json:"rpcToGet"`
-	RpcBtn     bool   `json:"rpcBtn"`
-	RpcInit    bool   `json:"rpcInit"`    // the choices above have their defaults
-	VencordDir string `json:"vencordDir"` // where the Vencord source is (for installing the plugin)
-	OrbTile    string `json:"orbTile"`    // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
-	OrbGlyph   string `json:"orbGlyph"`   // the big reward tile and the small white sign
+	RpcOn      bool              `json:"rpcOn"`
+	RpcQuest   bool              `json:"rpcQuest"`
+	RpcOrbs    bool              `json:"rpcOrbs"`
+	RpcToGet   bool              `json:"rpcToGet"`
+	RpcBtn     bool              `json:"rpcBtn"`
+	RpcInit    bool              `json:"rpcInit"`            // the choices above have their defaults
+	VencordDir string            `json:"vencordDir"`         // where the Vencord source is (for installing the plugin)
+	OrbTile    string            `json:"orbTile"`            // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
+	OrbGlyph   string            `json:"orbGlyph"`           // the big reward tile and the small white sign
+	OrbTiles   map[string]string `json:"orbTiles,omitempty"` // Orbs amount → Discord's tile for it (learnt by the plugin)
 }
 
 // Quest is what the plugin reports (already in a plain shape).
@@ -100,20 +101,22 @@ func (q *Quest) open(now int64) bool {
 
 // Sync is one report of the plugin.
 type Sync struct {
-	V        int             `json:"v"`
-	User     *BUser          `json:"user"`
-	Quests   []Quest         `json:"quests"`
-	Loaded   bool            `json:"loaded"` // the plugin has read the list at least once
-	Err      string          `json:"err"`
-	Orbs     *float64        `json:"orbs"`
-	Runs     []RunState      `json:"runs"`
-	Queue    []string        `json:"queue"`
-	Events   []Event         `json:"events"`
-	Desktop  bool            `json:"desktop"` // the Discord app (not a browser): games can be done
-	Plugin   string          `json:"plugin"`  // the plugin's version
-	OrbTile  string          `json:"orbTile"` // Discord's Orbs pictures (from Discord's own page), when the plugin saw them
-	OrbGlyph string          `json:"orbGlyph"`
-	OrbDebug json.RawMessage `json:"orbDebug,omitempty"` // what the plugin saw around "Orbs" on Discord's page
+	V          int               `json:"v"`
+	User       *BUser            `json:"user"`
+	Quests     []Quest           `json:"quests"`
+	Loaded     bool              `json:"loaded"` // the plugin has read the list at least once
+	Err        string            `json:"err"`
+	Orbs       *float64          `json:"orbs"`
+	Runs       []RunState        `json:"runs"`
+	Queue      []string          `json:"queue"`
+	Events     []Event           `json:"events"`
+	Desktop    bool              `json:"desktop"` // the Discord app (not a browser): games can be done
+	Plugin     string            `json:"plugin"`  // the plugin's version
+	OrbTile    string            `json:"orbTile"` // Discord's Orbs pictures (from Discord's own page), when the plugin saw them
+	OrbGlyph   string            `json:"orbGlyph"`
+	OrbTiles   map[string]string `json:"orbTiles,omitempty"`   // Orbs amount → the tile Discord shows with it
+	ClaimDebug json.RawMessage   `json:"claimDebug,omitempty"` // how Discord claims (learnt from a claim by hand) and the last try
+	OrbDebug   json.RawMessage   `json:"orbDebug,omitempty"`   // what the plugin saw around "Orbs" on Discord's page
 }
 
 type BUser struct {
@@ -213,6 +216,18 @@ func (e *Engine) onSync(s Sync) map[string]any {
 		e.log.OK("L.connected", name)
 	}
 	e.last, e.lastAt = s, time.Now()
+	if len(s.ClaimDebug) > 2 {
+		os.WriteFile(filepath.Join(e.dir, "claim-debug.json"), s.ClaimDebug, 0o644)
+	}
+	for n, u := range s.OrbTiles {
+		if strings.HasPrefix(u, "https://") && e.set.OrbTiles[n] != u {
+			if e.set.OrbTiles == nil {
+				e.set.OrbTiles = map[string]string{}
+			}
+			e.set.OrbTiles[n] = u
+			e.saveSettings()
+		}
+	}
 	if len(s.OrbDebug) > 2 {
 		os.WriteFile(filepath.Join(e.dir, "orb-debug.json"), s.OrbDebug, 0o644)
 	}
@@ -250,6 +265,9 @@ func (e *Engine) onSync(s Sync) map[string]any {
 			e.claimResultLocked("failed", ev.Msg)
 		case "claimNone":
 			e.claimResultLocked("none", "")
+		case "claimLearn":
+			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
+			e.claimResultLocked("learn", ev.Msg)
 		}
 	}
 	e.autoQueueLocked()
