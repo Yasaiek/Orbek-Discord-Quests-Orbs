@@ -49,14 +49,16 @@ h2 { font: 650 17px var(--display); margin: 22px 0 10px; }
 .head { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
 .head .grow { flex: 1; min-width: 260px; }
 .orbs { display: flex; gap: 10px; }
-.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1.25fr)) repeat(2, minmax(0, 1fr)); gap: 12px; margin: 4px 0 18px; }
-@media (max-width: 1150px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.kpi .mm { display: flex; flex-direction: column; gap: 7px; margin-top: 2px; }
-.kpi .mbar { position: relative; height: 6px; border-radius: 4px; background: rgba(255,255,255,.08); }
-.kpi .mbar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: linear-gradient(90deg, var(--m1), var(--m2)); opacity: .55; }
-.kpi .mbar b { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--m2), 0 0 10px var(--m2); transition: left .6s var(--ease); }
-.kpi .mrow { display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--dim); font-variant-numeric: tabular-nums; }
-.kpi .mrow strong { color: var(--text); font-weight: 600; white-space: nowrap; } .kpi .mrow { white-space: nowrap; } .kpi .mrow .sep { margin: 0 3px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 4px 0 18px; }
+.kpi { min-width: 0; }
+.kpi > b { flex-wrap: wrap; }
+.kpi .mm { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; min-width: 0; }
+.kpi .spk { display: block; width: 100%; height: 40px; overflow: visible; }
+.kpi .mrow { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 11.5px; color: var(--sub); font-variant-numeric: tabular-nums; }
+.kpi .mc { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 7px; background: rgba(255,255,255,.06); white-space: nowrap; }
+.kpi .mc i { font-style: normal; font-size: 8px; color: var(--m2); }
+.kpi .mc strong { color: var(--text); font-weight: 650; }
+.kpi .mper { margin-left: auto; font-size: 11px; color: var(--dim); white-space: nowrap; }
 .kpi.k-use { --m1: #ffcc4d; --m2: #ff8a3d; }
 .kpi.k-ram { --m1: #29d3b4; --m2: #3a8bff; border-color: rgba(41,211,180,.26); background: linear-gradient(160deg, rgba(41,211,180,.12), rgba(41,211,180,.02)); } .kpi.k-ram::after { background: radial-gradient(circle, rgba(41,211,180,.22), transparent 70%); } .kpi.k-ram .kh { color: #8ff0dc; } .kpi.k-ram > b { color: #dcfff7; }
 .kpi { position: relative; overflow: hidden; border-radius: 16px; padding: 14px 16px 13px; border: 1px solid rgba(163,91,255,.22); background: linear-gradient(160deg, rgba(88,101,242,.16), rgba(163,91,255,.05)); }
@@ -476,7 +478,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.4.6"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.7"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -757,6 +759,19 @@ function kindBadges(box, r, n) {
   for (const k of ['cosmetic', 'ingame', 'code', 'other']) if (r[k]) { const b = el('span', 'kb k-' + k); b.append(icon(ics[k]), el('b', '', r[k]), t('f.k.' + k)); box.append(b); }
   box.append(el('span', 'kq', t('k.quests', { n })));
 }
+// a sparkline (area chart) of recent values, with min and max chips under it
+function spark(box, hist, fmt, lo, hi, cls) {
+  const W = 200, H = 46, pts = hist.length ? hist : [0];
+  const mx = Math.max(...pts, 0.0001), mn = Math.min(...pts);
+  const top = mx + (mx - mn) * 0.15 || 1, bot = Math.max(0, mn - (mx - mn) * 0.15);
+  const x = (i) => pts.length < 2 ? W : (i / (pts.length - 1)) * W, y = (v) => H - 3 - ((v - bot) / (top - bot || 1)) * (H - 8);
+  const line = pts.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join(' ');
+  const id = 'g' + cls;
+  const svg = `<svg class="spk ${cls}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--m2)" stop-opacity=".45"/><stop offset="1" stop-color="var(--m2)" stop-opacity="0"/></linearGradient></defs>`
+    + `<path d="${line} L${W} ${H} L0 ${H} Z" fill="url(#${id})"/><path d="${line}" fill="none" stroke="var(--m2)" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>`
+    + `<circle cx="${x(pts.length - 1)}" cy="${y(pts[pts.length - 1])}" r="3.2" fill="#fff" stroke="var(--m2)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+  box.innerHTML = svg + `<div class="mrow"><span class="mc"><i>▼</i>min <strong>${fmt(lo)}</strong></span><span class="mc"><i>▲</i>max <strong>${fmt(hi)}</strong></span><span class="mper">${Math.round(pts.length * 2 / 60) || '<1'} min</span></div>`;
+}
 function renderKpis(orbIcon) {
   const big = (id, v) => { $(id).textContent = ''; $(id).append(orbIcon(), v); };
   big('kHave', S.orbs == null ? '–' : fmtNum(S.orbs));
@@ -765,18 +780,9 @@ function renderKpis(orbIcon) {
   big('kClaim', fmtNum(tw.orbs)); kindBadges($('kClaimSub'), tw, w.length);
   big('kOpen', fmtNum(to.orbs)); kindBadges($('kOpenSub'), to, o.length);
   const u = S.usage || {}, f = (v) => (v > 0 && v < 0.1 ? '<0.1' : (v || 0).toFixed(1)), mb = (v) => Math.round(v || 0) + ' MB';
-  // now, and a bar from the lowest to the highest since start with a marker where "now" is
-  const mm = (box, lo, hi, cur, fmt) => {
-    box.textContent = '';
-    const bar = el('div', 'mbar'), fill = el('i'), pin = el('b');
-    const span = Math.max(hi, cur, 0.0001), a = Math.min(lo, cur) / span * 100, z = Math.max(hi, cur) / span * 100;
-    fill.style.left = a + '%'; fill.style.width = Math.max(2, z - a) + '%'; pin.style.left = (cur / span * 100) + '%'; bar.append(fill, pin);
-    const row = el('div', 'mrow');
-    row.append(el('span', '', 'min'), el('strong', '', fmt(lo)), el('span', 'sep', '·'), el('span', '', 'max'), el('strong', '', fmt(hi)));
-    box.append(bar, row);
-  };
-  $('kCpu').textContent = f(u.cpu) + '%'; mm($('kCpuMM'), u.cpuMin || 0, u.cpuMax || 0, u.cpu || 0, (v) => f(v) + '%');
-  $('kRamV').textContent = mb(u.ram); mm($('kRamMM'), u.ramMin || 0, u.ramMax || 0, u.ram || 0, mb);
+  // now, a small chart of the last minutes, and the lowest and highest since start
+  $('kCpu').textContent = f(u.cpu) + '%'; spark($('kCpuMM'), u.histCpu || [], (v) => f(v) + '%', u.cpuMin || 0, u.cpuMax || 0, 'cpu');
+  $('kRamV').textContent = mb(u.ram); spark($('kRamMM'), u.histRam || [], mb, u.ramMin || 0, u.ramMax || 0, 'ram');
   $('kUse').title = $('kRam').title = t('use.title') + ' – ' + t('use.hint') + ' · RAM ' + f(u.ramPct) + '% PC';
 }
 const vnum = (v) => (v || '0').split('.').map(Number).reduce((a, n) => a * 1000 + n, 0);

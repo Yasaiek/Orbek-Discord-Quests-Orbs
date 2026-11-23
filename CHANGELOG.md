@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.7
+- CPU and RAM tiles show a small chart of the last minutes, with min and max chips under it.
+- The counter tiles wrap onto the next row in a narrow window instead of being cut off.
+
 ## 0.4.6
 - When a newer plugin comes with Orbek, the panel asks once whether to update it now (it says Discord will restart). Yes shows the update in a window: the steps and the live log, like the setup; then "Done".
 - "Update plugin" buttons use the same window.

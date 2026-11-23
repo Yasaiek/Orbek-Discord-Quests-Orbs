@@ -18,7 +18,12 @@ type Usage struct {
 	CPUMax float64 `json:"cpuMax"`
 	RAMMin float64 `json:"ramMin"`
 	RAMMax float64 `json:"ramMax"`
+	// the last few minutes, oldest first (one point every 2 s), for the little charts
+	HistCPU []float64 `json:"histCpu"`
+	HistRAM []float64 `json:"histRam"`
 }
+
+const histLen = 150 // 5 minutes
 
 var (
 	usageMu  sync.Mutex
@@ -66,6 +71,8 @@ func usageLoop(quit <-chan struct{}) {
 			} else {
 				u.CPUMin, u.CPUMax, u.RAMMin, u.RAMMax = u.CPU, u.CPU, u.RAM, u.RAM
 			}
+			u.HistCPU = appendHist(usageNow.HistCPU, math.Round(u.CPU*100)/100)
+			u.HistRAM = appendHist(usageNow.HistRAM, math.Round(u.RAM*10)/10)
 			usageNow = u
 			avgCPU, avgRAM, avgPct, avgN = avgCPU+u.CPU, avgRAM+u.RAM, avgPct+u.RAMPct, avgN+1
 			usageMu.Unlock()
@@ -84,4 +91,12 @@ func pct1(v float64) string {
 		return "<0.1"
 	}
 	return fmt.Sprintf("%.1f", v)
+}
+
+func appendHist(h []float64, v float64) []float64 {
+	out := make([]float64, 0, histLen)
+	if len(h) >= histLen {
+		h = h[len(h)-histLen+1:]
+	}
+	return append(append(out, h...), v)
 }
