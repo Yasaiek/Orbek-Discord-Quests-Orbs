@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.9
+- Smoother CPU and RAM charts: averaged values drawn as a soft curve with a round marker, never cut off at the edges.
+- In a narrower window the three Orb tiles stay in one row and CPU and RAM sit side by side below them.
+- Dialog buttons no longer show a white frame when the window opens (Enter still confirms).
+
 ## 0.4.8
 - Five counter tiles fit in one row again; the mini window has no claim bar.
 - Guide: the claim step describes claiming one by one.

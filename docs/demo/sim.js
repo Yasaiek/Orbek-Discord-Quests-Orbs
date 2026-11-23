@@ -21,7 +21,7 @@
   }));
   const S = {
     app: 'Orbek', version: window.ORBEK_VERSION || '0.0.0', lang, winGen: 0, connected: true, lastAt: now, user: { id: '1', name: 'Demo', avatar: '' },
-    usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6, cpuMin: 0.1, cpuMax: 2.4, ramMin: 88, ramMax: 112, histCpu: Array.from({ length: 60 }, (_, i) => +(0.3 + Math.abs(Math.sin(i / 6)) * 0.9).toFixed(2)), histRam: Array.from({ length: 60 }, (_, i) => 90 + Math.round(Math.sin(i / 9) * 6)) }, rpc: { state: 'idle', ready: true }, orbTile: '', orbGlyph: '',
+    usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6, cpuMin: 0.1, cpuMax: 2.4, ramMin: 88, ramMax: 112, histCpu: Array.from({ length: 60 }, (_, i) => +(0.45 + Math.sin(i / 9) * 0.18 + Math.sin(i / 3.7) * 0.05).toFixed(2)), histRam: Array.from({ length: 60 }, (_, i) => +(94 + Math.sin(i / 14) * 3 + i / 30).toFixed(1)) }, rpc: { state: 'idle', ready: true }, orbTile: '', orbGlyph: '',
     games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + q.id + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
     loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord',
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
@@ -41,7 +41,7 @@
       say('info', q.name + ': …');
     }
   };
-  setInterval(() => { const c = +(0.2 + Math.random() * 0.6 + S.runs.length * 0.15).toFixed(2), r = 90 + Math.round(Math.random() * 8); S.usage = { cpu: c, ram: r, ramPct: 0.6, procs: 6, cpuMin: Math.min(S.usage.cpuMin, c), cpuMax: Math.max(S.usage.cpuMax, c), ramMin: Math.min(S.usage.ramMin, r), ramMax: Math.max(S.usage.ramMax, r), histCpu: [...(S.usage.histCpu || []), c].slice(-150), histRam: [...(S.usage.histRam || []), r].slice(-150) }; S.rpc.state = S.settings.rpcOn ? (S.runs.length ? 'ok' : 'idle') : 'off'; }, 2000);
+  setInterval(() => { const c = +Math.max(0.05, Math.min(3, (S.usage.cpu || 0.4) * 0.8 + (0.25 + S.runs.length * 0.18) * 0.2 + (Math.random() - 0.5) * 0.12)).toFixed(2), r = Math.round(Math.max(80, Math.min(120, (S.usage.ram || 95) + (Math.random() - 0.5) * 2.5))); S.usage = { cpu: c, ram: r, ramPct: 0.6, procs: 6, cpuMin: Math.min(S.usage.cpuMin, c), cpuMax: Math.max(S.usage.cpuMax, c), ramMin: Math.min(S.usage.ramMin, r), ramMax: Math.max(S.usage.ramMax, r), histCpu: [...(S.usage.histCpu || []), c].slice(-150), histRam: [...(S.usage.histRam || []), r].slice(-150) }; S.rpc.state = S.settings.rpcOn ? (S.runs.length ? 'ok' : 'idle') : 'off'; }, 2000);
   setInterval(() => { // the demo runs ~20× faster than Discord
     for (const r of S.runs.slice()) {
       const q = find(r.id); const step = q.task.startsWith('WATCH') ? 7 : 20;
