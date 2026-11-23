@@ -307,6 +307,26 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
 .gi.g5 { --c1: #ff8a5b; --c2: #ff4f8b; } .gi.g6 { --c1: #ffcc4d; --c2: #ff8a3d; } .gi.g7 { --c1: #b05bff; --c2: #ff4fb0; } .gi.g8 { --c1: #29d3b4; --c2: #3a8bff; }
 .gi p { margin: 0; color: var(--sub); line-height: 1.55; font-size: 13.5px; }
 .gi.warn { border-color: rgba(240,178,50,.35); } .gi.warn h3 { color: var(--warn); }
+.updscr { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 40%, rgba(88,101,242,.28), rgba(8,8,16,.92) 60%); backdrop-filter: blur(10px); animation: ufade .3s ease; }
+@keyframes ufade { from { opacity: 0; } }
+.updscr .ubox { width: min(440px, 90vw); text-align: center; padding: 34px 30px 28px; border-radius: 24px; background: linear-gradient(180deg, rgba(30,30,52,.95), rgba(18,18,32,.95)); border: 1px solid rgba(150,130,255,.3); box-shadow: 0 30px 80px -20px rgba(70,50,200,.7); }
+.updscr .uplanet { width: 92px; height: 92px; animation: ufloat 3s ease-in-out infinite; filter: drop-shadow(0 12px 28px rgba(130,100,255,.6)); }
+@keyframes ufloat { 50% { transform: translateY(-8px) rotate(-6deg); } }
+.updscr h2 { margin: 14px 0 6px; font: 700 22px var(--display); }
+.updscr .uver { display: inline-flex; align-items: center; gap: 8px; color: var(--sub); font: 600 14px var(--display); margin-bottom: 18px; }
+.updscr .uver b { color: #fff; padding: 2px 10px; border-radius: 999px; background: var(--grad); }
+.updscr .uver svg.i { width: 15px; height: 15px; transform: rotate(-90deg); }
+.updscr .ubar { position: relative; height: 10px; border-radius: 6px; overflow: hidden; background: rgba(255,255,255,.08); }
+.updscr .ubar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px; background: linear-gradient(90deg, #5865f2, #a35bff, #ff6fb5); background-size: 200% 100%; animation: ushine 1.6s linear infinite; transition: width .4s var(--ease); }
+.updscr .ubar.ind i { width: 40% !important; animation: ushine 1.6s linear infinite, uind 1.2s ease-in-out infinite; }
+@keyframes ushine { to { background-position: -200% 0; } }
+@keyframes uind { 0% { left: -40%; } 100% { left: 100%; } }
+.updscr p { margin: 14px 0 0; color: var(--sub); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.whatsnew .box { max-width: 560px; }
+.whatsnew .wv { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid var(--line); }
+.whatsnew .wv b { display: inline-block; margin-bottom: 6px; padding: 2px 9px; border-radius: 999px; font: 700 12px var(--display); color: #fff; background: var(--grad); }
+.whatsnew ul { margin: 0; padding-left: 18px; color: var(--sub); line-height: 1.5; font-size: 13.5px; } .whatsnew li + li { margin-top: 4px; }
+.whatsnew .wlist { max-height: 52vh; overflow: auto; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -955,6 +975,47 @@ function checkAlert() {
   chime();
   ask(t('exp.titleUi'), al.text, t('cl.go'), true).then((go) => { if (go) op({ op: 'claimAll' }); });
 }
+// the update screen while Orbek downloads and restarts, and "what's new" once it is back
+let updLost = 0, updTo = '';
+function renderUpdate() {
+  const u = (S && S.update) || {}, scr = $('updScr');
+  const busy = u.state === 'downloading' || u.state === 'restarting';
+  if (busy) { updLost = Date.now(); updTo = u.latest || updTo; }
+  scr.hidden = !busy && !(updLost && Date.now() - updLost < 20000);
+  if (scr.hidden) return;
+  $('uFrom').textContent = 'v' + (S.version || '?'); $('uTo').textContent = 'v' + (u.latest || updTo || '?');
+  const bar = $('uFill').parentElement, mb = (n) => (n / 1048576).toFixed(1) + ' MB';
+  if (u.state === 'downloading' && u.size > 0) {
+    bar.classList.remove('ind'); $('uFill').style.width = Math.min(100, u.got / u.size * 100) + '%';
+    $('uStep').textContent = t('upd.stepDl', { a: mb(u.got || 0), b: mb(u.size) });
+  } else {
+    bar.classList.add('ind'); $('uStep').textContent = u.state === 'downloading' ? t('upd.stepDl0') : t('upd.stepRestart');
+  }
+}
+async function whatsNew() {
+  const u = S.update || {}, seen = localStorage.getItem('orbek.seenVer') || '';
+  if (seen === S.version) return;
+  try { localStorage.setItem('orbek.seenVer', S.version); } catch (e) {}
+  const from = u.from || seen;
+  if (!from || !u.doneAt) return; // a first start: nothing to tell
+  let md = '';
+  try { md = await fetch('changelog.md', { cache: 'no-store' }).then((r) => r.text()); } catch (e) { return; }
+  const vers = []; let cur = null;
+  for (const line of md.split(/\r?\n/)) {
+    const h = /^##\s+v?([0-9][^\s]*)/.exec(line); if (h) { cur = { v: h[1], items: [] }; vers.push(cur); continue; }
+    const b = /^\s*[-*]\s+(.*)/.exec(line); if (b && cur) cur.items.push(b[1]);
+  }
+  const list = vers.filter((x) => vnum(x.v) > vnum(from) && vnum(x.v) <= vnum(S.version));
+  if (!list.length) return;
+  const d = el('div', 'dlg whatsnew'), box = el('div', 'box'), h = el('h3');
+  h.append(el('span', 'ic', '🎉'), t('upd.newT', { v: S.version }));
+  const wl = el('div', 'wlist');
+  for (const x of list) { const w = el('div', 'wv'); w.append(el('b', '', 'v' + x.v)); const ul = el('ul'); for (const it of x.items) ul.append(el('li', '', it)); w.append(ul); wl.append(w); }
+  const acts = el('div', 'acts'), ok = el('button', 'btn pri', t('upd.ok'));
+  ok.onclick = () => d.remove(); acts.append(ok);
+  box.append(h, el('p', '', t('upd.newSub', { v: from })), wl, acts); d.append(box); d.onclick = (e) => { if (e.target === d) d.remove(); };
+  document.body.append(d); ok.focus();
+}
 function renderSettings() {
   drawLangDD();
   $('statsRow').hidden = !S.statsOn;
@@ -1006,15 +1067,26 @@ async function tick() {
     S = await api('/api/state');
     if (gen && S.winGen > gen) { window.close(); return; } // a newer panel window took over
     if (VER && S.version !== VER) { location.reload(); return; } // Orbek was updated: load the new panel
+    if (!VER) setTimeout(whatsNew, 800);
     VER = S.version;
+    renderUpdate();
     await loadLang(S.lang || 'en');
     render(); if (!MINI) { renderLog(); renderSettings(); renderSetup(); renderGuide(); }
-  } catch (e) { $('conn').className = 'conn off'; }
+  } catch (e) { $('conn').className = 'conn off'; if (S) renderUpdate(); }
   busy = false;
 }
 tick(); setInterval(tick, 1000);
 setInterval(() => { if (S && !MINI) checkAlert(); }, 1500);
 setInterval(() => { if (S && (S.runs || []).length) updateLive(); }, 250);
 </script>
+<div class="updscr" id="updScr" hidden>
+  <div class="ubox">
+    <img class="uplanet" src="icon.svg" alt="">
+    <h2 data-i="upd.screenT"></h2>
+    <div class="uver"><span id="uFrom"></span><i data-ic="chev"></i><b id="uTo"></b></div>
+    <div class="ubar"><i id="uFill"></i></div>
+    <p id="uStep"></p>
+  </div>
+</div>
 </body>
 </html>

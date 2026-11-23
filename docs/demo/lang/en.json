@@ -280,5 +280,12 @@
 "empty.doneT": "All done! 🎉",
 "empty.next": "New quests will show up here by themselves – Orbek checks Discord every {t}.",
 "empty.filterHint": "The remaining quests ({n}) are hidden by the chosen tab, search or filter.",
-"empty.reset": "Show all"
+"empty.reset": "Show all",
+"upd.screenT": "Updating Orbek",
+"upd.stepDl": "Downloading… {a} of {b}",
+"upd.stepDl0": "Downloading…",
+"upd.stepRestart": "Installing and restarting…",
+"upd.newT": "Orbek updated to v{v}",
+"upd.newSub": "What changed since v{v}:",
+"upd.ok": "Great!"
 }

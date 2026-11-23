@@ -280,5 +280,12 @@
 "empty.doneT": "Tout est fait ! 🎉",
 "empty.next": "Les nouvelles quêtes apparaîtront ici toutes seules – Orbek vérifie Discord toutes les {t}.",
 "empty.filterHint": "Les quêtes restantes ({n}) sont masquées par l'onglet, la recherche ou le filtre.",
-"empty.reset": "Tout afficher"
+"empty.reset": "Tout afficher",
+"upd.screenT": "Mise à jour d'Orbek",
+"upd.stepDl": "Téléchargement… {a} sur {b}",
+"upd.stepDl0": "Téléchargement…",
+"upd.stepRestart": "Installation et redémarrage…",
+"upd.newT": "Orbek mis à jour en v{v}",
+"upd.newSub": "Ce qui a changé depuis la v{v} :",
+"upd.ok": "Super !"
 }

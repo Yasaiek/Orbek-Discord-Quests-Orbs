@@ -280,5 +280,12 @@
 "empty.doneT": "すべて完了！🎉",
 "empty.next": "新しいクエストは自動でここに表示されます – Orbekは{t}ごとにDiscordを確認します。",
 "empty.filterHint": "残りのクエスト（{n}）はタブ・検索・フィルターで非表示になっています。",
-"empty.reset": "すべて表示"
+"empty.reset": "すべて表示",
+"upd.screenT": "Orbekを更新中",
+"upd.stepDl": "ダウンロード中… {a} / {b}",
+"upd.stepDl0": "ダウンロード中…",
+"upd.stepRestart": "インストールして再起動中…",
+"upd.newT": "Orbekをv{v}に更新しました",
+"upd.newSub": "v{v}からの変更点：",
+"upd.ok": "OK！"
 }

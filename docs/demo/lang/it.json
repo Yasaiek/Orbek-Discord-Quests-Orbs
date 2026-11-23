@@ -280,5 +280,12 @@
 "empty.doneT": "Tutto fatto! 🎉",
 "empty.next": "Le nuove missioni appariranno qui da sole – Orbek controlla Discord ogni {t}.",
 "empty.filterHint": "Le missioni rimaste ({n}) sono nascoste da scheda, ricerca o filtro.",
-"empty.reset": "Mostra tutte"
+"empty.reset": "Mostra tutte",
+"upd.screenT": "Aggiornamento di Orbek",
+"upd.stepDl": "Scarico… {a} di {b}",
+"upd.stepDl0": "Scarico…",
+"upd.stepRestart": "Installo e riavvio…",
+"upd.newT": "Orbek aggiornato alla v{v}",
+"upd.newSub": "Cosa è cambiato dalla v{v}:",
+"upd.ok": "Ottimo!"
 }

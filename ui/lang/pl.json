@@ -280,5 +280,12 @@
 "empty.doneT": "Wszystko zrobione! 🎉",
 "empty.next": "Nowe zadania pojawią się tutaj same – Orbek sprawdza Discorda co {t}.",
 "empty.filterHint": "Pozostałe zadania ({n}) są ukryte przez wybraną zakładkę, wyszukiwanie albo filtr.",
-"empty.reset": "Pokaż wszystkie"
+"empty.reset": "Pokaż wszystkie",
+"upd.screenT": "Aktualizacja Orbka",
+"upd.stepDl": "Pobieranie… {a} z {b}",
+"upd.stepDl0": "Pobieranie…",
+"upd.stepRestart": "Instaluję i uruchamiam ponownie…",
+"upd.newT": "Orbek zaktualizowany do v{v}",
+"upd.newSub": "Co się zmieniło od v{v}:",
+"upd.ok": "Super!"
 }

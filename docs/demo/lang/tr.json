@@ -280,5 +280,12 @@
 "empty.doneT": "Hepsi tamam! 🎉",
 "empty.next": "Yeni görevler buraya kendiliğinden gelir – Orbek Discord'u her {t} kontrol eder.",
 "empty.filterHint": "Kalan görevler ({n}) seçili sekme, arama ya da filtreyle gizlendi.",
-"empty.reset": "Hepsini göster"
+"empty.reset": "Hepsini göster",
+"upd.screenT": "Orbek güncelleniyor",
+"upd.stepDl": "İndiriliyor… {a} / {b}",
+"upd.stepDl0": "İndiriliyor…",
+"upd.stepRestart": "Kuruluyor ve yeniden başlatılıyor…",
+"upd.newT": "Orbek v{v} sürümüne güncellendi",
+"upd.newSub": "v{v} sürümünden bu yana değişenler:",
+"upd.ok": "Harika!"
 }

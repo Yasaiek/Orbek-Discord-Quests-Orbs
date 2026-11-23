@@ -66,7 +66,7 @@ func (e *Engine) view() map[string]any {
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
 		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "statsOn": statsURL != "", "alert": e.alert, "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
-		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done)},
+		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done), "from": e.upd.From, "got": updGot.Load(), "size": updSize.Load()},
 		"quests":   quests,
 		"settings": e.set,
 		"log":      e.log.tail(),
@@ -238,6 +238,11 @@ func (s *server) routes() http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 		w.Header().Set("Cache-Control", "no-store")
 		json.NewEncoder(w).Encode(s.e.view())
+	})
+	mux.HandleFunc("/changelog.md", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.Header().Set("Cache-Control", "no-store")
+		io.WriteString(w, changelogMD)
 	})
 	mux.HandleFunc("/api/op", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "POST" {

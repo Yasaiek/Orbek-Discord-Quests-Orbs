@@ -280,5 +280,12 @@
 "empty.doneT": "全部完成！🎉",
 "empty.next": "新任务会自动出现在这里——Orbek 每 {t} 检查一次 Discord。",
 "empty.filterHint": "剩余的任务（{n}）被当前标签、搜索或筛选隐藏了。",
-"empty.reset": "全部显示"
+"empty.reset": "全部显示",
+"upd.screenT": "正在更新 Orbek",
+"upd.stepDl": "下载中… {a} / {b}",
+"upd.stepDl0": "下载中…",
+"upd.stepRestart": "正在安装并重启…",
+"upd.newT": "Orbek 已更新到 v{v}",
+"upd.newSub": "自 v{v} 以来的变化：",
+"upd.ok": "好的！"
 }

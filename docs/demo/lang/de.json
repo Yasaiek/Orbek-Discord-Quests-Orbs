@@ -280,5 +280,12 @@
 "empty.doneT": "Alles erledigt! 🎉",
 "empty.next": "Neue Quests erscheinen hier von selbst – Orbek schaut alle {t} bei Discord nach.",
 "empty.filterHint": "Die übrigen Quests ({n}) sind durch Tab, Suche oder Filter ausgeblendet.",
-"empty.reset": "Alle zeigen"
+"empty.reset": "Alle zeigen",
+"upd.screenT": "Orbek wird aktualisiert",
+"upd.stepDl": "Lade… {a} von {b}",
+"upd.stepDl0": "Lade…",
+"upd.stepRestart": "Installiere und starte neu…",
+"upd.newT": "Orbek auf v{v} aktualisiert",
+"upd.newSub": "Was sich seit v{v} geändert hat:",
+"upd.ok": "Super!"
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.5
+- Update screen: while Orbek downloads a new version the panel shows a progress window (downloading with MB, then installing and restarting).
+- After the update a "What's new" window lists the changes since your previous version.
+
 ## 0.4.4
 - An empty list says what's going on: "All done!" when every quest is finished, "No quests right now" when Discord has none (both say when Orbek checks again), and only when the tab, search or a filter hides the rest – that, with a "Show all" button.
 

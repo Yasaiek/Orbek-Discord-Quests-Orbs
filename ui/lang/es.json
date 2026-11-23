@@ -280,5 +280,12 @@
 "empty.doneT": "¡Todo hecho! 🎉",
 "empty.next": "Las misiones nuevas aparecerán aquí solas – Orbek revisa Discord cada {t}.",
 "empty.filterHint": "Las misiones restantes ({n}) están ocultas por la pestaña, la búsqueda o el filtro.",
-"empty.reset": "Mostrar todas"
+"empty.reset": "Mostrar todas",
+"upd.screenT": "Actualizando Orbek",
+"upd.stepDl": "Descargando… {a} de {b}",
+"upd.stepDl0": "Descargando…",
+"upd.stepRestart": "Instalando y reiniciando…",
+"upd.newT": "Orbek actualizado a v{v}",
+"upd.newSub": "Qué cambió desde la v{v}:",
+"upd.ok": "¡Genial!"
 }
