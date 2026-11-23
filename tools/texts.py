@@ -7,7 +7,7 @@ KEYS = ["title", "eyebrow", "h1", "lead", "dl", "gh", "dls", "live",
 T = {}
 T["en"] = [
  "Orbek – Discord Quests and Orbs in one window", "Windows · free · open source · beta",
- "Every Discord quest. One window.",
+ "Your Discord quests, finally under control.",
  "Orbek shows all Discord quests – for Orbs, Discord cosmetics and in-game rewards – sorted the way you want, with progress you can watch live. It installs everything it needs in Discord with one click.",
  "Download for Windows", "Source on GitHub", "downloads", "Live preview – click around. It runs on made-up data, nothing is real.",
  "All quests in one place", "Games, videos and activities in tabs, with the time left and live progress rings.",
@@ -26,7 +26,7 @@ T["en"] = [
  "Doing Discord quests automatically is against Discord's rules. Orbek is not affiliated with Discord. You use it at your own risk."]
 T["pl"] = [
  "Orbek – zadania i Orby z Discorda w jednym oknie", "Windows · za darmo · otwarty kod · beta",
- "Każde zadanie Discorda. Jedno okno.",
+ "Zadania Discorda wreszcie pod kontrolą.",
  "Orbek pokazuje wszystkie zadania Discorda – za Orby, kosmetyki Discorda i nagrody w grach – posortowane tak, jak chcesz, z postępem na żywo. Wszystko, czego potrzebuje w Discordzie, instaluje jednym kliknięciem.",
  "Pobierz na Windowsa", "Kod na GitHubie", "pobrań", "Podgląd na żywo – klikaj śmiało. Działa na zmyślonych danych, nic nie jest prawdziwe.",
  "Wszystkie zadania w jednym miejscu", "Gry, filmy i aktywności w zakładkach, z czasem do końca i kółkami postępu na żywo.",
@@ -45,7 +45,7 @@ T["pl"] = [
  "Automatyczne robienie zadań Discorda łamie jego zasady. Orbek nie jest powiązany z Discordem. Używasz go na własną odpowiedzialność."]
 T["de"] = [
  "Orbek – Discord-Quests und Orbs in einem Fenster", "Windows · kostenlos · Open Source · Beta",
- "Jede Discord-Quest. Ein Fenster.",
+ "Deine Discord-Quests, endlich im Griff.",
  "Orbek zeigt alle Discord-Quests – für Orbs, Discord-Kosmetik und Spielbelohnungen – sortiert, wie du willst, mit Fortschritt live. Alles, was es in Discord braucht, installiert es mit einem Klick.",
  "Für Windows laden", "Quellcode auf GitHub", "Downloads", "Live-Vorschau – klick dich durch. Sie läuft mit erfundenen Daten, nichts ist echt.",
  "Alle Quests an einem Ort", "Spiele, Videos und Aktivitäten in Tabs, mit Restzeit und Live-Fortschrittsringen.",
@@ -64,7 +64,7 @@ T["de"] = [
  "Discord-Quests automatisch zu erledigen verstößt gegen Discords Regeln. Orbek ist nicht mit Discord verbunden. Nutzung auf eigenes Risiko."]
 T["fr"] = [
  "Orbek – quêtes et Orbs de Discord dans une seule fenêtre", "Windows · gratuit · open source · bêta",
- "Toutes les quêtes Discord. Une seule fenêtre.",
+ "Tes quêtes Discord, enfin sous contrôle.",
  "Orbek affiche toutes les quêtes Discord – pour des Orbs, des cosmétiques Discord et des récompenses en jeu – triées comme tu veux, avec la progression en direct. Il installe tout ce qu'il lui faut dans Discord en un clic.",
  "Télécharger pour Windows", "Code sur GitHub", "téléchargements", "Aperçu en direct – clique partout. Il tourne sur des données inventées, rien n'est réel.",
  "Toutes les quêtes au même endroit", "Jeux, vidéos et activités par onglets, avec le temps restant et des anneaux de progression en direct.",
@@ -83,7 +83,7 @@ T["fr"] = [
  "Faire les quêtes Discord automatiquement enfreint les règles de Discord. Orbek n'est pas affilié à Discord. Tu l'utilises à tes risques."]
 T["es"] = [
  "Orbek – misiones y Orbs de Discord en una sola ventana", "Windows · gratis · código abierto · beta",
- "Todas las misiones de Discord. Una ventana.",
+ "Tus misiones de Discord, por fin bajo control.",
  "Orbek muestra todas las misiones de Discord – por Orbs, cosméticos de Discord y recompensas en juegos – ordenadas como quieras, con el progreso en directo. Instala todo lo que necesita en Discord con un clic.",
  "Descargar para Windows", "Código en GitHub", "descargas", "Vista previa en directo – pulsa donde quieras. Usa datos inventados, nada es real.",
  "Todas las misiones en un sitio", "Juegos, vídeos y actividades en pestañas, con el tiempo restante y anillos de progreso en directo.",
@@ -102,7 +102,7 @@ T["es"] = [
  "Hacer misiones de Discord automáticamente va contra sus normas. Orbek no está afiliado a Discord. Lo usas bajo tu responsabilidad."]
 T["it"] = [
  "Orbek – missioni e Orb di Discord in una sola finestra", "Windows · gratis · open source · beta",
- "Ogni missione di Discord. Una finestra.",
+ "Le tue missioni Discord, finalmente sotto controllo.",
  "Orbek mostra tutte le missioni di Discord – per Orb, cosmetici di Discord e premi nei giochi – ordinate come vuoi, con l'avanzamento in diretta. Installa tutto ciò che gli serve in Discord con un clic.",
  "Scarica per Windows", "Codice su GitHub", "download", "Anteprima dal vivo – clicca pure. Gira su dati inventati, niente è reale.",
  "Tutte le missioni in un posto", "Giochi, video e attività in schede, con il tempo rimasto e anelli di avanzamento in diretta.",
@@ -121,7 +121,7 @@ T["it"] = [
  "Fare le missioni di Discord automaticamente viola le regole di Discord. Orbek non è affiliato a Discord. Lo usi a tuo rischio."]
 T["pt_BR"] = [
  "Orbek – missões e Orbs do Discord em uma janela", "Windows · grátis · código aberto · beta",
- "Toda missão do Discord. Uma janela.",
+ "Suas missões do Discord, finalmente sob controle.",
  "O Orbek mostra todas as missões do Discord – por Orbs, cosméticos do Discord e recompensas em jogos – ordenadas do seu jeito, com o progresso ao vivo. Ele instala tudo o que precisa no Discord com um clique.",
  "Baixar para Windows", "Código no GitHub", "downloads", "Prévia ao vivo – clique à vontade. Roda com dados inventados, nada é real.",
  "Todas as missões em um lugar", "Jogos, vídeos e atividades em abas, com o tempo restante e anéis de progresso ao vivo.",
@@ -140,7 +140,7 @@ T["pt_BR"] = [
  "Fazer missões do Discord automaticamente vai contra as regras do Discord. O Orbek não tem ligação com o Discord. Use por sua conta e risco."]
 T["ru"] = [
  "Orbek – задания и Orbs из Discord в одном окне", "Windows · бесплатно · открытый код · бета",
- "Все задания Discord. Одно окно.",
+ "Задания Discord – наконец под контролем.",
  "Orbek показывает все задания Discord – за Orbs, косметику Discord и награды в играх – отсортированные как вам удобно, с прогрессом в реальном времени. Всё нужное в Discord он ставит одним нажатием.",
  "Скачать для Windows", "Код на GitHub", "загрузок", "Живой предпросмотр – нажимайте смело. Работает на выдуманных данных, ничего настоящего.",
  "Все задания в одном месте", "Игры, видео и активности по вкладкам, с оставшимся временем и кольцами прогресса в реальном времени.",
@@ -159,7 +159,7 @@ T["ru"] = [
  "Автоматическое выполнение заданий Discord нарушает его правила. Orbek не связан с Discord. Вы используете его на свой риск."]
 T["uk"] = [
  "Orbek – завдання та Orbs із Discord в одному вікні", "Windows · безкоштовно · відкритий код · бета",
- "Усі завдання Discord. Одне вікно.",
+ "Завдання Discord – нарешті під контролем.",
  "Orbek показує всі завдання Discord – за Orbs, косметику Discord і нагороди в іграх – відсортовані як вам зручно, з прогресом наживо. Усе потрібне в Discord він встановлює одним натисканням.",
  "Завантажити для Windows", "Код на GitHub", "завантажень", "Живий попередній перегляд – натискайте сміливо. Працює на вигаданих даних, нічого справжнього.",
  "Усі завдання в одному місці", "Ігри, відео та активності за вкладками, з часом, що лишився, і кільцями прогресу наживо.",
@@ -178,7 +178,7 @@ T["uk"] = [
  "Автоматичне виконання завдань Discord порушує його правила. Orbek не пов'язаний із Discord. Ви використовуєте його на власний ризик."]
 T["tr"] = [
  "Orbek – Discord görevleri ve Orbs tek pencerede", "Windows · ücretsiz · açık kaynak · beta",
- "Her Discord görevi. Tek pencere.",
+ "Discord görevlerin sonunda kontrol altında.",
  "Orbek tüm Discord görevlerini – Orbs, Discord kozmetiği ve oyun içi ödüller için – istediğin gibi sıralanmış ve canlı ilerlemeyle gösterir. Discord'da ihtiyaç duyduğu her şeyi tek tıkla kurar.",
  "Windows için indir", "GitHub'da kaynak", "indirme", "Canlı önizleme – istediğin yere tıkla. Uydurma verilerle çalışır, hiçbiri gerçek değil.",
  "Tüm görevler tek yerde", "Oyunlar, videolar ve etkinlikler sekmelerde; kalan süre ve canlı ilerleme halkalarıyla.",
@@ -197,7 +197,7 @@ T["tr"] = [
  "Discord görevlerini otomatik yapmak Discord'un kurallarına aykırıdır. Orbek'in Discord ile bağlantısı yoktur. Kullanım riski sana aittir."]
 T["ja"] = [
  "Orbek – DiscordのクエストとOrbsをひとつのウィンドウで", "Windows · 無料 · オープンソース · ベータ",
- "Discordのすべてのクエストを、ひとつのウィンドウで。",
+ "Discordのクエストを、ついに完全管理。",
  "OrbekはDiscordのすべてのクエスト（Orbs、Discordコスメ、ゲーム内報酬）を好きな順に並べ、進行状況をリアルタイムで表示します。Discordに必要なものはワンクリックでインストールします。",
  "Windows版をダウンロード", "GitHubのソース", "ダウンロード", "ライブプレビュー – 自由にクリックしてください。架空のデータで動いています。",
  "すべてのクエストを一か所に", "ゲーム・動画・アクティビティをタブで、残り時間とリアルタイムの進行リング付きで。",
@@ -216,7 +216,7 @@ T["ja"] = [
  "Discordのクエストを自動で実行することはDiscordのルールに反します。OrbekはDiscordとは関係ありません。自己責任でご利用ください。"]
 T["zh_CN"] = [
  "Orbek – 在一个窗口中查看 Discord 任务和 Orbs", "Windows · 免费 · 开源 · 测试版",
- "所有 Discord 任务，一个窗口搞定。",
+ "Discord 任务，终于尽在掌控。",
  "Orbek 显示所有 Discord 任务——可获得 Orbs、Discord 装饰和游戏内奖励——按你喜欢的方式排序，并实时显示进度。它在 Discord 中需要的一切都能一键安装。",
  "下载 Windows 版", "GitHub 源代码", "次下载", "实时预览——随便点。使用的是虚构数据，都不是真的。",
  "所有任务集中一处", "游戏、视频和活动分页显示，附带剩余时间和实时进度环。",

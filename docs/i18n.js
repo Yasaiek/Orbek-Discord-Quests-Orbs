@@ -4,7 +4,7 @@ const SITE = {
  "en": {
   "title": "Orbek – Discord Quests and Orbs in one window",
   "eyebrow": "Windows · free · open source · beta",
-  "h1": "Every Discord quest. One window.",
+  "h1": "Your Discord quests, finally under control.",
   "lead": "Orbek shows all Discord quests – for Orbs, Discord cosmetics and in-game rewards – sorted the way you want, with progress you can watch live. It installs everything it needs in Discord with one click.",
   "dl": "Download for Windows",
   "gh": "Source on GitHub",
@@ -80,7 +80,7 @@ const SITE = {
  "pl": {
   "title": "Orbek – zadania i Orby z Discorda w jednym oknie",
   "eyebrow": "Windows · za darmo · otwarty kod · beta",
-  "h1": "Każde zadanie Discorda. Jedno okno.",
+  "h1": "Zadania Discorda wreszcie pod kontrolą.",
   "lead": "Orbek pokazuje wszystkie zadania Discorda – za Orby, kosmetyki Discorda i nagrody w grach – posortowane tak, jak chcesz, z postępem na żywo. Wszystko, czego potrzebuje w Discordzie, instaluje jednym kliknięciem.",
   "dl": "Pobierz na Windowsa",
   "gh": "Kod na GitHubie",
@@ -156,7 +156,7 @@ const SITE = {
  "de": {
   "title": "Orbek – Discord-Quests und Orbs in einem Fenster",
   "eyebrow": "Windows · kostenlos · Open Source · Beta",
-  "h1": "Jede Discord-Quest. Ein Fenster.",
+  "h1": "Deine Discord-Quests, endlich im Griff.",
   "lead": "Orbek zeigt alle Discord-Quests – für Orbs, Discord-Kosmetik und Spielbelohnungen – sortiert, wie du willst, mit Fortschritt live. Alles, was es in Discord braucht, installiert es mit einem Klick.",
   "dl": "Für Windows laden",
   "gh": "Quellcode auf GitHub",
@@ -232,7 +232,7 @@ const SITE = {
  "fr": {
   "title": "Orbek – quêtes et Orbs de Discord dans une seule fenêtre",
   "eyebrow": "Windows · gratuit · open source · bêta",
-  "h1": "Toutes les quêtes Discord. Une seule fenêtre.",
+  "h1": "Tes quêtes Discord, enfin sous contrôle.",
   "lead": "Orbek affiche toutes les quêtes Discord – pour des Orbs, des cosmétiques Discord et des récompenses en jeu – triées comme tu veux, avec la progression en direct. Il installe tout ce qu'il lui faut dans Discord en un clic.",
   "dl": "Télécharger pour Windows",
   "gh": "Code sur GitHub",
@@ -308,7 +308,7 @@ const SITE = {
  "es": {
   "title": "Orbek – misiones y Orbs de Discord en una sola ventana",
   "eyebrow": "Windows · gratis · código abierto · beta",
-  "h1": "Todas las misiones de Discord. Una ventana.",
+  "h1": "Tus misiones de Discord, por fin bajo control.",
   "lead": "Orbek muestra todas las misiones de Discord – por Orbs, cosméticos de Discord y recompensas en juegos – ordenadas como quieras, con el progreso en directo. Instala todo lo que necesita en Discord con un clic.",
   "dl": "Descargar para Windows",
   "gh": "Código en GitHub",
@@ -384,7 +384,7 @@ const SITE = {
  "it": {
   "title": "Orbek – missioni e Orb di Discord in una sola finestra",
   "eyebrow": "Windows · gratis · open source · beta",
-  "h1": "Ogni missione di Discord. Una finestra.",
+  "h1": "Le tue missioni Discord, finalmente sotto controllo.",
   "lead": "Orbek mostra tutte le missioni di Discord – per Orb, cosmetici di Discord e premi nei giochi – ordinate come vuoi, con l'avanzamento in diretta. Installa tutto ciò che gli serve in Discord con un clic.",
   "dl": "Scarica per Windows",
   "gh": "Codice su GitHub",
@@ -460,7 +460,7 @@ const SITE = {
  "pt_BR": {
   "title": "Orbek – missões e Orbs do Discord em uma janela",
   "eyebrow": "Windows · grátis · código aberto · beta",
-  "h1": "Toda missão do Discord. Uma janela.",
+  "h1": "Suas missões do Discord, finalmente sob controle.",
   "lead": "O Orbek mostra todas as missões do Discord – por Orbs, cosméticos do Discord e recompensas em jogos – ordenadas do seu jeito, com o progresso ao vivo. Ele instala tudo o que precisa no Discord com um clique.",
   "dl": "Baixar para Windows",
   "gh": "Código no GitHub",
@@ -536,7 +536,7 @@ const SITE = {
  "ru": {
   "title": "Orbek – задания и Orbs из Discord в одном окне",
   "eyebrow": "Windows · бесплатно · открытый код · бета",
-  "h1": "Все задания Discord. Одно окно.",
+  "h1": "Задания Discord – наконец под контролем.",
   "lead": "Orbek показывает все задания Discord – за Orbs, косметику Discord и награды в играх – отсортированные как вам удобно, с прогрессом в реальном времени. Всё нужное в Discord он ставит одним нажатием.",
   "dl": "Скачать для Windows",
   "gh": "Код на GitHub",
@@ -612,7 +612,7 @@ const SITE = {
  "uk": {
   "title": "Orbek – завдання та Orbs із Discord в одному вікні",
   "eyebrow": "Windows · безкоштовно · відкритий код · бета",
-  "h1": "Усі завдання Discord. Одне вікно.",
+  "h1": "Завдання Discord – нарешті під контролем.",
   "lead": "Orbek показує всі завдання Discord – за Orbs, косметику Discord і нагороди в іграх – відсортовані як вам зручно, з прогресом наживо. Усе потрібне в Discord він встановлює одним натисканням.",
   "dl": "Завантажити для Windows",
   "gh": "Код на GitHub",
@@ -688,7 +688,7 @@ const SITE = {
  "tr": {
   "title": "Orbek – Discord görevleri ve Orbs tek pencerede",
   "eyebrow": "Windows · ücretsiz · açık kaynak · beta",
-  "h1": "Her Discord görevi. Tek pencere.",
+  "h1": "Discord görevlerin sonunda kontrol altında.",
   "lead": "Orbek tüm Discord görevlerini – Orbs, Discord kozmetiği ve oyun içi ödüller için – istediğin gibi sıralanmış ve canlı ilerlemeyle gösterir. Discord'da ihtiyaç duyduğu her şeyi tek tıkla kurar.",
   "dl": "Windows için indir",
   "gh": "GitHub'da kaynak",
@@ -764,7 +764,7 @@ const SITE = {
  "ja": {
   "title": "Orbek – DiscordのクエストとOrbsをひとつのウィンドウで",
   "eyebrow": "Windows · 無料 · オープンソース · ベータ",
-  "h1": "Discordのすべてのクエストを、ひとつのウィンドウで。",
+  "h1": "Discordのクエストを、ついに完全管理。",
   "lead": "OrbekはDiscordのすべてのクエスト（Orbs、Discordコスメ、ゲーム内報酬）を好きな順に並べ、進行状況をリアルタイムで表示します。Discordに必要なものはワンクリックでインストールします。",
   "dl": "Windows版をダウンロード",
   "gh": "GitHubのソース",
@@ -840,7 +840,7 @@ const SITE = {
  "zh_CN": {
   "title": "Orbek – 在一个窗口中查看 Discord 任务和 Orbs",
   "eyebrow": "Windows · 免费 · 开源 · 测试版",
-  "h1": "所有 Discord 任务，一个窗口搞定。",
+  "h1": "Discord 任务，终于尽在掌控。",
   "lead": "Orbek 显示所有 Discord 任务——可获得 Orbs、Discord 装饰和游戏内奖励——按你喜欢的方式排序，并实时显示进度。它在 Discord 中需要的一切都能一键安装。",
   "dl": "下载 Windows 版",
   "gh": "GitHub 源代码",
