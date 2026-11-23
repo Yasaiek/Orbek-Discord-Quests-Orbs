@@ -272,5 +272,7 @@
 "claim.oldplugin": "El plugin de Discord es demasiado viejo para probar – pulsa «Actualizar plugin» en la pestaña Instalación.",
 "claim.noanswer": "El plugin no respondió – comprueba que Discord esté abierto y vuelve a intentarlo.",
 "claim.noplugin": "Discord no está conectado a Orbek – no hay con qué probar.",
-"claim.learn": "Discord no aceptó la forma de reclamar por defecto ({r}). Reclama una recompensa a mano en Discord – el plugin verá cómo lo hace Discord – y vuelve a activar el reclamo."
+"claim.learn": "Discord no aceptó la forma de reclamar por defecto ({r}). Reclama una recompensa a mano en Discord – el plugin verá cómo lo hace Discord – y vuelve a activar el reclamo.",
+"set.orbAnim": "Icono de Orbs animado",
+"set.orbAnimHint": "Los Orbs giran; desactívalo para un icono quieto."
 }

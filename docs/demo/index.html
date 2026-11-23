@@ -420,13 +420,14 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     <div class="card">
       <h3><i data-ic="settings"></i><span data-i="set.app"></span></h3>
       <div class="row"><span data-i="set.lang"></span><div class="dd up" id="langDD"><button class="ddbtn" id="langBtn"></button><div class="ddmenu" id="langMenu"></div></div></div>
+      <label class="row"><span><span data-i="set.orbAnim"></span><small data-i="set.orbAnimHint"></small></span><input type="checkbox" class="sw" data-set="orbAnim"></label>
       <label class="row"><span data-i="set.openOnStart"></span><input type="checkbox" class="sw" data-set="openOnStart"></label>
       <label class="row"><span data-i="set.autostart"></span><input type="checkbox" class="sw" data-set="autostart"></label>
       <div class="row"><span><span data-i="set.about"></span><small id="about"></small></span><button class="btn bad sm" id="quit" data-i="set.quit"></button></div>
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.3.5"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.3.6"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -475,7 +476,7 @@ const IC = {
   cal: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
   activity: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'
 };
-const icon = (n, cls) => { if (n === 'orb' && !window.ORBEK_DEMO) { const i = document.createElement('img'); i.src = 'orbs.png'; i.alt = ''; i.className = 'i orbpic' + (cls ? ' ' + cls : ''); return i; } const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'i' + (cls ? ' ' + cls : '')); s.innerHTML = IC[n] || ''; return s; };
+const icon = (n, cls) => { if (n === 'orb' && !window.ORBEK_DEMO) { const i = document.createElement('img'); i.src = orbFile(); i.alt = ''; i.className = 'i orbpic' + (cls ? ' ' + cls : ''); return i; } const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'i' + (cls ? ' ' + cls : '')); s.innerHTML = IC[n] || ''; return s; };
 document.querySelectorAll('i[data-ic]').forEach((n) => n.replaceWith(icon(n.dataset.ic)));
 const TASKIC = { WATCH_VIDEO: 'video', WATCH_VIDEO_ON_MOBILE: 'video', PLAY_ON_DESKTOP: 'game', STREAM_ON_DESKTOP: 'game', PLAY_ACTIVITY: 'activity' };
 const withIc = (n, text, cls) => { const b = el('span', cls); b.append(icon(n), text); return b; };
@@ -552,7 +553,8 @@ function orbTileFor(n) {
   for (const k of keys) if (Math.abs(Math.log(k / n)) < Math.abs(Math.log(best / n))) best = k; // nearest, by ratio (Nitro shows 700 as 840)
   return tiles[best];
 }
-const orbImg = (n) => { if (!window.ORBEK_DEMO) return 'orbs.png'; const t = orbTileFor(n); if (t) return t; if (S.orbTile) return S.orbTile; for (const q of S.quests) for (const r of q.rewards || []) if (r.type === 4 && r.img) return r.img; return ''; };
+const orbFile = () => (S && S.settings && S.settings.orbAnim === false ? 'orbs.png' : 'orbs.webp');
+const orbImg = (n) => { if (!window.ORBEK_DEMO) return orbFile(); const t = orbTileFor(n); if (t) return t; if (S.orbTile) return S.orbTile; for (const q of S.quests) for (const r of q.rewards || []) if (r.type === 4 && r.img) return r.img; return ''; };
 
 function ring(q, size) {
   const v = pct(q), live = !!runOf(q), R = 18, C = 2 * Math.PI * R;
@@ -584,7 +586,7 @@ function rewardImg(r) {
   const fallback = () => { im.textContent = ''; if (r.type === 4) im.append(orbDot(true)); else im.append(icon(r.type === 3 ? 'spark' : r.type === 2 ? 'game' : 'gift', 'rwi t' + r.type)); };
   if (src) {
     const media = /\.(mp4|webm)(\?|$)/i.test(src) ? Object.assign(el('video'), { autoplay: true, muted: true, loop: true, playsInline: true }) : el('img');
-    media.src = src; media.onerror = fallback; if (src === 'orbs.png') { media.className = 'orbpic'; im.classList.add('orbs'); } im.append(media);
+    media.src = src; media.onerror = fallback; if (/^orbs\.(png|webp)$/.test(src)) { media.className = 'orbpic'; im.classList.add('orbs'); } im.append(media);
   } else fallback();
   return im;
 }
@@ -941,6 +943,7 @@ document.querySelectorAll('[data-set]').forEach((n) => (n.onchange = async () =>
   if (n.dataset.set === 'autoMode' && v && !(await ask(t('set.autoMode'), t('set.autoModeConfirm'), t('dlg.turnOn'), true))) { n.checked = false; return; }
   if (n.dataset.set === 'autoClaim' && v && !(await ask(t('set.autoClaim'), t('set.autoClaimConfirm'), t('dlg.turnOn'), true))) { n.checked = false; return; }
   op({ op: 'settings', patch: { [n.dataset.set]: v } });
+  if (n.dataset.set === 'orbAnim') { S.settings.orbAnim = v; render(true); renderFilters(true); }
 }));
 
 $('search').oninput = (e) => { ui.q = e.target.value; render(true); };

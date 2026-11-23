@@ -272,5 +272,7 @@
 "claim.oldplugin": "Discord'daki eklenti denemek için çok eski – Kurulum sekmesinde “Eklentiyi güncelle”ye tıkla.",
 "claim.noanswer": "Eklenti yanıt vermedi – Discord'un açık olduğunu kontrol edip yeniden dene.",
 "claim.noplugin": "Discord Orbek'e bağlı değil – deneyecek bir şey yok.",
-"claim.learn": "Discord varsayılan alma yolunu kabul etmedi ({r}). Discord'da bir ödülü elle al – eklenti Discord'un bunu nasıl yaptığını görecek – sonra almayı yeniden aç."
+"claim.learn": "Discord varsayılan alma yolunu kabul etmedi ({r}). Discord'da bir ödülü elle al – eklenti Discord'un bunu nasıl yaptığını görecek – sonra almayı yeniden aç.",
+"set.orbAnim": "Hareketli Orbs simgesi",
+"set.orbAnimHint": "Orbs döner; sabit simge için kapat."
 }

@@ -272,5 +272,7 @@
 "claim.oldplugin": "Das Plugin in Discord ist zu alt zum Testen – klicke im Tab Einrichtung auf „Plugin aktualisieren“.",
 "claim.noanswer": "Das Plugin hat nicht geantwortet – prüfe, ob Discord läuft, und versuch es nochmal.",
 "claim.noplugin": "Discord ist nicht mit Orbek verbunden – kein Test möglich.",
-"claim.learn": "Discord hat die Standard-Abholung nicht angenommen ({r}). Hol eine Belohnung von Hand in Discord ab – das Plugin schaut zu, wie Discord es macht – und schalte das Abholen dann wieder ein."
+"claim.learn": "Discord hat die Standard-Abholung nicht angenommen ({r}). Hol eine Belohnung von Hand in Discord ab – das Plugin schaut zu, wie Discord es macht – und schalte das Abholen dann wieder ein.",
+"set.orbAnim": "Animiertes Orbs-Symbol",
+"set.orbAnimHint": "Die Orbs drehen sich; ausschalten für ein stilles Symbol."
 }

@@ -272,5 +272,7 @@
 "claim.oldplugin": "Plugin w Discordzie jest za stary, żeby testować odbieranie – kliknij „Zaktualizuj plugin” w zakładce Instalacja.",
 "claim.noanswer": "Plugin nie odpowiedział – sprawdź, czy Discord jest włączony, i spróbuj jeszcze raz.",
 "claim.noplugin": "Discord nie jest połączony z Orbkiem – nie ma czym testować.",
-"claim.learn": "Discord nie przyjął domyślnego sposobu odbierania ({r}). Odbierz jedną nagrodę ręcznie w Discordzie – plugin podpatrzy, jak Discord to robi, a potem włącz odbieranie jeszcze raz."
+"claim.learn": "Discord nie przyjął domyślnego sposobu odbierania ({r}). Odbierz jedną nagrodę ręcznie w Discordzie – plugin podpatrzy, jak Discord to robi, a potem włącz odbieranie jeszcze raz.",
+"set.orbAnim": "Animowana ikona Orbów",
+"set.orbAnimHint": "Orby się obracają; wyłącz, jeśli wolisz nieruchomą ikonę."
 }

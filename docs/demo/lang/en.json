@@ -272,5 +272,7 @@
 "claim.oldplugin": "The plugin in Discord is too old to test claiming – click “Update plugin” on the Setup tab.",
 "claim.noanswer": "The plugin didn't answer – check that Discord is running and try again.",
 "claim.noplugin": "Discord isn't connected to Orbek – nothing to test with.",
-"claim.learn": "Discord didn't accept the default way of claiming ({r}). Claim one reward by hand in Discord – the plugin will see how Discord does it – then switch claiming on again."
+"claim.learn": "Discord didn't accept the default way of claiming ({r}). Claim one reward by hand in Discord – the plugin will see how Discord does it – then switch claiming on again.",
+"set.orbAnim": "Animated Orbs icon",
+"set.orbAnimHint": "The Orbs turn; switch off for a still icon."
 }

@@ -152,6 +152,8 @@ func (s *server) handleOp(r opReq) map[string]any {
 				if e.set.AutoClaim {
 					testClaim = true
 				}
+			case "orbAnim":
+				e.set.OrbAnim = boolean(v)
 			case "rpcOn":
 				e.set.RpcOn = boolean(v)
 			case "rpcQuest":

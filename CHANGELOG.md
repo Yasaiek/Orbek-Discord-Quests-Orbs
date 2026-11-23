@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.6
+- The Orbs icon is animated; Settings → "Animated Orbs icon" switches it to a still picture.
+
 ## 0.3.5
 - Discord's Orbs picture everywhere in the app: counters, rewards, tabs, labels.
 - Claiming learns from Discord: claim one reward by hand in Discord and the plugin copies exactly how Discord asks for it. When the default way is refused, the panel says so. Details go to data/claim-debug.json.

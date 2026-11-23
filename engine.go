@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.3.5"
+var version = "0.3.6"
 
 const appName = "Orbek"
 
@@ -40,7 +40,9 @@ type Settings struct {
 	RpcOrbs    bool              `json:"rpcOrbs"`
 	RpcToGet   bool              `json:"rpcToGet"`
 	RpcBtn     bool              `json:"rpcBtn"`
-	RpcInit    bool              `json:"rpcInit"`            // the choices above have their defaults
+	RpcInit    bool              `json:"rpcInit"` // the choices above have their defaults
+	OrbAnim    bool              `json:"orbAnim"` // the Orbs picture moves
+	LookInit   bool              `json:"lookInit"`
 	VencordDir string            `json:"vencordDir"`         // where the Vencord source is (for installing the plugin)
 	OrbTile    string            `json:"orbTile"`            // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
 	OrbGlyph   string            `json:"orbGlyph"`           // the big reward tile and the small white sign
@@ -183,6 +185,9 @@ func newEngine(dir string) *Engine {
 	}
 	if e.set.ClaimNote.State == "testing" { // a test cut short by a restart
 		e.set.ClaimNote = ClaimNote{State: "idle"}
+	}
+	if !e.set.LookInit {
+		e.set.OrbAnim, e.set.LookInit = true, true
 	}
 	if e.set.RefreshMin <= 0 {
 		e.set.RefreshMin = 10
