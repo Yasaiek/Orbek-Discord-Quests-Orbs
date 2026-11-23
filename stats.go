@@ -17,7 +17,7 @@ import (
 // version and the average CPU and RAM since the last time. Switched off in the settings, nothing is sent.
 
 // statsURL is the statistics server (a Cloudflare Worker); "" = none yet.
-const statsURL = ""
+const statsURL = "https://orbek-stats.yasaiiek.workers.dev"
 
 func (e *Engine) statsID() string {
 	p := filepath.Join(e.dir, "stats-id")

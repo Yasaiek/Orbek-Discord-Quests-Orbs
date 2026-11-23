@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.7
+- Anonymous statistics for the website (on by default, Settings → "Send anonymous statistics"): every 15 minutes a random installation number, the version and the average CPU and RAM use. The site shows how many copies run now and their average use.
+
 ## 0.3.6
 - The Orbs icon is animated; Settings → "Animated Orbs icon" switches it to a still picture.
 

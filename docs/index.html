@@ -287,7 +287,7 @@ function pick() {
   return 'en';
 }
 // live counter from the statistics server: copies running now, their average CPU and RAM
-const STATS = '';
+const STATS = 'https://orbek-stats.yasaiiek.workers.dev';
 const LIVE = {"en": ["running right now", "average CPU", "average RAM", "Anonymous figures from Orbek copies that have statistics switched on."], "pl": ["działa teraz", "średnio CPU", "średnio RAM", "Anonimowe dane z kopii Orbek, które mają włączone statystyki."], "de": ["laufen gerade", "CPU im Schnitt", "RAM im Schnitt", "Anonyme Zahlen von Orbek-Kopien mit eingeschalteten Statistiken."], "fr": ["en marche maintenant", "CPU moyen", "RAM moyenne", "Chiffres anonymes des copies de Orbek qui ont les statistiques activées."], "es": ["funcionando ahora", "CPU media", "RAM media", "Datos anónimos de las copias de Orbek con estadísticas activadas."], "it": ["attivi ora", "CPU media", "RAM media", "Dati anonimi dalle copie di Orbek con le statistiche attive."], "pt_BR": ["rodando agora", "CPU média", "RAM média", "Dados anônimos das cópias do Orbek com estatísticas ligadas."], "ru": ["работают сейчас", "CPU в среднем", "RAM в среднем", "Анонимные данные копий Orbek с включённой статистикой."], "uk": ["працюють зараз", "CPU в середньому", "RAM в середньому", "Анонімні дані копій Orbek з увімкненою статистикою."], "tr": ["şu an çalışıyor", "ortalama CPU", "ortalama RAM", "İstatistikleri açık Orbek kopyalarından anonim veriler."], "ja": ["現在稼働中", "平均CPU", "平均RAM", "統計をオンにしているOrbekからの匿名データです。"], "zh_CN": ["当前运行中", "平均 CPU", "平均内存", "来自开启统计的 Orbek 的匿名数据。"]};
 let liveData = null;
 function drawLive() {
