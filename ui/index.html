@@ -919,12 +919,14 @@ $('updInstall').onclick = () => op({ op: 'updInstall' });
 $('quit').onclick = async () => { if (await ask(t('set.quit'), t('set.quitConfirm'), t('set.quit'), true)) op({ op: 'quit' }).then(() => window.close()); };
 
 const gen = +(new URLSearchParams(location.search).get('g') || 0);
-let busy = false;
+let busy = false, VER = '';
 async function tick() {
   if (busy) return; busy = true;
   try {
     S = await api('/api/state');
     if (gen && S.winGen > gen) { window.close(); return; } // a newer panel window took over
+    if (VER && S.version !== VER) { location.reload(); return; } // Orbek was updated: load the new panel
+    VER = S.version;
     await loadLang(S.lang || 'en');
     render(); if (!MINI) { renderLog(); renderSettings(); renderSetup(); renderGuide(); }
   } catch (e) { $('conn').className = 'conn off'; }

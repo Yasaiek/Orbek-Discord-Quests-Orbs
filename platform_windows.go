@@ -5,6 +5,7 @@ package main
 import (
 	"embed"
 	"fmt"
+	"golang.org/x/sys/windows"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -31,6 +32,7 @@ func menuIcon(name string) []byte {
 // runTray puts the icon next to the clock and blocks until the user quits. Right click opens Orbek's menu:
 // state, how much of the PC it takes, the windows, stopping, updates, the website and quitting.
 func runTray(e *Engine, a trayActions) {
+	darkMenus()
 	systray.Run(func() {
 		systray.SetIcon(iconICO)
 		systray.SetTitle(appName)
@@ -260,4 +262,20 @@ func setWindowAppID(hwnd uintptr, exe string) bool {
 	set(5, orbekAppID)          // ID
 	syscall.SyscallN(vt[7], ps) // Commit
 	return true
+}
+
+// darkMenus makes the program's menus (the tray menu) dark, whatever the Windows theme. It uses the same
+// switch Windows' own apps use (uxtheme ordinals 135 SetPreferredAppMode and 136 FlushMenuThemes, Windows 10
+// 1903 and newer); on older Windows the call does nothing harmful.
+func darkMenus() {
+	h, err := windows.LoadLibrary("uxtheme.dll")
+	if err != nil {
+		return
+	}
+	if p, err := windows.GetProcAddressByOrdinal(h, 135); err == nil {
+		syscall.SyscallN(p, 2) // ForceDark
+	}
+	if p, err := windows.GetProcAddressByOrdinal(h, 136); err == nil {
+		syscall.SyscallN(p)
+	}
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3
+- After an update the open panel reloads itself, so the new version shows right away.
+- The tray menu is dark (with the colourful icons), also when Windows uses the light theme.
+
 ## 0.3.2
 - Coloured buttons no longer show a thin line at their left edge.
 
