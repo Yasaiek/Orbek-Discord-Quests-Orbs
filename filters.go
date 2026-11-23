@@ -114,14 +114,18 @@ func cleanList(v any, known []string) []string {
 type seenGame struct {
 	Name string `json:"name"`
 	Last int64  `json:"last"` // when a quest of it was last seen
+	Icon string `json:"icon,omitempty"`
 }
 
 func (e *Engine) loadGames() {
 	var list []seenGame
 	readJSON(filepath.Join(e.dir, "games.json"), &list)
-	e.games = map[string]int64{}
+	e.games, e.gameIcons = map[string]int64{}, map[string]string{}
 	for _, g := range list {
 		e.games[g.Name] = g.Last
+		if g.Icon != "" {
+			e.gameIcons[g.Name] = g.Icon
+		}
 	}
 }
 
@@ -141,6 +145,10 @@ func (e *Engine) noteGamesLocked(qs []Quest) {
 			changed = true
 		}
 		e.games[g] = now
+		if ic := qs[i].Icon; ic != "" && e.gameIcons[g] != ic {
+			e.gameIcons[g] = ic
+			changed = true
+		}
 	}
 	if changed || time.Since(e.gamesSaved) > time.Hour {
 		e.gamesSaved = time.Now()
@@ -151,7 +159,7 @@ func (e *Engine) noteGamesLocked(qs []Quest) {
 func (e *Engine) gameListLocked() []seenGame {
 	out := make([]seenGame, 0, len(e.games))
 	for n, t := range e.games {
-		out = append(out, seenGame{n, t})
+		out = append(out, seenGame{n, t, e.gameIcons[n]})
 	}
 	sort.Slice(out, func(i, j int) bool { return strings.ToLower(out[i].Name) < strings.ToLower(out[j].Name) })
 	return out

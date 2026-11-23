@@ -22,7 +22,7 @@
   const S = {
     app: 'Orbek', version: window.ORBEK_VERSION || '0.0.0', lang, winGen: 0, connected: true, lastAt: now, user: { id: '1', name: 'Demo', avatar: '' },
     usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6 }, orbTile: '', orbGlyph: '',
-    games: Q.map((q) => ({ name: q.game, last: now })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
+    games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + q.id + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
     loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord',
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
     settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], autoClaim: false, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },

@@ -89,6 +89,11 @@ body.minimode .stat.use { display: none; }
 .chip:hover { color: var(--text); border-color: var(--line2); }
 .chip.on { background: linear-gradient(135deg, rgba(88,101,242,.3), rgba(163,91,255,.22)); border-color: rgba(150,130,255,.6); color: #fff; }
 .chip svg.i { width: 15px; height: 15px; }
+.chip svg.k-cosmetic { color: #ff8fd0; } .chip svg.k-ingame { color: #7cc4ff; } .chip svg.k-code { color: #f0b232; } .chip svg.k-other { color: #9aa0b8; }
+.chip .kimg { width: 20px; height: 20px; border-radius: 5px; object-fit: cover; } .chip .orbdot, .chip .orbg { width: 16px; height: 16px; }
+.chip .gico { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; margin-left: -5px; flex-shrink: 0; }
+.chip .gico.none { display: inline-grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; background: linear-gradient(135deg, #5865f2, #a35bff); }
+.chip.on .gico { box-shadow: 0 0 0 2px rgba(255,255,255,.7); }
 .gamebox { background: rgba(0,0,0,.18); border: 1px solid var(--line); border-radius: 14px; padding: 10px; }
 .gsearch { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; }
 .gsearch svg.i { width: 15px; height: 15px; color: var(--dim); } .gsearch input { flex: 1; background: none; border: 0; outline: 0; color: var(--text); font: inherit; }
@@ -678,15 +683,24 @@ function renderGuide() {
 const KINDS = [['orbs', 'orb'], ['cosmetic', 'spark'], ['ingame', 'game'], ['code', 'gift'], ['other', 'quests']];
 const TASKS = [['video', 'video'], ['play', 'game'], ['activity', 'activity'], ['stream', 'stream']];
 const setPatch = (patch) => { Object.assign(S.settings, patch); renderFilters(true); op({ op: 'settings', patch }); };
-function chip(label, ic, on, click) { const b = el('button', 'chip' + (on ? ' on' : '')); b.type = 'button'; if (ic) b.append(icon(ic)); b.append(label); b.onclick = click; return b; }
+function chip(label, ic, on, click) { const b = el('button', 'chip' + (on ? ' on' : '')); b.type = 'button'; if (ic) b.append(typeof ic === 'string' ? icon(ic) : ic); b.append(label); b.onclick = click; return b; }
+function kindIcon(v, ic) {
+  if (v === 'orbs') { const src = orbImg(); if (!src) return orbDot(); const i = el('img', 'kimg'); i.src = src; i.alt = ''; i.onerror = () => i.replaceWith(orbDot()); return i; }
+  return icon(ic, 'k-' + v);
+}
+function gameIcon(name) {
+  const g = (S.games || []).find((x) => x.name === name);
+  if (!g || !g.icon) { const d = el('span', 'gico none'); d.textContent = (name || '?').trim().charAt(0).toUpperCase(); return d; }
+  const i = el('img', 'gico'); i.src = g.icon; i.alt = ''; i.loading = 'lazy'; i.onerror = () => { const d = el('span', 'gico none'); d.textContent = name.charAt(0).toUpperCase(); i.replaceWith(d); }; return i;
+}
 function toggleIn(list, v) { const a = (list || []).slice(), i = a.indexOf(v); if (i >= 0) a.splice(i, 1); else a.push(v); return a; }
 function renderFilters(force) {
   const st = S.settings, q = ($('fGameQ').value || '').trim().toLowerCase(), games = (S.games || []).map((g) => g.name);
-  const sig = JSON.stringify([st.autoKinds, st.autoTasks, st.autoGames, st.gameList, games, q, st.autoMode, LANG]);
+  const sig = JSON.stringify([st.autoKinds, st.autoTasks, st.autoGames, st.gameList, S.games, q, st.autoMode, LANG, orbImg(), S.orbGlyph]);
   if (!force && $('autoFilt').dataset.sig === sig) return; $('autoFilt').dataset.sig = sig;
   $('autoFilt').classList.toggle('off', !st.autoMode);
   const k = $('fKinds'); k.textContent = '';
-  for (const [v, ic] of KINDS) k.append(chip(t('f.k.' + v), ic, (st.autoKinds || []).includes(v), () => setPatch({ autoKinds: toggleIn(st.autoKinds, v) })));
+  for (const [v, ic] of KINDS) k.append(chip(t('f.k.' + v), kindIcon(v, ic), (st.autoKinds || []).includes(v), () => setPatch({ autoKinds: toggleIn(st.autoKinds, v) })));
   const tk = $('fTasks'); tk.textContent = '';
   for (const [v, ic] of TASKS) tk.append(chip(t('f.t.' + v), ic, (st.autoTasks || []).includes(v), () => setPatch({ autoTasks: toggleIn(st.autoTasks, v) })));
   const g = $('fGames'); g.textContent = '';
@@ -695,7 +709,7 @@ function renderFilters(force) {
   const box = $('fGameList'); box.textContent = '';
   const list = [...new Set([...(st.gameList || []), ...games])].filter((n) => !q || n.toLowerCase().includes(q));
   if (!list.length) box.append(el('small', 'muted', games.length ? '–' : t('f.noGames')));
-  for (const n of list) box.append(chip(n, (st.gameList || []).includes(n) ? 'check' : '', (st.gameList || []).includes(n), () => setPatch({ gameList: toggleIn(st.gameList, n) })));
+  for (const n of list) box.append(chip(n, gameIcon(n), (st.gameList || []).includes(n), () => setPatch({ gameList: toggleIn(st.gameList, n) })));
 }
 $('fGameQ').oninput = () => renderFilters(true);
 const LANG_NAMES = [['en', 'English'], ['pl', 'Polski'], ['de', 'Deutsch'], ['fr', 'Français'], ['es', 'Español'], ['it', 'Italiano'], ['pt_BR', 'Português (BR)'], ['ru', 'Русский'], ['uk', 'Українська'], ['tr', 'Türkçe'], ['ja', '日本語'], ['zh_CN', '简体中文']];

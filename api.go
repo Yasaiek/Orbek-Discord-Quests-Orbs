@@ -46,7 +46,7 @@ func (e *Engine) view() map[string]any {
 		q := &s.Quests[i]
 		quests = append(quests, map[string]any{
 			"id": q.ID, "name": q.Name, "game": q.Game, "publisher": q.Publisher, "task": q.Task,
-			"target": q.Target, "progress": q.Progress, "rewards": q.Rewards, "hero": q.Hero,
+			"target": q.Target, "progress": q.Progress, "rewards": q.Rewards, "hero": q.Hero, "icon": q.Icon,
 			"startsAt": q.Starts, "expiresAt": q.Expires, "enrolledAt": q.Enrolled, "completedAt": q.Completed, "claimedAt": q.Claimed,
 			"auto": q.Auto, "orbs": q.orbs(), "cosmetic": q.cosmetic(),
 		})

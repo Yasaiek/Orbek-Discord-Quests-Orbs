@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3
+- Games in the automat's filter show the game's tile; reward kinds have coloured icons (Orbs with Discord's own picture).
+
 ## 0.2.2
 - Settings → Automat: choose which rewards (Orbs, Discord cosmetics, in-game items, codes, other), which tasks (videos, playing, activities, streaming) and which games (all, only chosen, all but chosen – from the games Orbek has seen) the automat takes.
 - Experimental: claim finished quests by themselves, with Discord's own request. If Discord wants a captcha, it shows it in Discord or Orbek opens the quests page.

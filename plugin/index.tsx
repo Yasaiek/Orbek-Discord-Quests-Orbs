@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.2.2";
+const PLUGIN_VERSION = "0.2.3";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -30,7 +30,7 @@ interface Reward { type: number; name: string; orbs: number; img: string; }
 interface Quest {
     id: string; name: string; game: string; publisher: string; appId: string;
     task: string; target: number; progress: number; configVersion: number;
-    rewards: Reward[]; hero: string;
+    rewards: Reward[]; hero: string; icon: string;
     startsAt: number; expiresAt: number; enrolledAt: number; completedAt: number; claimedAt: number;
     auto: boolean;
 }
@@ -86,6 +86,8 @@ function normalize(raw: any): Quest | null {
             img: asset(q.id, r.asset)
         })),
         hero: asset(q.id, c.assets?.hero ?? c.assets?.questBarHero ?? c.assets?.gameTile),
+        icon: asset(q.id, c.assets?.gameTile ?? c.assets?.gameTileDark ?? c.assets?.logotype)
+            || (c.application?.icon && c.application?.id ? `${CDN}app-icons/${c.application.id}/${c.application.icon}.png?size=64` : ""),
         startsAt: time(c.startsAt),
         expiresAt: time(c.expiresAt),
         enrolledAt: time(us.enrolledAt),

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.2.2"
+var version = "0.2.3"
 
 const appName = "Orbek"
 
@@ -48,6 +48,7 @@ type Quest struct {
 	Progress  float64  `json:"progress"`
 	Rewards   []Reward `json:"rewards"`
 	Hero      string   `json:"hero"`
+	Icon      string   `json:"icon"` // the game's tile
 	Starts    int64    `json:"startsAt"`
 	Expires   int64    `json:"expiresAt"`
 	Enrolled  int64    `json:"enrolledAt"`
@@ -151,6 +152,7 @@ type Engine struct {
 	quit chan struct{}
 
 	games      map[string]int64 // games seen in quests (name → last seen)
+	gameIcons  map[string]string
 	gamesSaved time.Time
 	onQuit     func()
 	winGen     int
