@@ -307,5 +307,7 @@
 "set.dataSame": "Dane już są w tym folderze.",
 "L.dataMoving": "Przenoszę dane do %s…",
 "L.dataMoved": "Dane są teraz w %s.",
-"L.dataMoveFail": "Nie udało się uruchomić ponownie, by przenieść dane: %v"
+"L.dataMoveFail": "Nie udało się uruchomić ponownie, by przenieść dane: %v",
+"plug.wait": "Plugin {v} zainstalowany – czekam, aż Discord uruchomi się z nową wersją…",
+"plug.stuck": "Discord dalej ma plugin {a}, choć zainstalowano {b}. Uruchom Discorda ponownie albo zainstaluj jeszcze raz."
 }

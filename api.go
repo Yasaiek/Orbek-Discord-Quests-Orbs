@@ -65,7 +65,7 @@ func (e *Engine) view() map[string]any {
 	return map[string]any{
 		"app": appName, "closing": e.closing, "dataDir": e.dir, "dataDefault": dataDirIn(defaultRoot()), "dataCustom": readLocation().Root != "", "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
-		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
+		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin, "pluginWait": e.plugWaitLocked(), "pluginStuck": e.plugStuckLocked(),
 		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "statsOn": statsURL != "", "alert": e.alert, "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done), "from": e.upd.From, "got": updGot.Load(), "size": updSize.Load()},

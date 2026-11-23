@@ -307,5 +307,7 @@
 "set.dataSame": "Les données sont déjà dans ce dossier.",
 "L.dataMoving": "Déplacement des données vers %s…",
 "L.dataMoved": "Les données sont maintenant dans %s.",
-"L.dataMoveFail": "Impossible de redémarrer pour déplacer les données : %v"
+"L.dataMoveFail": "Impossible de redémarrer pour déplacer les données : %v",
+"plug.wait": "Plugin {v} installé – en attente du redémarrage de Discord…",
+"plug.stuck": "Discord utilise encore le plugin {a} alors que {b} a été installé. Redémarrez Discord ou réinstallez."
 }

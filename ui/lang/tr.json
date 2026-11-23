@@ -307,5 +307,7 @@
 "set.dataSame": "Veriler zaten bu klasörde.",
 "L.dataMoving": "Veriler %s konumuna taşınıyor…",
 "L.dataMoved": "Veriler artık %s konumunda.",
-"L.dataMoveFail": "Verileri taşımak için yeniden başlatılamadı: %v"
+"L.dataMoveFail": "Verileri taşımak için yeniden başlatılamadı: %v",
+"plug.wait": "Eklenti {v} kuruldu – Discord'un onunla açılması bekleniyor…",
+"plug.stuck": "Discord, {b} kurulmasına rağmen hâlâ {a} eklentisini kullanıyor. Discord'u yeniden başlatın veya tekrar kurun."
 }

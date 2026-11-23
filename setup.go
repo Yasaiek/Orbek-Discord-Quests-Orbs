@@ -186,6 +186,10 @@ func (e *Engine) runSetup(full bool) error {
 		return err
 	}
 	killDiscord()
+	e.mu.Lock()
+	e.plugWait, e.plugWaitAt = pluginVersion(), time.Now()
+	e.lastAt = time.Time{} // Discord is closed: the old plugin's last report no longer counts
+	e.mu.Unlock()
 	if full {
 		if err := step("inject", func() error { return e.injectVencord(vdir) }); err != nil {
 			return err

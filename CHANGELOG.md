@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.12
+- After a plugin update Orbek no longer offers the same update again while Discord restarts: it shows that it waits for Discord to come back with the new plugin, and the install buttons stay off meanwhile.
+- If Discord still runs the old plugin a few minutes after the update, Orbek says so (restart Discord or install again).
+
 ## 0.4.11
 - Data now lives in `%LOCALAPPDATA%\Yasaiek\Orbek` (shared Yasaiek folder, each program in its own subfolder). Files from the old places are moved over on the first start.
 - Settings → Data folder: open it, or pick another place; the data is moved and Orbek restarts.

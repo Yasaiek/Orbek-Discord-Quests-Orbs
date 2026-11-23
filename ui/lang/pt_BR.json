@@ -307,5 +307,7 @@
 "set.dataSame": "Os dados já estão nesta pasta.",
 "L.dataMoving": "Movendo os dados para %s…",
 "L.dataMoved": "Os dados agora estão em %s.",
-"L.dataMoveFail": "Não foi possível reiniciar para mover os dados: %v"
+"L.dataMoveFail": "Não foi possível reiniciar para mover os dados: %v",
+"plug.wait": "Plugin {v} instalado – aguardando o Discord iniciar com ele…",
+"plug.stuck": "O Discord ainda usa o plugin {a}, embora {b} tenha sido instalado. Reinicie o Discord ou instale de novo."
 }

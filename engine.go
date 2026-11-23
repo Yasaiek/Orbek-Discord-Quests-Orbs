@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var version = "0.4.11"
+var version = "0.4.12"
 
 const appName = "Orbek"
 
@@ -163,13 +163,17 @@ type Engine struct {
 	set Settings
 	log *Logger
 
-	last     Sync
-	lastAt   time.Time // last report of the plugin
-	cmds     []Cmd
-	fails    map[string]time.Time
-	autoSent map[string]time.Time // quests handed to the plugin by "do them by themselves"
-	upd      updState
-	setup    setupState
+	last   Sync
+	lastAt time.Time // last report of the plugin
+	// plugWait: the plugin version just installed; until Discord comes back with it, the old one's
+	// version is not shown as "needs an update" (that made the panel offer the update a second time)
+	plugWait   string
+	plugWaitAt time.Time
+	cmds       []Cmd
+	fails      map[string]time.Time
+	autoSent   map[string]time.Time // quests handed to the plugin by "do them by themselves"
+	upd        updState
+	setup      setupState
 
 	quit    chan struct{}
 	closing bool // quitting: open windows close themselves
@@ -237,6 +241,9 @@ func (e *Engine) onSync(s Sync) map[string]any {
 		e.log.OK("L.connected", name)
 	}
 	e.last, e.lastAt = s, time.Now()
+	if e.plugWait != "" && !newer(e.plugWait, s.Plugin) {
+		e.plugWait = "" // Discord runs the installed plugin now
+	}
 	if len(s.ClaimDebug) > 2 {
 		os.WriteFile(filepath.Join(e.dir, "claim-debug.json"), s.ClaimDebug, 0o644)
 	}
@@ -456,4 +463,18 @@ func (e *Engine) restartSelf(arg string) error {
 		}
 	}()
 	return nil
+}
+
+// plugWaitLocked: the plugin version Orbek just installed while Discord is still starting with it.
+func (e *Engine) plugWaitLocked() string {
+	if e.plugWait != "" && time.Since(e.plugWaitAt) < 3*time.Minute {
+		return e.plugWait
+	}
+	return ""
+}
+
+// plugStuckLocked: installed a while ago, but Discord still runs the old plugin (Discord not restarted,
+// or it loads Vencord from somewhere else).
+func (e *Engine) plugStuckLocked() bool {
+	return e.plugWait != "" && time.Since(e.plugWaitAt) >= 3*time.Minute && e.connectedLocked() && newer(e.plugWait, e.last.Plugin)
 }

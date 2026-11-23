@@ -307,5 +307,7 @@
 "set.dataSame": "The data is already in this folder.",
 "L.dataMoving": "Moving the data to %s…",
 "L.dataMoved": "Data is now in %s.",
-"L.dataMoveFail": "Could not restart to move the data: %v"
+"L.dataMoveFail": "Could not restart to move the data: %v",
+"plug.wait": "Plugin {v} installed – waiting for Discord to start with it…",
+"plug.stuck": "Discord still runs plugin {a} although {b} was installed. Restart Discord, or install again."
 }

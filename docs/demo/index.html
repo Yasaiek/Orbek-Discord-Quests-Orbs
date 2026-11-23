@@ -488,7 +488,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.4.11"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.12"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -839,8 +839,11 @@ function render(force) {
   $('who').hidden = !(S.connected && S.user);
   if (S.user) { $('whoName').textContent = S.user.name; $('whoImg').src = S.user.avatar || 'icon.svg'; }
   $('setupCard').hidden = S.connected; $('navSetup').hidden = S.connected;
-  const old = S.connected && S.plugin && vnum(S.plugin) < vnum(S.pluginLatest);
-  $('plugBanner').hidden = !old; if (old) $('plugText').textContent = t('plug.old', { a: S.plugin, b: S.pluginLatest });
+  const old = S.connected && S.plugin && vnum(S.plugin) < vnum(S.pluginLatest) && !S.pluginWait;
+  $('plugBanner').hidden = !old && !S.pluginWait;
+  $('plugBtn').hidden = !!S.pluginWait;
+  if (S.pluginWait) $('plugText').textContent = t('plug.wait', { v: S.pluginWait });
+  else if (old) $('plugText').textContent = t(S.pluginStuck ? 'plug.stuck' : 'plug.old', { a: S.plugin, b: S.pluginLatest });
   const runs = S.runs || [];
   const runnable = list.filter((q) => open(q) && q.auto && !runOf(q) && !S.queue.includes(q.id) && !((q.task === 'PLAY_ON_DESKTOP' || q.task === 'STREAM_ON_DESKTOP') && !S.desktop));
   { const w = S.quests.filter(waiting); $('claimbar').hidden = !(w.length && S.connected);
@@ -1077,7 +1080,8 @@ function renderSettings() {
   $('dataInfo').textContent = S.dataDir || '';
   $('dataReset').hidden = !S.dataCustom;
   $('about').textContent = 'Orbek ' + S.version + (S.plugin ? ' · plugin ' + S.plugin : '');
-  $('plugInfo').textContent = (S.plugin ? t('plug.have', { v: S.plugin }) : t('plug.none')) + ' · ' + t('plug.latest', { v: S.pluginLatest }) + ' · ' + (S.vencord ? t('plug.where', { p: S.vencord }) : t('plug.noVencord'));
+  $('plugBtn2').disabled = !!S.pluginWait || !!(S.setup || {}).running;
+  $('plugInfo').textContent = (S.pluginWait ? t('plug.wait', { v: S.pluginWait }) : S.plugin ? t('plug.have', { v: S.plugin }) : t('plug.none')) + ' · ' + t('plug.latest', { v: S.pluginLatest }) + ' · ' + (S.vencord ? t('plug.where', { p: S.vencord }) : t('plug.noVencord'));
 
   const u = S.update || {};
   $('updInfo').textContent = u.state === 'available' ? t('upd.avail', { v: u.latest }) : u.state === 'downloading' ? t('upd.downloading', { v: u.latest }) : u.state === 'checking' ? t('upd.checking') : u.state === 'failed' ? t('upd.failed') : u.state === 'current' ? t('upd.current') : t('upd.never');
@@ -1142,7 +1146,7 @@ function renderPlugDialog() {
 // once per new plugin version: ask whether to update it now
 function maybeAskPlugin() {
   if (plugDlg || document.querySelector('.dlg') || !S.connected || !S.plugin || !S.pluginLatest) return;
-  if (vnum(S.plugin) >= vnum(S.pluginLatest) || (S.setup || {}).running) return;
+  if (vnum(S.plugin) >= vnum(S.pluginLatest) || (S.setup || {}).running || S.pluginWait || S.pluginStuck) return;
   if (localStorage.getItem('orbek.plugAsk') === S.pluginLatest) return;
   plugDialog(true);
 }

@@ -307,5 +307,7 @@
 "set.dataSame": "数据已在此文件夹中。",
 "L.dataMoving": "正在将数据移至 %s…",
 "L.dataMoved": "数据现在位于 %s。",
-"L.dataMoveFail": "无法重新启动以移动数据：%v"
+"L.dataMoveFail": "无法重新启动以移动数据：%v",
+"plug.wait": "插件 {v} 已安装，正在等待 Discord 以新版本启动…",
+"plug.stuck": "虽然已安装 {b}，Discord 仍在使用插件 {a}。请重启 Discord 或重新安装。"
 }
