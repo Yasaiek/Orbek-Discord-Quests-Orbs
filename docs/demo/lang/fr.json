@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord n'est pas connecté à Orbek – impossible de tester.",
 "claim.learn": "Discord n'a pas accepté la façon de récupérer par défaut ({r}). Récupère une récompense à la main dans Discord – le plugin verra comment Discord fait – puis réactive la récupération.",
 "set.orbAnim": "Icône Orbs animée",
-"set.orbAnimHint": "Les Orbs tournent ; désactive pour une icône fixe."
+"set.orbAnimHint": "Les Orbs tournent ; désactive pour une icône fixe.",
+"set.stats": "Envoyer des statistiques anonymes",
+"set.statsHint": "Toutes les 15 minutes : un numéro d'installation aléatoire, la version et l'utilisation moyenne du CPU et de la RAM – pour le compteur du site d'Orbek. Ni noms, ni comptes, ni quêtes."
 }

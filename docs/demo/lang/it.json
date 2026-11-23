@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord non è collegato a Orbek – niente con cui provare.",
 "claim.learn": "Discord non ha accettato il modo di riscatto predefinito ({r}). Riscatta un premio a mano in Discord – il plugin vedrà come lo fa Discord – poi riattiva il riscatto.",
 "set.orbAnim": "Icona Orb animata",
-"set.orbAnimHint": "Gli Orb ruotano; spegni per un'icona ferma."
+"set.orbAnimHint": "Gli Orb ruotano; spegni per un'icona ferma.",
+"set.stats": "Invia statistiche anonime",
+"set.statsHint": "Ogni 15 minuti: un numero di installazione casuale, la versione e l'uso medio di CPU e RAM – per il contatore sul sito di Orbek. Niente nomi, account o missioni."
 }

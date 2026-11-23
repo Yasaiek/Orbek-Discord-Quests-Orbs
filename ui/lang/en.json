@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord isn't connected to Orbek – nothing to test with.",
 "claim.learn": "Discord didn't accept the default way of claiming ({r}). Claim one reward by hand in Discord – the plugin will see how Discord does it – then switch claiming on again.",
 "set.orbAnim": "Animated Orbs icon",
-"set.orbAnimHint": "The Orbs turn; switch off for a still icon."
+"set.orbAnimHint": "The Orbs turn; switch off for a still icon.",
+"set.stats": "Send anonymous statistics",
+"set.statsHint": "Every 15 minutes: a random installation number, the version and the average CPU and RAM use – for the counter on Orbek's website. No names, accounts or quests."
 }

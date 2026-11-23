@@ -197,6 +197,12 @@ footer { margin: 90px 0 0; padding: 26px 0 40px; border-top: 1px solid var(--lin
 .tstep.g5 { --c1: #ff8a5b; --c2: #ff4f8b; } .tstep.g6 { --c1: #ffcc4d; --c2: #ff8a3d; } .tstep.g7 { --c1: #b05bff; --c2: #ff4fb0; } .tstep.g8 { --c1: #29d3b4; --c2: #3a8bff; }
 .tstep h3 { margin: 4px 0 6px; font-size: 16px; } .tstep p { margin: 0; color: var(--sub); font-size: 14.5px; }
 .tstep.warn { border-color: rgba(240,178,50,.35); } .tstep.warn h3 { color: #f0b232; }
+.lstats { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 10px; margin-top: 14px; }
+.lstats .lv { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); font-size: 13px; color: var(--sub); }
+.lstats .lv b { color: var(--text, #fff); font-variant-numeric: tabular-nums; }
+.lstats .ldot { width: 8px; height: 8px; border-radius: 50%; background: #3ecf8e; box-shadow: 0 0 0 0 rgba(62,207,142,.6); animation: lping 2s infinite; }
+@keyframes lping { 0% { box-shadow: 0 0 0 0 rgba(62,207,142,.6); } 70% { box-shadow: 0 0 0 8px rgba(62,207,142,0); } 100% { box-shadow: 0 0 0 0 rgba(62,207,142,0); } }
+.lstats small { flex-basis: 100%; font-size: 11.5px; opacity: .6; }
 </style>
 </head>
 <body>
@@ -222,6 +228,7 @@ footer { margin: 90px 0 0; padding: 26px 0 40px; border-top: 1px solid var(--lin
     <a class="btn" href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs"><span data-i="gh">Source on GitHub</span></a>
   </div>
   <div class="count" id="count"></div>
+  <div class="lstats" id="lstats" hidden><span class="lv"><i class="ldot"></i><b id="lvN">0</b> <span id="lvNt"></span></span><span class="lv"><b id="lvC">–</b> <span id="lvCt"></span></span><span class="lv"><b id="lvR">–</b> <span id="lvRt"></span></span><small id="lvNote"></small></div>
   <div class="stage" id="stage"><div class="shot" id="shot"><div class="frame">
     <div class="chrome"><i></i><i></i><i></i><img src="img/icon.svg" alt=""><span>Orbek</span></div>
     <iframe class="live" id="live" title="Orbek – live preview of the panel" loading="eager"></iframe>
@@ -279,6 +286,24 @@ function pick() {
   }
   return 'en';
 }
+// live counter from the statistics server: copies running now, their average CPU and RAM
+const STATS = '';
+const LIVE = {"en": ["running right now", "average CPU", "average RAM", "Anonymous figures from Orbek copies that have statistics switched on."], "pl": ["działa teraz", "średnio CPU", "średnio RAM", "Anonimowe dane z kopii Orbek, które mają włączone statystyki."], "de": ["laufen gerade", "CPU im Schnitt", "RAM im Schnitt", "Anonyme Zahlen von Orbek-Kopien mit eingeschalteten Statistiken."], "fr": ["en marche maintenant", "CPU moyen", "RAM moyenne", "Chiffres anonymes des copies de Orbek qui ont les statistiques activées."], "es": ["funcionando ahora", "CPU media", "RAM media", "Datos anónimos de las copias de Orbek con estadísticas activadas."], "it": ["attivi ora", "CPU media", "RAM media", "Dati anonimi dalle copie di Orbek con le statistiche attive."], "pt_BR": ["rodando agora", "CPU média", "RAM média", "Dados anônimos das cópias do Orbek com estatísticas ligadas."], "ru": ["работают сейчас", "CPU в среднем", "RAM в среднем", "Анонимные данные копий Orbek с включённой статистикой."], "uk": ["працюють зараз", "CPU в середньому", "RAM в середньому", "Анонімні дані копій Orbek з увімкненою статистикою."], "tr": ["şu an çalışıyor", "ortalama CPU", "ortalama RAM", "İstatistikleri açık Orbek kopyalarından anonim veriler."], "ja": ["現在稼働中", "平均CPU", "平均RAM", "統計をオンにしているOrbekからの匿名データです。"], "zh_CN": ["当前运行中", "平均 CPU", "平均内存", "来自开启统计的 Orbek 的匿名数据。"]};
+let liveData = null;
+function drawLive() {
+  const box = $('lstats'); if (!liveData || !liveData.active) { box.hidden = true; return; }
+  const L = LIVE[lang] || LIVE.en, loc = lang.replace('_', '-');
+  $('lvN').textContent = liveData.active.toLocaleString(loc); $('lvNt').textContent = L[0];
+  $('lvC').textContent = (liveData.cpu ?? 0).toLocaleString(loc, { maximumFractionDigits: 1 }) + '%'; $('lvCt').textContent = L[1];
+  $('lvR').textContent = Math.round(liveData.ram || 0) + ' MB'; $('lvRt').textContent = L[2];
+  $('lvNote').textContent = L[3]; box.hidden = false;
+}
+async function liveStats() {
+  if (!STATS) return;
+  try { liveData = await fetch(STATS.replace(/\/$/, '') + '/stats?app=orbek').then((r) => r.json()); } catch (e) { liveData = null; }
+  drawLive();
+}
+liveStats(); setInterval(liveStats, 60000);
 function showCount() {
   const box = $('count'); if (!downloads) { box.textContent = ''; return; }
   const word = SITE[lang].dls || SITE.en.dls, loc = lang.replace('_', '-');
@@ -322,7 +347,7 @@ function tutorial(d) {
 function apply(l) {
   lang = l; const d = SITE[l]; document.documentElement.lang = l.replace('_', '-'); document.title = d.title || SITE.en.title;
   document.querySelectorAll('[data-i]').forEach((n) => { const v = d[n.dataset.i] || SITE.en[n.dataset.i]; if (v) n.textContent = v; });
-  words(document.querySelector('h1')); ticker(d); drawLang(); showCount(); tutorial(d);
+  words(document.querySelector('h1')); ticker(d); drawLang(); showCount(); drawLive(); tutorial(d);
   const fr = $('live'); if (fr && fr.contentWindow && fr.src) fr.contentWindow.postMessage({ orbekLang: l }, '*');
 }
 apply(pick());

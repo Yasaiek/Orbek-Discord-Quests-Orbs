@@ -274,5 +274,7 @@
 "claim.noplugin": "O Discord não está conectado ao Orbek – não há como testar.",
 "claim.learn": "O Discord não aceitou o jeito padrão de resgatar ({r}). Resgate uma recompensa à mão no Discord – o plugin vai ver como o Discord faz – e ligue o resgate de novo.",
 "set.orbAnim": "Ícone de Orbs animado",
-"set.orbAnimHint": "Os Orbs giram; desligue para um ícone parado."
+"set.orbAnimHint": "Os Orbs giram; desligue para um ícone parado.",
+"set.stats": "Enviar estatísticas anônimas",
+"set.statsHint": "A cada 15 minutos: um número de instalação aleatório, a versão e o uso médio de CPU e RAM – para o contador no site do Orbek. Sem nomes, contas ou missões."
 }

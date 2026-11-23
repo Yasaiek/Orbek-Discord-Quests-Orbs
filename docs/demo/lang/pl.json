@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord nie jest połączony z Orbkiem – nie ma czym testować.",
 "claim.learn": "Discord nie przyjął domyślnego sposobu odbierania ({r}). Odbierz jedną nagrodę ręcznie w Discordzie – plugin podpatrzy, jak Discord to robi, a potem włącz odbieranie jeszcze raz.",
 "set.orbAnim": "Animowana ikona Orbów",
-"set.orbAnimHint": "Orby się obracają; wyłącz, jeśli wolisz nieruchomą ikonę."
+"set.orbAnimHint": "Orby się obracają; wyłącz, jeśli wolisz nieruchomą ikonę.",
+"set.stats": "Wysyłaj anonimowe statystyki",
+"set.statsHint": "Co 15 minut: losowy numer instalacji, wersja oraz średnie zużycie CPU i RAM – do licznika na stronie Orbka. Bez nazw, kont i zadań."
 }

@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord 未连接到 Orbek——无法测试。",
 "claim.learn": "Discord 不接受默认的领取方式（{r}）。请在 Discord 中手动领取一个奖励——插件会看 Discord 是怎么做的——然后重新开启领取。",
 "set.orbAnim": "动态 Orbs 图标",
-"set.orbAnimHint": "Orbs 会旋转；关闭则显示静态图标。"
+"set.orbAnimHint": "Orbs 会旋转；关闭则显示静态图标。",
+"set.stats": "发送匿名统计",
+"set.statsHint": "每 15 分钟发送：随机安装编号、版本以及平均 CPU 和内存占用——用于 Orbek 网站上的计数器。不含名字、账户或任务。"
 }

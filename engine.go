@@ -43,6 +43,8 @@ type Settings struct {
 	RpcInit    bool              `json:"rpcInit"` // the choices above have their defaults
 	OrbAnim    bool              `json:"orbAnim"` // the Orbs picture moves
 	LookInit   bool              `json:"lookInit"`
+	Stats      bool              `json:"stats"` // anonymous statistics for the website (on unless switched off)
+	StatsInit  bool              `json:"statsInit"`
 	VencordDir string            `json:"vencordDir"`         // where the Vencord source is (for installing the plugin)
 	OrbTile    string            `json:"orbTile"`            // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
 	OrbGlyph   string            `json:"orbGlyph"`           // the big reward tile and the small white sign
@@ -185,6 +187,9 @@ func newEngine(dir string) *Engine {
 	}
 	if e.set.ClaimNote.State == "testing" { // a test cut short by a restart
 		e.set.ClaimNote = ClaimNote{State: "idle"}
+	}
+	if !e.set.StatsInit {
+		e.set.Stats, e.set.StatsInit = true, true
 	}
 	if !e.set.LookInit {
 		e.set.OrbAnim, e.set.LookInit = true, true
@@ -344,6 +349,7 @@ func (e *Engine) run() {
 	go e.updateLoop()
 	go usageLoop(e.quit)
 	go e.discordLoop()
+	go e.statsLoop("orbek")
 	t := time.NewTicker(30 * time.Second)
 	defer t.Stop()
 	for {

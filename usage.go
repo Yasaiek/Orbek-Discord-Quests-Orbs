@@ -23,7 +23,23 @@ type Usage struct {
 var (
 	usageMu  sync.Mutex
 	usageNow Usage
+	// sums since usageAverage was last asked (for the anonymous statistics)
+	avgCPU, avgRAM, avgPct float64
+	avgN                   int
 )
+
+// usageAverage is the average use since the last call: CPU %, RAM MB, RAM % of the PC.
+func usageAverage() (cpu, ram, pct float64) {
+	usageMu.Lock()
+	defer usageMu.Unlock()
+	if avgN == 0 {
+		u := usageNow
+		return u.CPU, u.RAM, u.RAMPct
+	}
+	cpu, ram, pct = avgCPU/float64(avgN), avgRAM/float64(avgN), avgPct/float64(avgN)
+	avgCPU, avgRAM, avgPct, avgN = 0, 0, 0, 0
+	return
+}
 
 func currentUsage() Usage {
 	usageMu.Lock()
@@ -51,6 +67,7 @@ func usageLoop(quit <-chan struct{}) {
 				u.CPUMin, u.CPUMax, u.RAMMin, u.RAMMax = u.CPU, u.CPU, u.RAM, u.RAM
 			}
 			usageNow = u
+			avgCPU, avgRAM, avgPct, avgN = avgCPU+u.CPU, avgRAM+u.RAM, avgPct+u.RAMPct, avgN+1
 			usageMu.Unlock()
 		}
 	}

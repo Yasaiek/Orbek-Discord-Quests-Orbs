@@ -419,6 +419,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     <div class="card">
       <h3><i data-ic="settings"></i><span data-i="set.app"></span></h3>
       <div class="row"><span data-i="set.lang"></span><div class="dd up" id="langDD"><button class="ddbtn" id="langBtn"></button><div class="ddmenu" id="langMenu"></div></div></div>
+      <label class="row" id="statsRow" hidden><span><span data-i="set.stats"></span><small data-i="set.statsHint"></small></span><input type="checkbox" class="sw" data-set="stats"></label>
       <label class="row"><span><span data-i="set.orbAnim"></span><small data-i="set.orbAnimHint"></small></span><input type="checkbox" class="sw" data-set="orbAnim"></label>
       <label class="row"><span data-i="set.openOnStart"></span><input type="checkbox" class="sw" data-set="openOnStart"></label>
       <label class="row"><span data-i="set.autostart"></span><input type="checkbox" class="sw" data-set="autostart"></label>
@@ -918,6 +919,7 @@ $('langBtn').onclick = (e) => { e.stopPropagation(); $('langDD').classList.toggl
 document.addEventListener('click', () => $('langDD').classList.remove('open'));
 function renderSettings() {
   drawLangDD();
+  $('statsRow').hidden = !S.statsOn;
   renderFilters();
   claimNotice();
   document.querySelectorAll('[data-set]').forEach((n) => {

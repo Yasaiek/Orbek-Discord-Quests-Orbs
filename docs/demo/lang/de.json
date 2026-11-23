@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord ist nicht mit Orbek verbunden – kein Test möglich.",
 "claim.learn": "Discord hat die Standard-Abholung nicht angenommen ({r}). Hol eine Belohnung von Hand in Discord ab – das Plugin schaut zu, wie Discord es macht – und schalte das Abholen dann wieder ein.",
 "set.orbAnim": "Animiertes Orbs-Symbol",
-"set.orbAnimHint": "Die Orbs drehen sich; ausschalten für ein stilles Symbol."
+"set.orbAnimHint": "Die Orbs drehen sich; ausschalten für ein stilles Symbol.",
+"set.stats": "Anonyme Statistiken senden",
+"set.statsHint": "Alle 15 Minuten: eine zufällige Installationsnummer, die Version und die durchschnittliche CPU- und RAM-Nutzung – für den Zähler auf Orbeks Website. Keine Namen, Konten oder Quests."
 }

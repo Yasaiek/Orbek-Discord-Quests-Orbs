@@ -274,5 +274,7 @@
 "claim.noplugin": "Discord Orbek'e bağlı değil – deneyecek bir şey yok.",
 "claim.learn": "Discord varsayılan alma yolunu kabul etmedi ({r}). Discord'da bir ödülü elle al – eklenti Discord'un bunu nasıl yaptığını görecek – sonra almayı yeniden aç.",
 "set.orbAnim": "Hareketli Orbs simgesi",
-"set.orbAnimHint": "Orbs döner; sabit simge için kapat."
+"set.orbAnimHint": "Orbs döner; sabit simge için kapat.",
+"set.stats": "Anonim istatistik gönder",
+"set.statsHint": "Her 15 dakikada: rastgele bir kurulum numarası, sürüm ve ortalama CPU ve RAM kullanımı – Orbek'in sitesindeki sayaç için. İsim, hesap ya da görev yok."
 }
