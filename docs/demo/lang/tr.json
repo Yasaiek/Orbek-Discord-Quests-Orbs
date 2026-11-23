@@ -287,5 +287,12 @@
 "upd.stepRestart": "Kuruluyor ve yeniden başlatılıyor…",
 "upd.newT": "Orbek v{v} sürümüne güncellendi",
 "upd.newSub": "v{v} sürümünden bu yana değişenler:",
-"upd.ok": "Harika!"
+"upd.ok": "Harika!",
+"pu.title": "Eklenti güncellemesi",
+"pu.askAuto": "Orbek eklentisinin yeni bir sürümü var. Şimdi güncellensin mi?",
+"pu.ask": "Orbek eklentisi şimdi güncellensin mi?",
+"pu.restart": "Discord kısa süre kapanıp kendiliğinden yeniden açılır – sesli kanaldaysan bağlantın kesilir.",
+"pu.yes": "Evet, güncelle",
+"pu.later": "Hayır, sonra",
+"pu.done": "Tamam! Discord yeniden başlıyor – Orbek birazdan bağlanacak."
 }

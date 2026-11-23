@@ -287,5 +287,12 @@
 "upd.stepRestart": "インストールして再起動中…",
 "upd.newT": "Orbekをv{v}に更新しました",
 "upd.newSub": "v{v}からの変更点：",
-"upd.ok": "OK！"
+"upd.ok": "OK！",
+"pu.title": "プラグインの更新",
+"pu.askAuto": "Orbekプラグインの新しいバージョンがあります。今すぐ更新しますか？",
+"pu.ask": "今すぐOrbekプラグインを更新しますか？",
+"pu.restart": "Discordが一度閉じて自動で再起動します – ボイスチャンネルにいる場合は切断されます。",
+"pu.yes": "はい、更新する",
+"pu.later": "いいえ、後で",
+"pu.done": "完了！Discordを再起動しています – まもなくOrbekが接続します。"
 }

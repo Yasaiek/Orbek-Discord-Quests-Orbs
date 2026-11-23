@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.6
+- When a newer plugin comes with Orbek, the panel asks once whether to update it now (it says Discord will restart). Yes shows the update in a window: the steps and the live log, like the setup; then "Done".
+- "Update plugin" buttons use the same window.
+
 ## 0.4.5
 - Update screen: while Orbek downloads a new version the panel shows a progress window (downloading with MB, then installing and restarting).
 - After the update a "What's new" window lists the changes since your previous version.

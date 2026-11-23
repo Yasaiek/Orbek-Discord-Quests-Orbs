@@ -287,5 +287,12 @@
 "upd.stepRestart": "Installiere und starte neu…",
 "upd.newT": "Orbek auf v{v} aktualisiert",
 "upd.newSub": "Was sich seit v{v} geändert hat:",
-"upd.ok": "Super!"
+"upd.ok": "Super!",
+"pu.title": "Plugin-Update",
+"pu.askAuto": "Es gibt eine neue Version des Orbek-Plugins. Jetzt aktualisieren?",
+"pu.ask": "Das Orbek-Plugin jetzt aktualisieren?",
+"pu.restart": "Discord schließt sich kurz und startet von selbst neu – in einem Sprachkanal wirst du getrennt.",
+"pu.yes": "Ja, aktualisieren",
+"pu.later": "Nein, später",
+"pu.done": "Fertig! Discord startet neu – Orbek verbindet sich gleich."
 }

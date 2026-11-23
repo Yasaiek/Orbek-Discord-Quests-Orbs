@@ -287,5 +287,12 @@
 "upd.stepRestart": "正在安装并重启…",
 "upd.newT": "Orbek 已更新到 v{v}",
 "upd.newSub": "自 v{v} 以来的变化：",
-"upd.ok": "好的！"
+"upd.ok": "好的！",
+"pu.title": "插件更新",
+"pu.askAuto": "Orbek 插件有新版本。现在更新吗？",
+"pu.ask": "现在更新 Orbek 插件吗？",
+"pu.restart": "Discord 会短暂关闭并自动重新启动——如果你在语音频道中，会被断开。",
+"pu.yes": "是的，更新",
+"pu.later": "不，稍后",
+"pu.done": "完成！Discord 正在重启——Orbek 马上就会连接。"
 }

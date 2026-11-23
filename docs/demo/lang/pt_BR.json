@@ -287,5 +287,12 @@
 "upd.stepRestart": "Instalando e reiniciando…",
 "upd.newT": "Orbek atualizado para v{v}",
 "upd.newSub": "O que mudou desde a v{v}:",
-"upd.ok": "Ótimo!"
+"upd.ok": "Ótimo!",
+"pu.title": "Atualização do plugin",
+"pu.askAuto": "Há uma nova versão do plugin do Orbek. Atualizar agora?",
+"pu.ask": "Atualizar o plugin do Orbek agora?",
+"pu.restart": "O Discord fecha por um momento e abre sozinho – se estiver num canal de voz, você será desconectado.",
+"pu.yes": "Sim, atualizar",
+"pu.later": "Não, depois",
+"pu.done": "Pronto! O Discord está reiniciando – o Orbek conecta já já."
 }

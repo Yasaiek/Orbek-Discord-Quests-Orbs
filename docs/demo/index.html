@@ -328,6 +328,17 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
 .whatsnew .wv b { display: inline-block; margin-bottom: 6px; padding: 2px 9px; border-radius: 999px; font: 700 12px var(--display); color: #fff; background: var(--grad); }
 .whatsnew ul { margin: 0; padding-left: 18px; color: var(--sub); line-height: 1.5; font-size: 13.5px; } .whatsnew li + li { margin-top: 4px; }
 .whatsnew .wlist { max-height: 52vh; overflow: auto; margin-top: 4px; }
+.plugdlg .box { max-width: 560px; }
+.plugdlg h3 .ic.pi { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--grad); color: #fff; }
+.plugdlg h3 .ic.pi svg.i { width: 18px; height: 18px; }
+.puver { display: inline-flex; align-items: center; gap: 8px; margin: 2px 0 6px; color: var(--sub); font: 600 13.5px var(--display); }
+.puver b { color: #fff; padding: 2px 10px; border-radius: 999px; background: var(--grad); } .puver svg.i { width: 14px; height: 14px; transform: rotate(-90deg); }
+.puwarn { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; color: #ffe2a8 !important; background: rgba(240,178,50,.1); border: 1px solid rgba(240,178,50,.3); }
+.puwarn svg.i { width: 17px; height: 17px; flex-shrink: 0; margin-top: 1px; }
+.pusteps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0 10px; }
+.pusteps .stp { padding: 9px 11px; } .pusteps .stp .ic { width: 26px; height: 26px; }
+.pulog { max-height: 190px; overflow: auto; font-size: 11.5px; margin: 0; white-space: pre-wrap; }
+.plugdlg p.okc { color: #7fe0b2; } .plugdlg p.bad { color: #ffb4b4; }
 </style>
 </head>
 <body>
@@ -465,7 +476,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.4.5"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.6"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -1054,7 +1065,52 @@ $('vCards').onclick = () => { ui.view = 'cards'; keep(); render(true); };
 $('vMini').onclick = () => { ui.view = 'mini'; keep(); render(true); };
 $('miniWin').onclick = () => op({ op: 'mini' });
 const goPage = (p) => document.querySelector(`nav button[data-p=${p}]`).click();
-const installPlugin = async () => { if (await ask(t('plug.title'), t('plug.confirm'), t('plug.install'))) { goPage('setup'); op({ op: 'pluginInstall' }); } };
+// updating the plugin in a window: ask (it restarts Discord), then the same steps and log as the setup, live
+let plugDlg = null, askT = 0;
+function plugDialog(auto) {
+  if (plugDlg) return;
+  const d = el('div', 'dlg plugdlg'), box = el('div', 'box'), h = el('h3');
+  h.append(el('span', 'ic pi'), t('pu.title'));
+  h.firstChild.append(icon('plug'));
+  const ver = el('div', 'puver'); ver.append(el('span', '', 'v' + (S.plugin || '?')), icon('chev'), el('b', '', 'v' + (S.pluginLatest || '?')));
+  const text = el('p', '', t(auto ? 'pu.askAuto' : 'pu.ask')), warn = el('p', 'puwarn'); warn.append(icon('alert'), t('pu.restart'));
+  const steps = el('div', 'pusteps'), log = el('div', 'console pulog'); log.hidden = true; steps.hidden = true;
+  const acts = el('div', 'acts'), no = el('button', 'btn', t(auto ? 'pu.later' : 'dlg.cancel')), yes = el('button', 'btn pri', t('pu.yes'));
+  yes.prepend(icon('download'));
+  const close = () => { d.remove(); plugDlg = null; };
+  no.onclick = () => { if (auto) try { localStorage.setItem('orbek.plugAsk', S.pluginLatest); } catch (e) {} close(); };
+  yes.onclick = () => { op({ op: 'pluginInstall' }); plugDlg.started = Date.now(); text.textContent = t('inst.running'); warn.hidden = true; steps.hidden = false; log.hidden = false; acts.textContent = ''; };
+  acts.append(no, yes); box.append(h, ver, text, warn, steps, log, acts); d.append(box); document.body.append(d);
+  plugDlg = { d, steps, log, text, acts, started: 0, close };
+}
+function renderPlugDialog() {
+  if (!plugDlg || !plugDlg.started) return;
+  const st = S.setup || {}, { steps, log, text, acts } = plugDlg;
+  const list = st.steps || [], sig = JSON.stringify(list) + LANG;
+  if (steps.dataset.sig !== sig) {
+    steps.dataset.sig = sig; steps.textContent = '';
+    list.forEach((s, i) => {
+      const c = el('div', 'stp ' + s.state), ic = el('div', 'ic');
+      if (s.state === 'run') ic.append(el('div', 'spin')); else if (s.state === 'ok') ic.append(icon('check')); else if (s.state === 'fail') ic.append(icon('x')); else ic.textContent = i + 1;
+      const tx = el('div'); tx.append(el('b', '', t(STEPS[s.key]))); c.append(ic, tx); steps.append(c);
+    });
+  }
+  const lines = st.lines || [], k = lines.length + (lines[lines.length - 1] || '');
+  if (log.dataset.k !== k) { log.dataset.k = k; log.textContent = lines.slice(-14).join('\n'); log.scrollTop = log.scrollHeight; }
+  if (Date.now() - plugDlg.started > 1500 && !st.running && (st.done || st.err) && !acts.childNodes.length) {
+    text.textContent = st.err ? t('inst.failed', { e: st.err }) : t('pu.done');
+    text.className = st.err ? 'bad' : 'okc';
+    const ok = el('button', 'btn pri', 'OK'); ok.onclick = plugDlg.close; acts.append(ok);
+  }
+}
+// once per new plugin version: ask whether to update it now
+function maybeAskPlugin() {
+  if (plugDlg || document.querySelector('.dlg') || !S.connected || !S.plugin || !S.pluginLatest) return;
+  if (vnum(S.plugin) >= vnum(S.pluginLatest) || (S.setup || {}).running) return;
+  if (localStorage.getItem('orbek.plugAsk') === S.pluginLatest) return;
+  plugDialog(true);
+}
+const installPlugin = () => plugDialog(false);
 $('plugBtn').onclick = installPlugin; $('plugBtn2').onclick = installPlugin; $('instPlug').onclick = installPlugin;
 $('goSetup').onclick = () => goPage('setup');
 $('instAll').onclick = async () => { if (await ask(t('inst.all'), t('inst.confirm'), t('inst.go'))) op({ op: 'setup' }); };
@@ -1072,7 +1128,7 @@ async function tick() {
     if (VER && S.version !== VER) { location.reload(); return; } // Orbek was updated: load the new panel
     if (!VER) setTimeout(whatsNew, 800);
     VER = S.version;
-    renderUpdate();
+    renderUpdate(); renderPlugDialog(); if (!MINI && !askT) askT = setTimeout(() => { askT = 0; maybeAskPlugin(); }, 2500);
     await loadLang(S.lang || 'en');
     render(); if (!MINI) { renderLog(); renderSettings(); renderSetup(); renderGuide(); }
   } catch (e) { $('conn').className = 'conn off'; if (S) renderUpdate(); }
