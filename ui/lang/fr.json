@@ -272,5 +272,8 @@
 "set.expWarn": "Me rappeler les récompenses sur le point d'être perdues",
 "set.expHint": "Une notification Windows avec un son quand une quête est faite, que la récompense n'est pas récupérée et que la quête finit bientôt.",
 "set.expWhen": "Combien de temps avant la fin",
-"exp.titleUi": "Une récompense va être perdue !"
+"exp.titleUi": "Une récompense va être perdue !",
+"set.clTitle": "Récupérer les récompenses",
+"set.clickSelf": "Appuyer sur « Récupérer » tout seul",
+"set.clickSelfHint": "En récupérant une par une, le plugin appuie sur « Récupérer la récompense ». Si Discord affiche un captcha, tu le résous – puis Orbek passe à la suivante."
 }

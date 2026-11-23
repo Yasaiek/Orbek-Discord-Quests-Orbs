@@ -272,5 +272,8 @@
 "set.expWarn": "Kaybolmak üzere olan ödülleri hatırlat",
 "set.expHint": "Görev bitmiş ama ödül alınmamışsa ve görev yakında bitiyorsa sesli bir Windows bildirimi.",
 "set.expWhen": "Bitişten ne kadar önce",
-"exp.titleUi": "Bir ödül kaybolmak üzere!"
+"exp.titleUi": "Bir ödül kaybolmak üzere!",
+"set.clTitle": "Ödül alma",
+"set.clickSelf": "“Ödülü al”a kendisi bassın",
+"set.clickSelfHint": "Tek tek alırken eklenti “Ödülü al”a kendisi basar. Discord captcha gösterirse sen çözersin – sonra Orbek sıradakine geçer."
 }

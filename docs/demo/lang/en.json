@@ -272,5 +272,8 @@
 "set.expWarn": "Remind me of rewards about to be lost",
 "set.expHint": "A Windows notification with a sound when a quest is done but its reward isn't claimed and the quest ends soon.",
 "set.expWhen": "How long before the end",
-"exp.titleUi": "A reward is about to be lost!"
+"exp.titleUi": "A reward is about to be lost!",
+"set.clTitle": "Claiming rewards",
+"set.clickSelf": "Press “Claim reward” by itself",
+"set.clickSelfHint": "When claiming one by one, the plugin presses “Claim reward”. If Discord shows a captcha, you solve it – then Orbek goes on to the next one."
 }

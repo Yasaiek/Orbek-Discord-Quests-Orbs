@@ -272,5 +272,8 @@
 "set.expWarn": "まもなく失われる報酬を通知する",
 "set.expHint": "クエストは完了したのに報酬を受け取っておらず、まもなく終了するときに音付きのWindows通知を出します。",
 "set.expWhen": "終了のどれくらい前",
-"exp.titleUi": "報酬がまもなく失われます！"
+"exp.titleUi": "報酬がまもなく失われます！",
+"set.clTitle": "報酬の受け取り",
+"set.clickSelf": "「報酬を受け取る」を自動で押す",
+"set.clickSelfHint": "順番に受け取るとき、プラグインが「報酬を受け取る」を押します。DiscordがCAPTCHAを表示したらあなたが解き、その後Orbekが次に進みます。"
 }

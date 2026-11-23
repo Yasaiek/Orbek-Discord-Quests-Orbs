@@ -272,5 +272,8 @@
 "set.expWarn": "Recordarme las recompensas a punto de perderse",
 "set.expHint": "Una notificación de Windows con sonido cuando una misión está hecha pero su recompensa no se ha reclamado y la misión termina pronto.",
 "set.expWhen": "Cuánto antes del final",
-"exp.titleUi": "¡Una recompensa está por perderse!"
+"exp.titleUi": "¡Una recompensa está por perderse!",
+"set.clTitle": "Reclamar recompensas",
+"set.clickSelf": "Pulsar «Reclamar recompensa» solo",
+"set.clickSelfHint": "Al reclamar una a una, el plugin pulsa «Reclamar recompensa». Si Discord muestra un captcha, lo resuelves tú y Orbek pasa a la siguiente."
 }

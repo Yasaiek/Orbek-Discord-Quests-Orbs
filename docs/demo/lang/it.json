@@ -272,5 +272,8 @@
 "set.expWarn": "Ricordami i premi che stanno per andare persi",
 "set.expHint": "Una notifica di Windows con suono quando una missione è fatta ma il premio non è riscattato e la missione sta per finire.",
 "set.expWhen": "Quanto prima della fine",
-"exp.titleUi": "Un premio sta per andare perso!"
+"exp.titleUi": "Un premio sta per andare perso!",
+"set.clTitle": "Riscatto premi",
+"set.clickSelf": "Premi «Riscatta premio» da solo",
+"set.clickSelfHint": "Nel riscatto uno alla volta il plugin preme «Riscatta premio». Se Discord mostra un captcha lo risolvi tu, poi Orbek passa al successivo."
 }

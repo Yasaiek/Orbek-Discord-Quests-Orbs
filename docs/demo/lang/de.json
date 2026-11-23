@@ -272,5 +272,8 @@
 "set.expWarn": "An bald verfallende Belohnungen erinnern",
 "set.expHint": "Eine Windows-Benachrichtigung mit Ton, wenn eine Quest erledigt, die Belohnung aber nicht abgeholt ist und die Quest bald endet.",
 "set.expWhen": "Wie lange vor dem Ende",
-"exp.titleUi": "Eine Belohnung verfällt gleich!"
+"exp.titleUi": "Eine Belohnung verfällt gleich!",
+"set.clTitle": "Belohnungen abholen",
+"set.clickSelf": "„Belohnung abholen“ selbst drücken",
+"set.clickSelfHint": "Beim Abholen nacheinander drückt das Plugin „Belohnung abholen“. Zeigt Discord ein Captcha, löst du es – dann geht Orbek zur nächsten."
 }

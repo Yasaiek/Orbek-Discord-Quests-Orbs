@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3
+- Claiming one by one: the plugin presses "Claim reward" itself (Settings → Claiming rewards); a captcha, when Discord shows one, is yours to solve. If Discord doesn't give the reward, the bar says so and waits for your click.
+
 ## 0.4.2
 - Reminders: when a quest is done but its reward isn't claimed and the quest ends within 24 h (or 6, 12, 48 h – Settings → Reminders), Orbek shows a Windows notification with a sound, plays a sound in the open panel and offers to claim one by one. Once per quest.
 

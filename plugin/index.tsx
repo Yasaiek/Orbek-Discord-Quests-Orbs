@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.1";
+const PLUGIN_VERSION = "0.4.2";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -224,6 +224,8 @@ async function enroll(q: Quest): Promise<Quest> {
 // „Odbierz 1/5”. Gdy klikniesz „Odbierz nagrodę” i Discord ją wyda, przechodzi do następnej.
 let refreshMs = 10 * 60_000; // co ile czytać listę zadań od nowa (Orbek to ustawia)
 let claimQueue: string[] = [], claimTotal = 0, claimCur = "", claimFindT: any = null;
+let autoClick = true; // kliknij „Odbierz nagrodę” samo (captchę, jeśli Discord ją pokaże, rozwiązuje człowiek)
+const clicked = new Set<string>();
 const HL = "orbek-claim-hl";
 
 function claimCss() {
@@ -290,7 +292,7 @@ function claimShow() {
     unhighlight();
     const q = known.get(claimCur);
     const n = claimTotal - claimQueue.length;
-    claimBar(`🎁 Odbierz <b>${(q?.name ?? "nagrodę").replace(/</g, "&lt;")}</b> <span class="n">${n}/${claimTotal} · Enter = odbierz</span>`);
+    claimBar(`🎁 Odbierz <b>${(q?.name ?? "nagrodę").replace(/</g, "&lt;")}</b> <span class="n">${n}/${claimTotal}${autoClick ? "" : " · Enter = odbierz"}</span>`);
     let tries = 0;
     const find = () => {
         const card = questCard(claimCur);
@@ -299,7 +301,15 @@ function claimShow() {
             card.scrollIntoView({ behavior: "smooth", block: "center" });
             // zaznaczenie na przycisku odbioru: Enter albo kliknięcie odbiera (to robisz Ty)
             const btn = [...card.querySelectorAll("button")].find(b => /odbierz|claim|receber|reclamar|récupérer|abholen|riscatta|получ|отрим|al$|受け取|领取/i.test(b.textContent ?? "")) as HTMLButtonElement | undefined;
-            if (btn) { btn.classList.add("orbek-claim-btn"); setTimeout(() => btn.focus({ preventScroll: true }), 450); }
+            if (btn) {
+                btn.classList.add("orbek-claim-btn");
+                setTimeout(() => btn.focus({ preventScroll: true }), 450);
+                if (autoClick && !clicked.has(claimCur)) { // jedno kliknięcie na zadanie; dalej (captcha) – Ty
+                    clicked.add(claimCur);
+                    const id = claimCur;
+                    setTimeout(() => { if (claimCur === id && btn.isConnected) btn.click(); }, 900);
+                }
+            }
             return;
         }
         if (++tries < 40) claimFindT = setTimeout(find, 500); // strona zadań jeszcze się ładuje
@@ -330,12 +340,21 @@ function claimEnd(done = false) {
 function claimStart(ids: string[]) {
     const list = ids.filter(id => { const q = known.get(id); return q && q.completedAt && !q.claimedAt; });
     if (!list.length) { say("claimNone"); return; }
-    claimQueue = list; claimTotal = list.length;
+    claimQueue = list; claimTotal = list.length; clicked.clear();
     openQuests();
     setTimeout(() => claimNext(), 700);
 }
 
 // Discord wydał nagrodę (kliknięciem w Discordzie) – następna
+// Discord nie wydał nagrody (np. captcha nierozwiązana) – zostajemy przy tej, klikasz sam
+function onClaimFail(e: any) {
+    const id = String(e?.questId ?? "");
+    if (id && id === claimCur) {
+        const q = known.get(id);
+        claimBar(`⚠️ <b>${(q?.name ?? "").replace(/</g, "&lt;")}</b> – nie wyszło, kliknij „Odbierz nagrodę” sam <span class="n">${claimTotal - claimQueue.length}/${claimTotal}</span>`);
+    }
+}
+
 function onClaimed(e: any) {
     const id = String(e?.questId ?? "");
     const q = known.get(id);
@@ -578,6 +597,7 @@ async function tick() {
             const res = JSON.parse(raw);
             autoAllowed = !!res.auto;
             if (Number(res.refresh) >= 1) refreshMs = Number(res.refresh) * 60_000;
+            autoClick = res.autoClick !== false;
             maxParallel = Math.max(0, Number(res.parallel ?? 1));
             if (!autoAllowed && (runs.size || queue.length)) stopAll();
             for (const c of res.cmds ?? []) await doCmd(c);
@@ -604,12 +624,14 @@ export default definePlugin({
     start() {
         alive = true;
         FluxDispatcher.subscribe("QUESTS_CLAIM_REWARD_SUCCESS", onClaimed);
+        FluxDispatcher.subscribe("QUESTS_CLAIM_REWARD_FAILURE", onClaimFail);
         timer = setTimeout(tick, 3000);
     },
 
     stop() {
         alive = false;
         FluxDispatcher.unsubscribe("QUESTS_CLAIM_REWARD_SUCCESS", onClaimed);
+        FluxDispatcher.unsubscribe("QUESTS_CLAIM_REWARD_FAILURE", onClaimFail);
         claimEnd();
         if (timer) clearTimeout(timer);
         stopAll();

@@ -272,5 +272,8 @@
 "set.expWarn": "Lembrar de recompensas prestes a se perder",
 "set.expHint": "Uma notificação do Windows com som quando uma missão foi feita, mas a recompensa não foi resgatada e a missão acaba logo.",
 "set.expWhen": "Quanto antes do fim",
-"exp.titleUi": "Uma recompensa está para se perder!"
+"exp.titleUi": "Uma recompensa está para se perder!",
+"set.clTitle": "Resgate de recompensas",
+"set.clickSelf": "Apertar “Resgatar recompensa” sozinho",
+"set.clickSelfHint": "No resgate um a um, o plugin aperta “Resgatar recompensa”. Se o Discord mostrar captcha, você resolve – e o Orbek passa para a próxima."
 }

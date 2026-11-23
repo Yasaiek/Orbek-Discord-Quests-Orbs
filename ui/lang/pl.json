@@ -272,5 +272,8 @@
 "set.expWarn": "Przypominaj o nagrodach, które zaraz przepadną",
 "set.expHint": "Powiadomienie Windows z dźwiękiem, gdy zadanie jest zrobione, ale nagroda nie jest odebrana, a zadanie zaraz się kończy.",
 "set.expWhen": "Na ile przed końcem",
-"exp.titleUi": "Nagroda zaraz przepadnie!"
+"exp.titleUi": "Nagroda zaraz przepadnie!",
+"set.clTitle": "Odbieranie nagród",
+"set.clickSelf": "Klikaj „Odbierz nagrodę” samo",
+"set.clickSelfHint": "Przy odbieraniu po kolei plugin sam naciska „Odbierz nagrodę”. Jeśli Discord pokaże captchę, rozwiązujesz ją Ty – potem Orbek przechodzi do następnej."
 }

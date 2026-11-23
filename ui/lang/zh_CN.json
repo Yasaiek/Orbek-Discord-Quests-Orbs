@@ -272,5 +272,8 @@
 "set.expWarn": "提醒即将失效的奖励",
 "set.expHint": "任务已完成但奖励未领取且任务即将结束时，发出带声音的 Windows 通知。",
 "set.expWhen": "结束前多久",
-"exp.titleUi": "奖励即将失效！"
+"exp.titleUi": "奖励即将失效！",
+"set.clTitle": "领取奖励",
+"set.clickSelf": "自动点击“领取奖励”",
+"set.clickSelfHint": "逐个领取时，插件会自己点击“领取奖励”。如果 Discord 显示验证码，由你来完成——之后 Orbek 会进入下一个。"
 }
