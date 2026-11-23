@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">Fehler melden</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## Was es kann
 
@@ -25,7 +30,7 @@
 2. **Auf „Alles installieren“ klicken** – Im Tab Einrichtung lädt Orbek Node.js und Vencord, legt das Plugin hinein, baut es und hängt es in Discord ein. Das dauert ein paar Minuten.
 3. **Discord startet von selbst neu** – Nach der Einrichtung startet Discord mit dem Orbek-Plugin neu. Unten im Fenster wird „Discord verbunden“ grün.
 4. **Quests durchsehen** – Tabs Spiele, Videos und Für Orbs, Sortierung und ein Kosmetik-Filter. Jede Quest zeigt Belohnungen, Fortschritt und Restzeit.
-5. **Annehmen und abholen** – „Quest annehmen“ übernimmt die Quest. Ist sie erledigt, klicke „In Discord abholen“ – die Belohnung holst du auf der Quest-Seite ab (dort gibt es ein Captcha).
+5. **Annehmen und abholen** – „Quest annehmen“ nimmt die Quest an. Ist sie erledigt, klicke „Nacheinander in Discord abholen“ – Discord zeigt die Belohnungen nacheinander, du löst nur ein Captcha, wenn eins kommt.
 6. **Automatik – auf eigenes Risiko** – In den Einstellungen kannst du Orbek Quests selbst erledigen lassen, mehrere gleichzeitig. Discord verbietet das und kann Belohnungen zurücknehmen oder das Konto sperren.
 7. **Mini-Ansicht** – Schalte die Ansicht auf „Mini“ oder öffne „Kleines Fenster“, um nur Belohnungen und Fortschrittsringe zu sehen.
 8. **Updates** – Orbek aktualisiert sich selbst von GitHub. Gibt es ein neueres Plugin, erscheint die Leiste „Plugin aktualisieren“.

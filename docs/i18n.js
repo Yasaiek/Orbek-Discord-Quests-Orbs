@@ -61,7 +61,7 @@ const SITE = {
    ],
    [
     "Accept and claim",
-    "“Accept quest” takes the quest. When it is completed, click “Claim in Discord” – you claim the reward on the quests page (there is a captcha)."
+    "“Accept quest” takes the quest. When it's done, click “Claim one by one in Discord” – Discord shows the rewards one after another and you only solve a captcha when one appears."
    ],
    [
     "Automation – at your own risk",
@@ -137,7 +137,7 @@ const SITE = {
    ],
    [
     "Zapisz się i odbieraj",
-    "„Zapisz się” przyjmuje zadanie. Gdy jest zaliczone, kliknij „Odbierz w Discordzie” – nagrodę odbierasz na stronie zadań (jest tam captcha)."
+    "„Zapisz się” przyjmuje zadanie. Gdy jest zaliczone, kliknij „Odbierz po kolei w Discordzie” – Discord pokaże nagrody jedna po drugiej, a Ty rozwiązujesz tylko captchę, gdy się pojawi."
    ],
    [
     "Automat – na własne ryzyko",
@@ -213,7 +213,7 @@ const SITE = {
    ],
    [
     "Annehmen und abholen",
-    "„Quest annehmen“ übernimmt die Quest. Ist sie erledigt, klicke „In Discord abholen“ – die Belohnung holst du auf der Quest-Seite ab (dort gibt es ein Captcha)."
+    "„Quest annehmen“ nimmt die Quest an. Ist sie erledigt, klicke „Nacheinander in Discord abholen“ – Discord zeigt die Belohnungen nacheinander, du löst nur ein Captcha, wenn eins kommt."
    ],
    [
     "Automatik – auf eigenes Risiko",
@@ -288,8 +288,8 @@ const SITE = {
     "Onglets Jeux, Vidéos et Pour des Orbs, tri et filtre des cosmétiques. Chaque quête montre ses récompenses, sa progression et le temps restant."
    ],
    [
-    "Accepte et récupère",
-    "« Accepter la quête » la prend. Une fois terminée, clique sur « Récupérer dans Discord » – tu récupères la récompense sur la page des quêtes (avec un captcha)."
+    "Accepter et récupérer",
+    "« Accepter la quête » la prend. Une fois faite, clique « Récupérer une par une dans Discord » – Discord montre les récompenses l'une après l'autre, tu ne résous qu'un captcha s'il apparaît."
    ],
    [
     "Automatisation – à tes risques",
@@ -364,8 +364,8 @@ const SITE = {
     "Pestañas Juegos, Vídeos y Por Orbs, ordenación y filtro de cosméticos. Cada misión muestra recompensas, progreso y tiempo restante."
    ],
    [
-    "Acepta y reclama",
-    "«Aceptar misión» la toma. Cuando esté completada, pulsa «Reclamar en Discord» – reclamas la recompensa en la página de misiones (hay un captcha)."
+    "Aceptar y reclamar",
+    "«Aceptar misión» la toma. Cuando esté hecha, pulsa «Reclamar una a una en Discord»: Discord muestra las recompensas una tras otra y tú solo resuelves un captcha si aparece."
    ],
    [
     "Automatización – bajo tu responsabilidad",
@@ -441,7 +441,7 @@ const SITE = {
    ],
    [
     "Accetta e riscatta",
-    "«Accetta missione» la prende. Quando è completata, clicca «Riscatta in Discord» – riscatti il premio nella pagina delle missioni (c'è un captcha)."
+    "«Accetta missione» la prende. Quando è fatta, clicca «Riscatta una alla volta in Discord»: Discord mostra i premi uno dopo l'altro e tu risolvi solo un captcha se compare."
    ],
    [
     "Automazione – a tuo rischio",
@@ -517,7 +517,7 @@ const SITE = {
    ],
    [
     "Aceite e resgate",
-    "“Aceitar missão” pega a missão. Quando estiver concluída, clique em “Resgatar no Discord” – você resgata a recompensa na página de missões (tem captcha)."
+    "“Aceitar missão” pega a missão. Quando estiver feita, clique em “Resgatar uma a uma no Discord” – o Discord mostra as recompensas uma após a outra e você só resolve um captcha se aparecer."
    ],
    [
     "Automação – por sua conta e risco",
@@ -592,8 +592,8 @@ const SITE = {
     "Вкладки Игры, Видео и За Orbs, сортировка и фильтр косметики. У каждого задания видны награды, прогресс и оставшееся время."
    ],
    [
-    "Принимайте и получайте",
-    "«Принять задание» берёт его. Когда оно выполнено, нажмите «Получить в Discord» – награду получаете на странице заданий (там капча)."
+    "Примите и заберите",
+    "«Принять задание» берёт задание. Когда оно выполнено, нажмите «Забрать по очереди в Discord» – Discord покажет награды одну за другой, вы решаете только капчу, если она появится."
    ],
    [
     "Автоматика – на ваш риск",
@@ -668,8 +668,8 @@ const SITE = {
     "Вкладки Ігри, Відео та За Orbs, сортування й фільтр косметики. Кожне завдання показує нагороди, прогрес і час, що лишився."
    ],
    [
-    "Приймайте й отримуйте",
-    "«Прийняти завдання» бере його. Коли воно виконане, натисніть «Отримати в Discord» – нагороду отримуєте на сторінці завдань (там капча)."
+    "Прийміть і заберіть",
+    "«Прийняти завдання» бере завдання. Коли воно виконане, натисніть «Забрати по черзі в Discord» – Discord покаже нагороди одну за одною, ви розв'язуєте лише капчу, якщо вона з'явиться."
    ],
    [
     "Автоматика – на ваш ризик",
@@ -745,7 +745,7 @@ const SITE = {
    ],
    [
     "Kabul et ve al",
-    "“Görevi kabul et” görevi alır. Tamamlandığında “Discord'da al”a tıkla – ödülü görevler sayfasında alırsın (orada captcha var)."
+    "“Görevi kabul et” görevi alır. Bitince “Discord'da tek tek al”a tıkla – Discord ödülleri sırayla gösterir, sen yalnızca çıkarsa captcha'yı çözersin."
    ],
    [
     "Otomasyon – risk sana ait",
@@ -820,8 +820,8 @@ const SITE = {
     "ゲーム・動画・Orbsタブ、並べ替え、コスメのフィルター。各クエストに報酬、進行状況、残り時間が表示されます。"
    ],
    [
-    "受けて受け取る",
-    "「クエストを受ける」で受注。完了したら「Discordで受け取る」をクリック – 報酬はクエストページで受け取ります（キャプチャあり）。"
+    "受注して受け取る",
+    "「クエストを受ける」でクエストを受注します。完了したら「Discordで順番に受け取る」をクリック – Discordが報酬を順番に表示し、CAPTCHAが出たときだけ解きます。"
    ],
    [
     "自動化 – 自己責任で",
@@ -897,7 +897,7 @@ const SITE = {
    ],
    [
     "接受并领取",
-    "“接受任务”即可接取。完成后点击“在 Discord 中领取”——在任务页面领取奖励（有验证码）。"
+    "“接受任务”会接下任务。完成后点击“在 Discord 中逐个领取”——Discord 会逐个显示奖励，只有出现验证码时你才需要完成它。"
    ],
    [
     "自动化——风险自负",

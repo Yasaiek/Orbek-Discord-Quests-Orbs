@@ -80,6 +80,11 @@ def readme(code, root):
   <a href="https://github.com/{REPO}/issues/new">{d["bug"]}</a>
 </p>
 <p align="center"><img src="{up}docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="{up}docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="{up}docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="{up}docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## {d["whatT"]}
 

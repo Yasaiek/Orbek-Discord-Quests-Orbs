@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">Report a bug</a>
 </p>
 <p align="center"><img src="docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## What it does
 
@@ -25,7 +30,7 @@
 2. **Click “Install everything”** – On the Setup tab Orbek downloads Node.js and Vencord, puts the plugin in, builds it and hooks it into Discord. It takes a few minutes.
 3. **Discord restarts by itself** – After the setup Discord starts again with the Orbek plugin. “Discord connected” turns green at the bottom of the window.
 4. **Browse the quests** – Games, Videos and For Orbs tabs, sorting and a cosmetics filter. Every quest shows its rewards, progress and time left.
-5. **Accept and claim** – “Accept quest” takes the quest. When it is completed, click “Claim in Discord” – you claim the reward on the quests page (there is a captcha).
+5. **Accept and claim** – “Accept quest” takes the quest. When it's done, click “Claim one by one in Discord” – Discord shows the rewards one after another and you only solve a captcha when one appears.
 6. **Automation – at your own risk** – In Settings you can let Orbek do quests by itself, several at once. Discord forbids this and may take the rewards back or ban the account.
 7. **Mini view** – Switch the view to “Mini” or open “Small window” to see just the rewards and progress rings.
 8. **Updates** – Orbek updates itself from GitHub. When a newer plugin is out you will see an “Update plugin” bar.

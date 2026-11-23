@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.8
+- Five counter tiles fit in one row again; the mini window has no claim bar.
+- Guide: the claim step describes claiming one by one.
+
 ## 0.4.7
 - CPU and RAM tiles show a small chart of the last minutes, with min and max chips under it.
 - The counter tiles wrap onto the next row in a narrow window instead of being cut off.

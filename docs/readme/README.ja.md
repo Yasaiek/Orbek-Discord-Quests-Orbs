@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">バグを報告</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## できること
 
@@ -25,7 +30,7 @@
 2. **「すべてインストール」をクリック** – セットアップタブでOrbekがNode.jsとVencordをダウンロードし、プラグインを入れてビルドし、Discordに組み込みます。数分かかります。
 3. **Discordが自動で再起動** – セットアップ後、DiscordがOrbekプラグイン付きで再起動します。ウィンドウ下部の「Discord接続中」が緑になります。
 4. **クエストを見る** – ゲーム・動画・Orbsタブ、並べ替え、コスメのフィルター。各クエストに報酬、進行状況、残り時間が表示されます。
-5. **受けて受け取る** – 「クエストを受ける」で受注。完了したら「Discordで受け取る」をクリック – 報酬はクエストページで受け取ります（キャプチャあり）。
+5. **受注して受け取る** – 「クエストを受ける」でクエストを受注します。完了したら「Discordで順番に受け取る」をクリック – Discordが報酬を順番に表示し、CAPTCHAが出たときだけ解きます。
 6. **自動化 – 自己責任で** – 設定でOrbekにクエストを自動で、複数同時に実行させられます。Discordはこれを禁止しており、報酬の取り消しやアカウント停止の可能性があります。
 7. **ミニ表示** – 表示を「ミニ」に切り替えるか「小さいウィンドウ」を開くと、報酬と進行リングだけが見られます。
 8. **アップデート** – OrbekはGitHubから自動で更新されます。新しいプラグインが出ると「プラグインを更新」のバーが表示されます。

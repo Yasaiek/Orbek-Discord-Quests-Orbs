@@ -25,7 +25,7 @@
     games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + q.id + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
     loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord',
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
-    settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], refreshMin: 10, rpcOn: true, rpcQuest: true, rpcOrbs: true, rpcToGet: true, rpcBtn: true, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
+    settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], refreshMin: 10, clickSelf: true, expiryWarn: true, expiryHours: 24, rpcOn: true, rpcQuest: true, rpcOrbs: true, rpcToGet: true, rpcBtn: true, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
     setup: { running: false, done: false, err: '', steps: [], lines: [], full: true },
     update: { state: 'current', latest: '', checked: now, doneAt: 0 },
   };

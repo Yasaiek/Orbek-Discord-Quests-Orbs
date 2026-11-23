@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">Hata bildir</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## Ne yapar
 
@@ -25,7 +30,7 @@
 2. **“Her şeyi kur”a tıkla** – Kurulum sekmesinde Orbek, Node.js ve Vencord'u indirir, eklentiyi koyar, derler ve Discord'a bağlar. Birkaç dakika sürer.
 3. **Discord kendiliğinden yeniden başlar** – Kurulumdan sonra Discord, Orbek eklentisiyle yeniden açılır. Pencerenin altında “Discord bağlı” yeşile döner.
 4. **Görevlere göz at** – Oyunlar, Videolar ve Orbs için sekmeleri, sıralama ve kozmetik filtresi. Her görev ödüllerini, ilerlemesini ve kalan süresini gösterir.
-5. **Kabul et ve al** – “Görevi kabul et” görevi alır. Tamamlandığında “Discord'da al”a tıkla – ödülü görevler sayfasında alırsın (orada captcha var).
+5. **Kabul et ve al** – “Görevi kabul et” görevi alır. Bitince “Discord'da tek tek al”a tıkla – Discord ödülleri sırayla gösterir, sen yalnızca çıkarsa captcha'yı çözersin.
 6. **Otomasyon – risk sana ait** – Ayarlar'da Orbek'in görevleri kendisi, birkaçını aynı anda yapmasına izin verebilirsin. Discord bunu yasaklar ve ödülleri geri alabilir ya da hesabı yasaklayabilir.
 7. **Mini görünüm** – Yalnızca ödülleri ve ilerleme halkalarını görmek için görünümü “Mini”ye al ya da “Küçük pencere”yi aç.
 8. **Güncellemeler** – Orbek kendini GitHub'dan günceller. Daha yeni bir eklenti çıktığında “Eklentiyi güncelle” çubuğu görünür.

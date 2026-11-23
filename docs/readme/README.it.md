@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">Segnala un bug</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## Cosa fa
 
@@ -25,7 +30,7 @@
 2. **Clicca «Installa tutto»** – Nella scheda Installazione Orbek scarica Node.js e Vencord, inserisce il plugin, lo compila e lo collega a Discord. Ci vogliono pochi minuti.
 3. **Discord si riavvia da solo** – Dopo l'installazione Discord si riavvia con il plugin Orbek. In basso nella finestra «Discord collegato» diventa verde.
 4. **Sfoglia le missioni** – Schede Giochi, Video e Per Orb, ordinamento e filtro dei cosmetici. Ogni missione mostra premi, avanzamento e tempo rimasto.
-5. **Accetta e riscatta** – «Accetta missione» la prende. Quando è completata, clicca «Riscatta in Discord» – riscatti il premio nella pagina delle missioni (c'è un captcha).
+5. **Accetta e riscatta** – «Accetta missione» la prende. Quando è fatta, clicca «Riscatta una alla volta in Discord»: Discord mostra i premi uno dopo l'altro e tu risolvi solo un captcha se compare.
 6. **Automazione – a tuo rischio** – Nelle Impostazioni puoi lasciare che Orbek faccia le missioni da solo, più insieme. Discord lo vieta e può togliere i premi o bannare l'account.
 7. **Vista mini** – Passa alla vista «Mini» o apri «Finestra piccola» per vedere solo i premi e gli anelli di avanzamento.
 8. **Aggiornamenti** – Orbek si aggiorna da solo da GitHub. Quando esce un plugin più nuovo, compare la barra «Aggiorna plugin».

@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">Zgłoś błąd</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## Co robi
 
@@ -25,7 +30,7 @@
 2. **Kliknij „Zainstaluj wszystko”** – W zakładce Instalacja Orbek sam pobierze Node.js i Vencorda, wgra plugin, zbuduje go i podepnie do Discorda. Trwa to kilka minut.
 3. **Discord sam się uruchomi** – Po instalacji Discord włączy się ponownie z pluginem Orbek. Na dole okna pojawi się zielone „Discord połączony”.
 4. **Przeglądaj zadania** – Zakładki Gry, Filmy i Za Orby, sortowanie i filtr kosmetyków. Każde zadanie pokazuje nagrody, postęp i ile czasu zostało.
-5. **Zapisz się i odbieraj** – „Zapisz się” przyjmuje zadanie. Gdy jest zaliczone, kliknij „Odbierz w Discordzie” – nagrodę odbierasz na stronie zadań (jest tam captcha).
+5. **Zapisz się i odbieraj** – „Zapisz się” przyjmuje zadanie. Gdy jest zaliczone, kliknij „Odbierz po kolei w Discordzie” – Discord pokaże nagrody jedna po drugiej, a Ty rozwiązujesz tylko captchę, gdy się pojawi.
 6. **Automat – na własne ryzyko** – W Ustawieniach możesz pozwolić Orbkowi robić zadania samemu, kilka naraz. Discord tego zabrania i może odebrać nagrody albo zablokować konto.
 7. **Mini podgląd** – Przełącz widok na „Mini” albo otwórz „Małe okno”, żeby widzieć same nagrody i kółka z postępem.
 8. **Aktualizacje** – Orbek aktualizuje się sam z GitHuba. Gdy wyjdzie nowsza wersja pluginu, zobaczysz pasek „Zaktualizuj plugin”.

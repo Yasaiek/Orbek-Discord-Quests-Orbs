@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">报告问题</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## 功能
 
@@ -25,7 +30,7 @@
 2. **点击“全部安装”** – 在安装页，Orbek 会下载 Node.js 和 Vencord、放入插件、构建并接入 Discord。需要几分钟。
 3. **Discord 会自动重启** – 安装后 Discord 会带着 Orbek 插件重新启动。窗口底部的“Discord 已连接”会变成绿色。
 4. **浏览任务** – 游戏、视频和 Orbs 奖励页签、排序以及装饰筛选。每个任务都会显示奖励、进度和剩余时间。
-5. **接受并领取** – “接受任务”即可接取。完成后点击“在 Discord 中领取”——在任务页面领取奖励（有验证码）。
+5. **接受并领取** – “接受任务”会接下任务。完成后点击“在 Discord 中逐个领取”——Discord 会逐个显示奖励，只有出现验证码时你才需要完成它。
 6. **自动化——风险自负** – 在设置中可以让 Orbek 自动完成任务，并可多个同时进行。Discord 禁止这样做，可能收回奖励或封禁账户。
 7. **迷你视图** – 把视图切换为“迷你”或打开“小窗口”，只看奖励和进度环。
 8. **更新** – Orbek 会从 GitHub 自动更新。有更新的插件时会出现“更新插件”提示条。

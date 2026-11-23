@@ -172,7 +172,7 @@
 "guide.4t": "Browse the quests",
 "guide.4": "Games, Videos and For Orbs tabs, sorting and a cosmetics filter. Every quest shows its rewards, progress and time left.",
 "guide.5t": "Accept and claim",
-"guide.5": "“Accept quest” takes the quest. When it is completed, click “Claim in Discord” – you claim the reward on the quests page (there is a captcha).",
+"guide.5": "“Accept quest” takes the quest. When it's done, click “Claim one by one in Discord” – Discord shows the rewards one after another and you only solve a captcha when one appears.",
 "guide.6t": "Automation – at your own risk",
 "guide.6": "In Settings you can let Orbek do quests by itself, several at once. Discord forbids this and may take the rewards back or ban the account.",
 "guide.7t": "Mini view",

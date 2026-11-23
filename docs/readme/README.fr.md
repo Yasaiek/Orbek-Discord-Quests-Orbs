@@ -9,6 +9,11 @@
   <a href="https://github.com/Yasaiek/Orbek-Discord-Quests-Orbs/issues/new">Signaler un bug</a>
 </p>
 <p align="center"><img src="../../docs/img/panel.png" alt="Orbek" width="880"></p>
+<table align="center"><tr>
+<td align="center" valign="top"><img src="../../docs/img/settings.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/guide.png" alt="" width="420"></td>
+<td align="center" valign="top"><img src="../../docs/img/mini.png" alt="" width="150"></td>
+</tr></table>
 
 ## Ce qu'il fait
 
@@ -25,7 +30,7 @@
 2. **Clique sur « Tout installer »** – Dans l'onglet Installation, Orbek télécharge Node.js et Vencord, y met le plugin, le compile et le branche sur Discord. Ça prend quelques minutes.
 3. **Discord redémarre tout seul** – Après l'installation, Discord redémarre avec le plugin Orbek. « Discord connecté » passe au vert en bas de la fenêtre.
 4. **Parcours les quêtes** – Onglets Jeux, Vidéos et Pour des Orbs, tri et filtre des cosmétiques. Chaque quête montre ses récompenses, sa progression et le temps restant.
-5. **Accepte et récupère** – « Accepter la quête » la prend. Une fois terminée, clique sur « Récupérer dans Discord » – tu récupères la récompense sur la page des quêtes (avec un captcha).
+5. **Accepter et récupérer** – « Accepter la quête » la prend. Une fois faite, clique « Récupérer une par une dans Discord » – Discord montre les récompenses l'une après l'autre, tu ne résous qu'un captcha s'il apparaît.
 6. **Automatisation – à tes risques** – Dans les Paramètres, tu peux laisser Orbek faire les quêtes tout seul, plusieurs à la fois. Discord l'interdit et peut reprendre les récompenses ou bannir le compte.
 7. **Vue mini** – Passe la vue en « Mini » ou ouvre « Petite fenêtre » pour ne voir que les récompenses et les anneaux de progression.
 8. **Mises à jour** – Orbek se met à jour tout seul depuis GitHub. Quand un plugin plus récent sort, une barre « Mettre à jour le plugin » apparaît.
