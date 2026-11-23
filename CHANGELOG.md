@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.9
+- Claim test tries up to three rewards (phone-video quests last) and both places Discord claims from; one quest Discord refuses no longer stops the others – it waits 6 hours and goes to the journal.
+
 ## 0.3.8
 - Claiming goes through Discord's own claim function (the one behind its "Claim reward" button), which adds the sealed data Discord wants for each quest. If Discord asks for a captcha, it shows it itself. Needs Discord's quests page opened once.
 

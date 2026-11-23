@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.3.2";
+const PLUGIN_VERSION = "0.3.3";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -231,6 +231,7 @@ let claiming = false;
 // Discorda o „/quests/…/claim…” są podglądane (adres i treść) i zapamiętywane jako wzór. Bez wzoru – próba
 // z domyślną treścią. Wszystko (wzór, ostatni błąd) idzie do Orbka do data/claim-debug.json.
 type ClaimTpl = { url: string; body: any; at: number; ok?: boolean; status?: number; err?: string; };
+let testing = false, lastClaimEv: { k: string; q?: Quest; msg: string; } = { k: "claimFail", msg: "" };
 let claimTpl: ClaimTpl | null = (() => { try { return JSON.parse(localStorage.getItem("orbek.claimTpl") ?? "null"); } catch { return null; } })();
 let claimDebug: any = { tpl: claimTpl }, claimDebugSent = "";
 let origPost: any = null, ownPost = false;
@@ -289,12 +290,16 @@ async function claim(q: Quest, byHand: boolean): Promise<boolean> {
     try {
         const fn = discordClaimFn();
         if (fn) { // tak jak przycisk w Discordzie: platforma 0 (wszędzie), miejsce 10 (strona zadań)
-            const mark = Date.now();
-            let thrown: any = null;
-            try { await fn(q.id, 0, 10); } catch (e) { thrown = e; }
-            await new Promise(r => setTimeout(r, 600));
-            const seen = claimDebug.seen;
-            const okSeen = seen && seen.at >= mark - 50 && seen.ok;
+            let thrown: any = null, seen: any = null, okSeen = false;
+            for (const loc of [11, 10]) { // 11: pasek zadania, 10: strona zadań – Discord przyjmował oba
+                const mark = Date.now();
+                thrown = null;
+                try { await fn(q.id, 0, loc); } catch (e) { thrown = e; }
+                await new Promise(r => setTimeout(r, 600));
+                seen = claimDebug.seen;
+                okSeen = !!(seen && seen.at >= mark - 50 && seen.ok);
+                if (okSeen || questsStore()?.getQuest?.(q.id)?.userStatus?.claimedAt) break;
+            }
             const st = questsStore()?.getQuest?.(q.id)?.userStatus;
             if (okSeen || st?.claimedAt) {
                 claimDebug = { ...claimDebug, lastTry: { via: "discord", at: Date.now(), ok: true } };
@@ -330,8 +335,11 @@ async function claim(q: Quest, byHand: boolean): Promise<boolean> {
         return true;
     } catch (e: any) {
         const b = e?.body ?? {};
-        if (b.captcha_key || b.captcha_sitekey || b.captcha_service) say("claimCaptcha", q);
-        else say(claimTpl?.ok ? "claimFail" : "claimLearn", q, errText(e));
+        claimRefused.set(q.id, Date.now());
+        const k = b.captcha_key || b.captcha_sitekey || b.captcha_service ? "claimCaptcha" : claimTpl?.ok ? "claimFail" : "claimLearn";
+        lastClaimEv = { k, q, msg: errText(e) };
+        if (testing && k !== "claimCaptcha") events.push({ k: "claimSkip", id: q.id, name: q.name, msg: errText(e) }); // w teście: tylko wpis do dziennika
+        else say(k, q, errText(e));
         if (byHand) openQuests();
         return false;
     } finally {
@@ -344,10 +352,19 @@ function openQuests() {
     Native.focusDiscord();
 }
 
+// Nagrody do odebrania: najpierw te z komputera, na końcu zadania „na telefonie” (Discord może chcieć ich odbioru
+// w aplikacji mobilnej); te, których Discord niedawno nie przyjął, czekają 6 godzin.
+const claimRefused = new Map<string, number>();
+function claimable(): Quest[] {
+    const now = Date.now();
+    return [...known.values()]
+        .filter(q => q.completedAt && !q.claimedAt && !(q.expiresAt && q.expiresAt < now) && now - (claimRefused.get(q.id) ?? 0) > 6 * 3600_000)
+        .sort((a, b) => Number(a.task.includes("MOBILE")) - Number(b.task.includes("MOBILE")));
+}
+
 async function autoClaimTick() {
     if (!autoClaim || claiming) return;
-    for (const q of known.values()) {
-        if (!q.completedAt || q.claimedAt || (q.expiresAt && q.expiresAt < Date.now())) continue;
+    for (const q of claimable()) {
         if (Date.now() - (claimTried.get(q.id) ?? 0) < 30 * 60_000) continue;
         await claim(q, false);
         return; // jedna na raz, kolejna przy następnym obrocie
@@ -527,9 +544,14 @@ async function doCmd(c: any) {
         case "refresh":
             await load();
             break;
-        case "claimTest": { // spróbuj odebrać jedną nagrodę teraz
-            const c = [...known.values()].find(x => x.completedAt && !x.claimedAt && !(x.expiresAt && x.expiresAt < Date.now()));
-            if (c) await claim(c, false); else say("claimNone");
+        case "claimTest": { // spróbuj odebrać teraz – do trzech różnych nagród, aż któraś przejdzie
+            const list = claimable().slice(0, 3);
+            if (!list.length) { say("claimNone"); break; }
+            testing = true;
+            let ok = false;
+            for (const c of list) if ((ok = await claim(c, false))) break;
+            testing = false;
+            if (!ok) say(lastClaimEv.k, lastClaimEv.q, lastClaimEv.msg);
             break;
         }
         case "enroll":

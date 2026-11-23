@@ -18,6 +18,10 @@ type ClaimNote struct {
 
 // claimResultLocked records a result from the plugin. Call with e.mu held.
 func (e *Engine) claimResultLocked(state, reason string) {
+	worked := e.set.ClaimNote.State == "ok"
+	if worked && state == "failed" {
+		return // claiming works; one quest Discord won't take (it is only in the journal) doesn't switch it off
+	}
 	e.set.ClaimNote = ClaimNote{State: state, Reason: reason, At: time.Now().UnixMilli()}
 	if (state == "captcha" || state == "failed" || state == "learn" || state == "nofn") && e.set.AutoClaim {
 		e.set.AutoClaim = false
