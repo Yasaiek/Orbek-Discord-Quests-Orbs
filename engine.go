@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.3.3"
+var version = "0.3.4"
 
 const appName = "Orbek"
 
@@ -177,6 +177,9 @@ func newEngine(dir string) *Engine {
 	readJSON(filepath.Join(dir, "settings.json"), &e.set)
 	if !e.set.RpcInit {
 		e.set.RpcQuest, e.set.RpcOrbs, e.set.RpcToGet, e.set.RpcBtn, e.set.RpcInit = true, true, true, true, true
+	}
+	if e.set.ClaimNote.State == "testing" { // a test cut short by a restart
+		e.set.ClaimNote = ClaimNote{State: "idle"}
 	}
 	if e.set.RefreshMin <= 0 {
 		e.set.RefreshMin = 10

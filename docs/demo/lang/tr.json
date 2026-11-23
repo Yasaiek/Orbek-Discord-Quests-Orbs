@@ -268,5 +268,8 @@
 "rpc.more": "+%d sürüyor",
 "rpc.orbs": "Orbs: %d",
 "rpc.toGet": "Kazanılacak: %d Orbs",
-"rpc.btn": "Orbek'i indir"
+"rpc.btn": "Orbek'i indir",
+"claim.oldplugin": "Discord'daki eklenti denemek için çok eski – Kurulum sekmesinde “Eklentiyi güncelle”ye tıkla.",
+"claim.noanswer": "Eklenti yanıt vermedi – Discord'un açık olduğunu kontrol edip yeniden dene.",
+"claim.noplugin": "Discord Orbek'e bağlı değil – deneyecek bir şey yok."
 }

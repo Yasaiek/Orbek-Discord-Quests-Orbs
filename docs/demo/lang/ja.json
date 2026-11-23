@@ -268,5 +268,8 @@
 "rpc.more": "+%d 実行中",
 "rpc.orbs": "Orbs：%d",
 "rpc.toGet": "獲得可能：%d Orbs",
-"rpc.btn": "Orbekを入手"
+"rpc.btn": "Orbekを入手",
+"claim.oldplugin": "Discord内のプラグインが古いためテストできません – セットアップタブで「プラグインを更新」をクリックしてください。",
+"claim.noanswer": "プラグインが応答しませんでした – Discordが起動しているか確認して、もう一度お試しください。",
+"claim.noplugin": "DiscordがOrbekに接続されていません – テストできません。"
 }

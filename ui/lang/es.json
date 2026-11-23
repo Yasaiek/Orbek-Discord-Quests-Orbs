@@ -268,5 +268,8 @@
 "rpc.more": "+%d en curso",
 "rpc.orbs": "Orbs: %d",
 "rpc.toGet": "Por conseguir: %d Orbs",
-"rpc.btn": "Descargar Orbek"
+"rpc.btn": "Descargar Orbek",
+"claim.oldplugin": "El plugin de Discord es demasiado viejo para probar – pulsa «Actualizar plugin» en la pestaña Instalación.",
+"claim.noanswer": "El plugin no respondió – comprueba que Discord esté abierto y vuelve a intentarlo.",
+"claim.noplugin": "Discord no está conectado a Orbek – no hay con qué probar."
 }

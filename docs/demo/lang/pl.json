@@ -268,5 +268,8 @@
 "rpc.more": "+%d w toku",
 "rpc.orbs": "Orby: %d",
 "rpc.toGet": "Do zdobycia: %d Orbów",
-"rpc.btn": "Pobierz Orbka"
+"rpc.btn": "Pobierz Orbka",
+"claim.oldplugin": "Plugin w Discordzie jest za stary, żeby testować odbieranie – kliknij „Zaktualizuj plugin” w zakładce Instalacja.",
+"claim.noanswer": "Plugin nie odpowiedział – sprawdź, czy Discord jest włączony, i spróbuj jeszcze raz.",
+"claim.noplugin": "Discord nie jest połączony z Orbkiem – nie ma czym testować."
 }

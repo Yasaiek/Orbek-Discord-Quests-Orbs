@@ -268,5 +268,8 @@
 "rpc.more": "+%d 进行中",
 "rpc.orbs": "Orbs：%d",
 "rpc.toGet": "可获得：%d Orbs",
-"rpc.btn": "下载 Orbek"
+"rpc.btn": "下载 Orbek",
+"claim.oldplugin": "Discord 中的插件太旧，无法测试——请在“安装”页点击“更新插件”。",
+"claim.noanswer": "插件没有响应——请确认 Discord 正在运行后再试一次。",
+"claim.noplugin": "Discord 未连接到 Orbek——无法测试。"
 }

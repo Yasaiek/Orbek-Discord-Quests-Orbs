@@ -268,5 +268,8 @@
 "rpc.more": "+%d идёт",
 "rpc.orbs": "Orbs: %d",
 "rpc.toGet": "К получению: %d Orbs",
-"rpc.btn": "Скачать Orbek"
+"rpc.btn": "Скачать Orbek",
+"claim.oldplugin": "Плагин в Discord слишком старый для проверки – нажмите «Обновить плагин» во вкладке Установка.",
+"claim.noanswer": "Плагин не ответил – проверьте, что Discord запущен, и попробуйте снова.",
+"claim.noplugin": "Discord не подключён к Orbek – проверять нечем."
 }

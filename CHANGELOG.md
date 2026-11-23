@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4
+- CPU and RAM have their own tiles: now, lowest and highest since start, with a range bar.
+- The claim test no longer hangs: with an old plugin it says to update the plugin, and without an answer it stops after 45 s.
+
 ## 0.3.3
 - After an update the open panel reloads itself, so the new version shows right away.
 - The tray menu is dark (with the colourful icons), also when Windows uses the light theme.
