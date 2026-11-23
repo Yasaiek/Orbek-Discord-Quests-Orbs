@@ -276,5 +276,6 @@
 "set.orbAnim": "Animated Orbs icon",
 "set.orbAnimHint": "The Orbs turn; switch off for a still icon.",
 "set.stats": "Send anonymous statistics",
-"set.statsHint": "Every 15 minutes: a random installation number, the version and the average CPU and RAM use – for the counter on Orbek's website. No names, accounts or quests."
+"set.statsHint": "Every 15 minutes: a random installation number, the version and the average CPU and RAM use – for the counter on Orbek's website. No names, accounts or quests.",
+"claim.nofn": "Claiming uses Discord's own function, which loads only once the quests page is opened. Open Discover → Quests in Discord once and switch claiming on again."
 }

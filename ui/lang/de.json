@@ -276,5 +276,6 @@
 "set.orbAnim": "Animiertes Orbs-Symbol",
 "set.orbAnimHint": "Die Orbs drehen sich; ausschalten für ein stilles Symbol.",
 "set.stats": "Anonyme Statistiken senden",
-"set.statsHint": "Alle 15 Minuten: eine zufällige Installationsnummer, die Version und die durchschnittliche CPU- und RAM-Nutzung – für den Zähler auf Orbeks Website. Keine Namen, Konten oder Quests."
+"set.statsHint": "Alle 15 Minuten: eine zufällige Installationsnummer, die Version und die durchschnittliche CPU- und RAM-Nutzung – für den Zähler auf Orbeks Website. Keine Namen, Konten oder Quests.",
+"claim.nofn": "Das Abholen nutzt Discords eigene Funktion, die erst mit der Quest-Seite geladen wird. Öffne in Discord einmal Entdecken → Quests und schalte das Abholen wieder ein."
 }

@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.3.7"
+var version = "0.3.8"
 
 const appName = "Orbek"
 
@@ -275,6 +275,8 @@ func (e *Engine) onSync(s Sync) map[string]any {
 			e.claimResultLocked("failed", ev.Msg)
 		case "claimNone":
 			e.claimResultLocked("none", "")
+		case "claimNoFn":
+			e.claimResultLocked("nofn", "")
 		case "claimLearn":
 			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
 			e.claimResultLocked("learn", ev.Msg)

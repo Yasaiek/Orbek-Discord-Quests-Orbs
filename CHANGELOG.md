@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.8
+- Claiming goes through Discord's own claim function (the one behind its "Claim reward" button), which adds the sealed data Discord wants for each quest. If Discord asks for a captcha, it shows it itself. Needs Discord's quests page opened once.
+
 ## 0.3.7
 - Anonymous statistics for the website (on by default, Settings → "Send anonymous statistics"): every 15 minutes a random installation number, the version and the average CPU and RAM use. The site shows how many copies run now and their average use.
 

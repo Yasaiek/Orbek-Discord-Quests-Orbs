@@ -13,12 +13,12 @@
  */
 
 import definePlugin, { PluginNative } from "@utils/types";
-import { findStore } from "@webpack";
+import { findStore, wreq } from "@webpack";
 import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, RestAPI, UserStore } from "@webpack/common";
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.3.1";
+const PLUGIN_VERSION = "0.3.2";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -251,6 +251,35 @@ function watchClaims() {
         return p;
     };
 }
+// Funkcja Discorda, którą woła przycisk „Odbierz nagrodę” (sama dokłada zapieczętowane dane zadania i decyzji).
+// Szukana w załadowanym kodzie Discorda po tym, że wysyła zapytanie odbioru zadania (nie „creatives”).
+let claimFn: ((...a: any[]) => any) | null = null, claimFnLook = 0;
+function discordClaimFn() {
+    if (claimFn || Date.now() - claimFnLook < 20_000) return claimFn;
+    claimFnLook = Date.now();
+    try {
+        const test = (f: any) => {
+            if (typeof f !== "function") return false;
+            const src = Function.prototype.toString.call(f);
+            return src.length < 6000 && /QUESTS?_CLAIM_REWARD\b/.test(src) && !/CREATIVES/.test(src);
+        };
+        for (const id in wreq.c) {
+            const ex = (wreq.c as any)[id]?.exports;
+            if (!ex || typeof ex !== "object" && typeof ex !== "function") continue;
+            for (const k of Object.keys(ex)) {
+                let v: any;
+                try { v = ex[k]; } catch { continue; }
+                if (test(v)) { claimFn = v; break; }
+                if (v && typeof v === "object") for (const k2 of Object.keys(v)) { let w: any; try { w = v[k2]; } catch { continue; } if (test(w)) { claimFn = w; break; } }
+                if (claimFn) break;
+            }
+            if (claimFn) break;
+        }
+        if (claimFn) claimDebug = { ...claimDebug, fn: { args: claimFn.length, src: Function.prototype.toString.call(claimFn).slice(0, 2500) } };
+    } catch (e) { console.error(TAG, "claim fn", e); }
+    return claimFn;
+}
+
 function unwatchClaims() { if (origPost) (RestAPI as any).post = origPost; origPost = null; }
 
 async function claim(q: Quest, byHand: boolean): Promise<boolean> {
@@ -258,6 +287,30 @@ async function claim(q: Quest, byHand: boolean): Promise<boolean> {
     claiming = true;
     claimTried.set(q.id, Date.now());
     try {
+        const fn = discordClaimFn();
+        if (fn) { // tak jak przycisk w Discordzie: platforma 0 (wszędzie), miejsce 10 (strona zadań)
+            const mark = Date.now();
+            let thrown: any = null;
+            try { await fn(q.id, 0, 10); } catch (e) { thrown = e; }
+            await new Promise(r => setTimeout(r, 600));
+            const seen = claimDebug.seen;
+            const okSeen = seen && seen.at >= mark - 50 && seen.ok;
+            const st = questsStore()?.getQuest?.(q.id)?.userStatus;
+            if (okSeen || st?.claimedAt) {
+                claimDebug = { ...claimDebug, lastTry: { via: "discord", at: Date.now(), ok: true } };
+                known.set(q.id, { ...q, claimedAt: Date.now() });
+                say("claimed", q);
+                lastLoad = 0;
+                return true;
+            }
+            claimDebug = { ...claimDebug, lastTry: { via: "discord", at: Date.now(), ok: false, err: thrown ? errText(thrown) : seen?.err, status: thrown?.status ?? seen?.status, raw: thrown?.body } };
+            throw thrown ?? { body: { message: seen?.err ?? "Discord did not claim" } };
+        }
+        if (claimTpl?.ok) { // Discord już odbierał, ale jego funkcji nie ma w załadowanym kodzie – trzeba otworzyć stronę zadań
+            say("claimNoFn", q);
+            if (byHand) openQuests();
+            return false;
+        }
         let url = `/quests/${q.id}/claim-reward`;
         let body: any = { platform: 0, location: 11, is_targeted: false, metadata_raw: null, metadata_sealed: null, traffic_metadata_raw: null, traffic_metadata_sealed: null };
         if (claimTpl?.ok) { // to, co Discord sam wysłał – z zadaniem podmienionym; zapieczętowane dane były dla tamtego zadania

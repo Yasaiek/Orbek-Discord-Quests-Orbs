@@ -145,7 +145,7 @@ img.i.orbpic { object-fit: contain; filter: drop-shadow(0 0 4px rgba(140,110,255
 .claimst #claimTxt { flex: 1; }
 .claimst .dot { width: 9px; height: 9px; border-radius: 50%; background: #8b8fa3; flex-shrink: 0; }
 .claimst.s-ok { border-color: rgba(62,207,142,.35); color: #bff3da; } .claimst.s-ok .dot { background: #3ecf8e; box-shadow: 0 0 10px #3ecf8e; }
-.claimst.s-testing .dot { background: #f0b232; animation: blink 1s infinite; } .claimst.s-learn, .claimst.s-oldplugin, .claimst.s-noanswer, .claimst.s-noplugin { border-color: rgba(240,178,50,.4); color: #ffe2a8; } .claimst.s-learn .dot, .claimst.s-oldplugin .dot, .claimst.s-noanswer .dot, .claimst.s-noplugin .dot { background: #f0b232; } .claimst.s-none .dot { background: #7cc4ff; }
+.claimst.s-testing .dot { background: #f0b232; animation: blink 1s infinite; } .claimst.s-nofn, .claimst.s-learn, .claimst.s-oldplugin, .claimst.s-noanswer, .claimst.s-noplugin { border-color: rgba(240,178,50,.4); color: #ffe2a8; } .claimst.s-nofn .dot, .claimst.s-learn .dot, .claimst.s-oldplugin .dot, .claimst.s-noanswer .dot, .claimst.s-noplugin .dot { background: #f0b232; } .claimst.s-none .dot { background: #7cc4ff; }
 .claimst.s-captcha, .claimst.s-failed { border-color: rgba(242,91,91,.4); color: #ffc9c9; } .claimst.s-captcha .dot, .claimst.s-failed .dot { background: #f25b5b; box-shadow: 0 0 10px #f25b5b; }
 @keyframes blink { 50% { opacity: .3; } }
 small.okc { color: #7fe0b2 !important; }
@@ -897,7 +897,7 @@ $('claimTest').onclick = () => op({ op: 'claimTest' });
 let claimSeen = +(localStorage.getItem('claimSeen') || 0);
 function claimNotice() {
   const cn = S.claimNote || {};
-  if ((cn.state === 'captcha' || cn.state === 'failed' || cn.state === 'learn') && cn.at > claimSeen) {
+  if ((cn.state === 'captcha' || cn.state === 'failed' || cn.state === 'learn' || cn.state === 'nofn') && cn.at > claimSeen) {
     claimSeen = cn.at; try { localStorage.setItem('claimSeen', String(cn.at)); } catch (e) {}
     ask(t('claim.offTitle'), t('claim.' + cn.state, { r: cn.reason || '?' }), 'OK', false, true);
   }

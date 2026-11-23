@@ -276,5 +276,6 @@
 "set.orbAnim": "Hareketli Orbs simgesi",
 "set.orbAnimHint": "Orbs döner; sabit simge için kapat.",
 "set.stats": "Anonim istatistik gönder",
-"set.statsHint": "Her 15 dakikada: rastgele bir kurulum numarası, sürüm ve ortalama CPU ve RAM kullanımı – Orbek'in sitesindeki sayaç için. İsim, hesap ya da görev yok."
+"set.statsHint": "Her 15 dakikada: rastgele bir kurulum numarası, sürüm ve ortalama CPU ve RAM kullanımı – Orbek'in sitesindeki sayaç için. İsim, hesap ya da görev yok.",
+"claim.nofn": "Alma, Discord'un kendi işlevini kullanır; bu yalnızca görevler sayfası açılınca yüklenir. Discord'da bir kez Keşfet → Görevler'i aç ve almayı yeniden aç."
 }

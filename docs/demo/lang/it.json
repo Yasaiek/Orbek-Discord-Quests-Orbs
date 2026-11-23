@@ -276,5 +276,6 @@
 "set.orbAnim": "Icona Orb animata",
 "set.orbAnimHint": "Gli Orb ruotano; spegni per un'icona ferma.",
 "set.stats": "Invia statistiche anonime",
-"set.statsHint": "Ogni 15 minuti: un numero di installazione casuale, la versione e l'uso medio di CPU e RAM – per il contatore sul sito di Orbek. Niente nomi, account o missioni."
+"set.statsHint": "Ogni 15 minuti: un numero di installazione casuale, la versione e l'uso medio di CPU e RAM – per il contatore sul sito di Orbek. Niente nomi, account o missioni.",
+"claim.nofn": "Il riscatto usa la funzione di Discord, caricata solo aprendo la pagina delle missioni. Apri una volta Esplora → Missioni in Discord e riattiva il riscatto."
 }

@@ -276,5 +276,6 @@
 "set.orbAnim": "Icône Orbs animée",
 "set.orbAnimHint": "Les Orbs tournent ; désactive pour une icône fixe.",
 "set.stats": "Envoyer des statistiques anonymes",
-"set.statsHint": "Toutes les 15 minutes : un numéro d'installation aléatoire, la version et l'utilisation moyenne du CPU et de la RAM – pour le compteur du site d'Orbek. Ni noms, ni comptes, ni quêtes."
+"set.statsHint": "Toutes les 15 minutes : un numéro d'installation aléatoire, la version et l'utilisation moyenne du CPU et de la RAM – pour le compteur du site d'Orbek. Ni noms, ni comptes, ni quêtes.",
+"claim.nofn": "La récupération utilise la fonction de Discord, chargée seulement avec la page des quêtes. Ouvre une fois Découvrir → Quêtes dans Discord et réactive la récupération."
 }

@@ -276,5 +276,6 @@
 "set.orbAnim": "Icono de Orbs animado",
 "set.orbAnimHint": "Los Orbs giran; desactívalo para un icono quieto.",
 "set.stats": "Enviar estadísticas anónimas",
-"set.statsHint": "Cada 15 minutos: un número de instalación aleatorio, la versión y el uso medio de CPU y RAM – para el contador de la web de Orbek. Sin nombres, cuentas ni misiones."
+"set.statsHint": "Cada 15 minutos: un número de instalación aleatorio, la versión y el uso medio de CPU y RAM – para el contador de la web de Orbek. Sin nombres, cuentas ni misiones.",
+"claim.nofn": "Reclamar usa la función de Discord, que solo se carga al abrir la página de misiones. Abre una vez Descubrir → Misiones en Discord y vuelve a activar el reclamo."
 }

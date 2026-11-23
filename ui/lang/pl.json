@@ -276,5 +276,6 @@
 "set.orbAnim": "Animowana ikona Orbów",
 "set.orbAnimHint": "Orby się obracają; wyłącz, jeśli wolisz nieruchomą ikonę.",
 "set.stats": "Wysyłaj anonimowe statystyki",
-"set.statsHint": "Co 15 minut: losowy numer instalacji, wersja oraz średnie zużycie CPU i RAM – do licznika na stronie Orbka. Bez nazw, kont i zadań."
+"set.statsHint": "Co 15 minut: losowy numer instalacji, wersja oraz średnie zużycie CPU i RAM – do licznika na stronie Orbka. Bez nazw, kont i zadań.",
+"claim.nofn": "Odbieranie korzysta z funkcji samego Discorda, a ta ładuje się dopiero po otwarciu strony zadań. Otwórz raz w Discordzie Odkrywaj → Zadania i włącz odbieranie jeszcze raz."
 }

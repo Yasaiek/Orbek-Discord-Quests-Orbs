@@ -276,5 +276,6 @@
 "set.orbAnim": "动态 Orbs 图标",
 "set.orbAnimHint": "Orbs 会旋转；关闭则显示静态图标。",
 "set.stats": "发送匿名统计",
-"set.statsHint": "每 15 分钟发送：随机安装编号、版本以及平均 CPU 和内存占用——用于 Orbek 网站上的计数器。不含名字、账户或任务。"
+"set.statsHint": "每 15 分钟发送：随机安装编号、版本以及平均 CPU 和内存占用——用于 Orbek 网站上的计数器。不含名字、账户或任务。",
+"claim.nofn": "领取使用 Discord 自己的功能，它只在打开任务页面时加载。请在 Discord 中打开一次“发现 → 任务”，然后重新开启领取。"
 }
