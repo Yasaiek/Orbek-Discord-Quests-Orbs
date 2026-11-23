@@ -142,6 +142,9 @@ img.i.orbpic { object-fit: contain; filter: drop-shadow(0 0 4px rgba(140,110,255
 .every input { width: 74px; text-align: center; background: rgba(0,0,0,.25); border: 1px solid var(--line2); color: var(--text); border-radius: 12px; padding: 9px 10px; font: 600 15px var(--display); outline: 0; }
 .every input:focus { border-color: rgba(150,130,255,.7); box-shadow: 0 0 0 3px rgba(120,100,255,.2); }
 .tag.exp { margin-left: 4px; font: 700 10px var(--display); letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; color: #ffd98a; background: rgba(240,178,50,.12); border: 1px solid rgba(240,178,50,.35); }
+.claimbar { display: flex; align-items: center; gap: 12px; padding: 10px 12px 10px 14px; margin-bottom: 12px; border-radius: 14px; border: 1px solid rgba(62,207,142,.35); background: linear-gradient(135deg, rgba(62,207,142,.14), rgba(24,160,201,.06)); }
+.claimbar .grow { display: flex; align-items: center; gap: 10px; font-weight: 600; color: #d2f9e5; }
+.claimbar .cg { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, #2ed39a, #18a0c9); color: #fff; box-shadow: 0 8px 18px -10px #2ed39a; }
 .claimst { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin: 4px 0 14px; border-radius: 12px; background: rgba(0,0,0,.2); border: 1px solid var(--line); color: var(--sub); font-size: 13px; }
 .claimst #claimTxt { flex: 1; }
 .claimst .dot { width: 9px; height: 9px; border-radius: 50%; background: #8b8fa3; flex-shrink: 0; }
@@ -350,6 +353,10 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
         <button class="tog" id="fHide"><i data-ic="eyeoff"></i><span data-i="f.hide"></span></button>
       </div>
     </div>
+    <div class="claimbar" id="claimbar" hidden>
+      <div class="grow"><span class="cg"><i data-ic="gift"></i></span><span id="claimText"></span></div>
+      <button class="btn ok sm" id="claimAll"><i data-ic="gift"></i><span data-i="cl.go"></span></button>
+    </div>
     <div class="autobar" id="autobar" hidden>
       <div class="grow"><span class="pulse" id="autoDot"></span><span id="autoText"></span></div>
       <button class="btn pri sm" id="runShown"></button>
@@ -393,11 +400,6 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
         <div class="gamebox" id="gameBox"><div class="gsearch"><i data-ic="search"></i><input id="fGameQ" data-ph="f.search"></div><div class="chips games" id="fGameList"></div></div>
       </div>
     </div>
-    <div class="card" id="claimCard">
-      <h3><i data-ic="gift"></i><span data-i="set.claimTitle"></span><span class="tag exp" data-i="set.exp"></span></h3>
-      <div class="frow"><div class="fl"><small class="warn" data-i="set.autoClaimHint"></small></div><div class="chips" id="fClaim"></div></div>
-      <div class="claimst" id="claimSt"><span class="dot"></span><span id="claimTxt"></span><button class="btn sm" id="claimTest"><i data-ic="play"></i><span data-i="set.claimTest"></span></button></div>
-    </div>
     <div class="card">
       <h3><i data-ic="refresh"></i><span data-i="set.refTitle"></span></h3>
       <div class="frow"><div class="fl"><b data-i="set.refEvery"></b><small data-i="set.refHint"></small></div>
@@ -428,7 +430,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.3.9"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.0"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -747,6 +749,8 @@ function render(force) {
   $('plugBanner').hidden = !old; if (old) $('plugText').textContent = t('plug.old', { a: S.plugin, b: S.pluginLatest });
   const runs = S.runs || [];
   const runnable = list.filter((q) => open(q) && q.auto && !runOf(q) && !S.queue.includes(q.id) && !((q.task === 'PLAY_ON_DESKTOP' || q.task === 'STREAM_ON_DESKTOP') && !S.desktop));
+  { const w = S.quests.filter(waiting); $('claimbar').hidden = !(w.length && S.connected);
+    $('claimText').textContent = t('cl.text', { n: w.length }); }
   $('autobar').hidden = !(S.settings.autoMode && S.connected);
   $('autoDot').className = 'pulse' + (runs.length ? '' : ' idle');
   if (runs.length) { $('autoText').textContent = ''; $('autoText').append(t('auto.running') + ' ', el('b', '', runs.map((r) => (S.quests.find((x) => x.id === r.id) || {}).name || '…').join(', ')), S.queue.length ? ' · ' + t('auto.queue', { n: S.queue.length }) : ''); }
@@ -847,7 +851,7 @@ const UNITS = [['m', 1], ['h', 60], ['d', 1440]];
 let refUnit = '';
 function renderFilters(force) {
   const st = S.settings, q = ($('fGameQ').value || '').trim().toLowerCase(), games = (S.games || []).map((g) => g.name);
-  const sig = JSON.stringify([st, S.games, q, LANG, orbImg(), S.orbGlyph, S.claimNote, S.rpc]);
+  const sig = JSON.stringify([st, S.games, q, LANG, orbImg(), S.orbGlyph, S.rpc]);
   if (!force && $('autoFilt').dataset.sig === sig) return; $('autoFilt').dataset.sig = sig;
   $('autoFilt').classList.toggle('off', !st.autoMode); $('fPar').classList.toggle('off', !st.autoMode);
   // how many at once
@@ -866,16 +870,6 @@ function renderFilters(force) {
   const list = [...new Set([...(st.gameList || []), ...games])].filter((n) => !q || n.toLowerCase().includes(q));
   if (!list.length) box.append(el('small', 'muted', games.length ? '–' : t('f.noGames')));
   for (const n of list) box.append(chip(n, gameIcon(n), (st.gameList || []).includes(n), () => setPatch({ gameList: toggleIn(st.gameList, n) })));
-  // claiming
-  const c = $('fClaim'); c.textContent = '';
-  c.append(chip(t('set.autoClaim'), 'gift', !!st.autoClaim, async () => {
-    if (!st.autoClaim && !(await ask(t('set.autoClaim'), t('set.autoClaimConfirm'), t('dlg.turnOn'), true))) return;
-    setPatch({ autoClaim: !st.autoClaim });
-  }));
-  const cn = S.claimNote || {}, cs = cn.state || 'idle';
-  $('claimSt').className = 'claimst s-' + cs;
-  $('claimTxt').textContent = t('claim.' + cs, { r: cn.reason || '?', t: cn.at ? new Date(cn.at).toLocaleString(LANG.replace('_', '-')) : '' });
-  $('claimTest').disabled = cs === 'testing';
   // how often to look for new quests
   const mins = st.refreshMin || 10;
   if (!refUnit) refUnit = mins % 1440 === 0 ? 'd' : mins % 60 === 0 ? 'h' : 'm';
@@ -895,16 +889,6 @@ function renderFilters(force) {
 }
 $('fGameQ').oninput = () => renderFilters(true);
 $('refN').onchange = () => { const per = UNITS.find((u) => u[0] === (refUnit || 'm'))[1]; setPatch({ refreshMin: Math.min(43200, Math.max(1, Math.round(+$('refN').value || 1) * per)) }); };
-$('claimTest').onclick = () => op({ op: 'claimTest' });
-// a failed claim test switches claiming off: say so once, in a dialog
-let claimSeen = +(localStorage.getItem('claimSeen') || 0);
-function claimNotice() {
-  const cn = S.claimNote || {};
-  if ((cn.state === 'captcha' || cn.state === 'failed' || cn.state === 'learn' || cn.state === 'nofn') && cn.at > claimSeen) {
-    claimSeen = cn.at; try { localStorage.setItem('claimSeen', String(cn.at)); } catch (e) {}
-    ask(t('claim.offTitle'), t('claim.' + cn.state, { r: cn.reason || '?' }), 'OK', false, true);
-  }
-}
 const LANG_NAMES = [['en', 'English'], ['pl', 'Polski'], ['de', 'Deutsch'], ['fr', 'Français'], ['es', 'Español'], ['it', 'Italiano'], ['pt_BR', 'Português (BR)'], ['ru', 'Русский'], ['uk', 'Українська'], ['tr', 'Türkçe'], ['ja', '日本語'], ['zh_CN', '简体中文']];
 function flagOf(code) { if (!code) { const s = icon('globe', 'flag'); return s; } const i = el('img', 'flag'); i.src = 'flags/' + code.split('_')[0] + '.svg'; i.alt = ''; return i; }
 function drawLangDD() {
@@ -924,7 +908,6 @@ function renderSettings() {
   drawLangDD();
   $('statsRow').hidden = !S.statsOn;
   renderFilters();
-  claimNotice();
   document.querySelectorAll('[data-set]').forEach((n) => {
     if (document.activeElement === n) return;
     const v = S.settings[n.dataset.set];
@@ -943,7 +926,6 @@ document.querySelectorAll('[data-set]').forEach((n) => (n.onchange = async () =>
   let v = n.type === 'checkbox' ? n.checked : n.value;
   if (n.dataset.set === 'parallel') v = +v;
   if (n.dataset.set === 'autoMode' && v && !(await ask(t('set.autoMode'), t('set.autoModeConfirm'), t('dlg.turnOn'), true))) { n.checked = false; return; }
-  if (n.dataset.set === 'autoClaim' && v && !(await ask(t('set.autoClaim'), t('set.autoClaimConfirm'), t('dlg.turnOn'), true))) { n.checked = false; return; }
   op({ op: 'settings', patch: { [n.dataset.set]: v } });
   if (n.dataset.set === 'orbAnim') { S.settings.orbAnim = v; render(true); renderFilters(true); }
 }));
@@ -951,6 +933,7 @@ document.querySelectorAll('[data-set]').forEach((n) => (n.onchange = async () =>
 $('search').oninput = (e) => { ui.q = e.target.value; render(true); };
 $('refresh').onclick = () => op({ op: 'refresh' });
 $('stopAll').onclick = () => op({ op: 'stopAll' });
+$('claimAll').onclick = () => op({ op: 'claimAll' });
 $('clearLog').onclick = () => op({ op: 'clearLog' });
 $('vCards').onclick = () => { ui.view = 'cards'; keep(); render(true); };
 $('vMini').onclick = () => { ui.view = 'mini'; keep(); render(true); };

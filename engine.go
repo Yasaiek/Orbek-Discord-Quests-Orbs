@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.3.9"
+var version = "0.4.0"
 
 const appName = "Orbek"
 
@@ -19,21 +19,19 @@ const appName = "Orbek"
 // Requests to Discord therefore come from the real Discord client, and the account's token never leaves it.
 
 type Settings struct {
-	Lang        string    `json:"lang"`               // "" = the system's
-	AutoMode    bool      `json:"autoMode"`           // the user allowed doing quests automatically
-	AutoAll     bool      `json:"autoAll"`            // ...and open quests are done without asking
-	AutoOnly    string    `json:"autoOnly,omitempty"` // up to 0.2.1: all | orbs | cosmetic (now AutoKinds)
-	AutoKinds   []string  `json:"autoKinds"`          // which rewards the automat goes for: orbs, cosmetic, ingame, code, other
-	AutoTasks   []string  `json:"autoTasks"`          // which tasks: video, play, activity, stream
-	AutoGames   string    `json:"autoGames"`          // all | only (the games in GameList) | except (all but those)
-	GameList    []string  `json:"gameList"`
-	OpenOnStart bool      `json:"openOnStart"` // show the panel when the program starts
-	Autostart   bool      `json:"autostart"`   // start with Windows
-	Parallel    int       `json:"parallel"`    // how many quests at once (0 = no limit)
-	AutoUpdate  bool      `json:"autoUpdate"`
-	ClaimNote   ClaimNote `json:"claimNote"`  // how the last try of claiming went
-	RefreshMin  int       `json:"refreshMin"` // how often the plugin reads the quest list again (minutes)
-	AutoClaim   bool      `json:"autoClaim"`  // experimental: claim finished quests through Discord's own request
+	Lang        string   `json:"lang"`               // "" = the system's
+	AutoMode    bool     `json:"autoMode"`           // the user allowed doing quests automatically
+	AutoAll     bool     `json:"autoAll"`            // ...and open quests are done without asking
+	AutoOnly    string   `json:"autoOnly,omitempty"` // up to 0.2.1: all | orbs | cosmetic (now AutoKinds)
+	AutoKinds   []string `json:"autoKinds"`          // which rewards the automat goes for: orbs, cosmetic, ingame, code, other
+	AutoTasks   []string `json:"autoTasks"`          // which tasks: video, play, activity, stream
+	AutoGames   string   `json:"autoGames"`          // all | only (the games in GameList) | except (all but those)
+	GameList    []string `json:"gameList"`
+	OpenOnStart bool     `json:"openOnStart"` // show the panel when the program starts
+	Autostart   bool     `json:"autostart"`   // start with Windows
+	Parallel    int      `json:"parallel"`    // how many quests at once (0 = no limit)
+	AutoUpdate  bool     `json:"autoUpdate"`
+	RefreshMin  int      `json:"refreshMin"` // how often the plugin reads the quest list again (minutes)
 	// Discord activity: on, and what it shows (quest and progress, Orbs you have, Orbs to get, the buttons)
 	RpcOn      bool              `json:"rpcOn"`
 	RpcQuest   bool              `json:"rpcQuest"`
@@ -185,9 +183,6 @@ func newEngine(dir string) *Engine {
 	if !e.set.RpcInit {
 		e.set.RpcQuest, e.set.RpcOrbs, e.set.RpcToGet, e.set.RpcBtn, e.set.RpcInit = true, true, true, true, true
 	}
-	if e.set.ClaimNote.State == "testing" { // a test cut short by a restart
-		e.set.ClaimNote = ClaimNote{State: "idle"}
-	}
 	if !e.set.StatsInit {
 		e.set.Stats, e.set.StatsInit = true, true
 	}
@@ -266,22 +261,12 @@ func (e *Engine) onSync(s Sync) map[string]any {
 			e.log.Warn("L.enrollFail", ev.Name, ev.Msg)
 		case "claimed":
 			e.log.OK("L.claimed", ev.Name)
-			e.claimResultLocked("ok", "")
-		case "claimCaptcha":
-			e.log.Warn("L.claimCaptcha", ev.Name)
-			e.claimResultLocked("captcha", "")
-		case "claimFail":
-			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
-			e.claimResultLocked("failed", ev.Msg)
-		case "claimNone":
-			e.claimResultLocked("none", "")
 		case "claimSkip":
-			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
-		case "claimNoFn":
-			e.claimResultLocked("nofn", "")
-		case "claimLearn":
-			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
-			e.claimResultLocked("learn", ev.Msg)
+			e.log.Info("L.claimSkipped", ev.Name)
+		case "claimAllDone":
+			e.log.OK("L.claimAllDone")
+		case "claimNone":
+			e.log.Info("L.claimNothing")
 		}
 	}
 	e.autoQueueLocked()
@@ -290,7 +275,7 @@ func (e *Engine) onSync(s Sync) map[string]any {
 	if cmds == nil {
 		cmds = []Cmd{}
 	}
-	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "claim": e.set.AutoClaim, "refresh": e.set.RefreshMin, "lang": curLang.Load()}
+	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "refresh": e.set.RefreshMin, "lang": curLang.Load()}
 }
 
 // desktopTask: done by the Discord app on the computer itself.

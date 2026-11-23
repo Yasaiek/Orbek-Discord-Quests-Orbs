@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 )
@@ -63,7 +64,7 @@ func (e *Engine) view() map[string]any {
 		"app": appName, "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
-		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "claimNote": e.set.ClaimNote, "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "statsOn": statsURL != "", "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
+		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "statsOn": statsURL != "", "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done)},
 		"quests":   quests,
@@ -91,6 +92,22 @@ func (s *server) handleOp(r opReq) map[string]any {
 	switch r.Op {
 	case "refresh", "stopAll":
 		e.push(Cmd{Op: r.Op})
+	case "claimAll": // every reward waiting to be claimed, soonest ending first: Discord shows them one by one
+		e.mu.Lock()
+		now := time.Now().UnixMilli()
+		var w []Quest
+		for _, q := range e.last.Quests {
+			if q.Completed > 0 && q.Claimed == 0 && (q.Expires == 0 || q.Expires > now) {
+				w = append(w, q)
+			}
+		}
+		e.mu.Unlock()
+		sort.Slice(w, func(i, j int) bool { return w[i].Expires < w[j].Expires })
+		ids := make([]string, len(w))
+		for i := range w {
+			ids[i] = w[i].ID
+		}
+		e.push(Cmd{Op: "claim", IDs: ids})
 	case "enroll", "stop", "claim":
 		if r.ID == "" {
 			return map[string]any{"ok": false}
@@ -109,7 +126,7 @@ func (s *server) handleOp(r opReq) map[string]any {
 		e.push(Cmd{Op: "run", IDs: r.IDs})
 	case "settings":
 		e.mu.Lock()
-		langChanged, autostart, testClaim := false, (*bool)(nil), false
+		langChanged, autostart := false, (*bool)(nil)
 		for k, v := range r.Patch {
 			switch k {
 			case "lang":
@@ -147,11 +164,6 @@ func (s *server) handleOp(r opReq) map[string]any {
 				}
 			case "autoUpdate":
 				e.set.AutoUpdate = boolean(v)
-			case "autoClaim":
-				e.set.AutoClaim = boolean(v)
-				if e.set.AutoClaim {
-					testClaim = true
-				}
 			case "stats":
 				e.set.Stats = boolean(v)
 			case "orbAnim":
@@ -175,9 +187,7 @@ func (s *server) handleOp(r opReq) map[string]any {
 		off := !e.set.AutoMode
 		e.saveSettings()
 		e.mu.Unlock()
-		if testClaim {
-			e.claimTest()
-		}
+
 		if off {
 			e.push(Cmd{Op: "stopAll"})
 		}
@@ -189,8 +199,6 @@ func (s *server) handleOp(r opReq) map[string]any {
 				e.log.Warn("L.autostartFail", err)
 			}
 		}
-	case "claimTest":
-		e.claimTest()
 	case "clearLog":
 		e.log.clear()
 	case "pluginInstall":

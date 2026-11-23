@@ -13,12 +13,12 @@
  */
 
 import definePlugin, { PluginNative } from "@utils/types";
-import { findStore, wreq } from "@webpack";
+import { findStore } from "@webpack";
 import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, RestAPI, UserStore } from "@webpack/common";
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.3.3";
+const PLUGIN_VERSION = "0.4.0";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -218,157 +218,118 @@ async function enroll(q: Quest): Promise<Quest> {
     return out;
 }
 
-// ---------- odbieranie nagród (eksperymentalne) ----------
-// To samo zapytanie, które wysyła przycisk „Odbierz nagrodę” w Discordzie. Jeśli Discord zażąda captchy,
-// pokazuje ją sam (jak przy kliknięciu) albo zapytanie wraca z błędem – wtedy otwieramy stronę zadań, żeby
-// odebrać ręcznie. Captchy nikt tu nie rozwiązuje za człowieka.
-let autoClaim = false;
+// ---------- odbieranie nagród po kolei ----------
+// Orbek nie odbiera nagród sam (Discord odrzuca odbiór, którego nie kliknął człowiek). Zamiast tego prowadzi:
+// otwiera stronę zadań, przewija do pierwszej nagrody do odebrania i ją podświetla, a u góry pokazuje pasek
+// „Odbierz 1/5”. Gdy klikniesz „Odbierz nagrodę” i Discord ją wyda, przechodzi do następnej.
 let refreshMs = 10 * 60_000; // co ile czytać listę zadań od nowa (Orbek to ustawia)
-const claimTried = new Map<string, number>();
-let claiming = false;
+let claimQueue: string[] = [], claimTotal = 0, claimCur = "", claimFindT: any = null;
+const HL = "orbek-claim-hl";
 
-// Jak dokładnie Discord odbiera nagrodę, plugin uczy się z jednego odebrania ręcznie w Discordzie: zapytania
-// Discorda o „/quests/…/claim…” są podglądane (adres i treść) i zapamiętywane jako wzór. Bez wzoru – próba
-// z domyślną treścią. Wszystko (wzór, ostatni błąd) idzie do Orbka do data/claim-debug.json.
-type ClaimTpl = { url: string; body: any; at: number; ok?: boolean; status?: number; err?: string; };
-let testing = false, lastClaimEv: { k: string; q?: Quest; msg: string; } = { k: "claimFail", msg: "" };
-let claimTpl: ClaimTpl | null = (() => { try { return JSON.parse(localStorage.getItem("orbek.claimTpl") ?? "null"); } catch { return null; } })();
-let claimDebug: any = { tpl: claimTpl }, claimDebugSent = "";
-let origPost: any = null, ownPost = false;
-function watchClaims() {
-    if (origPost) return;
-    origPost = RestAPI.post;
-    (RestAPI as any).post = function (opts: any, ...rest: any[]) {
-        const p = origPost.call(this, opts, ...rest);
-        const url = String(opts?.url ?? "");
-        const m = /^(.*\/quests\/)(\d+)(\/[^?]*claim[^?]*)/i.exec(url);
-        if (m && !ownPost) {
-            const tpl: ClaimTpl = { url: m[1] + "{id}" + m[3], body: JSON.parse(JSON.stringify(opts?.body ?? null)), at: Date.now() };
-            Promise.resolve(p).then(
-                (r: any) => { tpl.ok = true; tpl.status = r?.status; claimTpl = tpl; try { localStorage.setItem("orbek.claimTpl", JSON.stringify(tpl)); } catch { } claimDebug = { ...claimDebug, tpl, seen: tpl }; },
-                (e: any) => { tpl.ok = false; tpl.status = e?.status; tpl.err = errText(e); claimDebug = { ...claimDebug, seen: tpl }; }
-            );
-        }
-        return p;
-    };
-}
-// Funkcja Discorda, którą woła przycisk „Odbierz nagrodę” (sama dokłada zapieczętowane dane zadania i decyzji).
-// Szukana w załadowanym kodzie Discorda po tym, że wysyła zapytanie odbioru zadania (nie „creatives”).
-let claimFn: ((...a: any[]) => any) | null = null, claimFnLook = 0;
-function discordClaimFn() {
-    if (claimFn || Date.now() - claimFnLook < 20_000) return claimFn;
-    claimFnLook = Date.now();
-    try {
-        const test = (f: any) => {
-            if (typeof f !== "function") return false;
-            const src = Function.prototype.toString.call(f);
-            return src.length < 6000 && /QUESTS?_CLAIM_REWARD\b/.test(src) && !/CREATIVES/.test(src);
-        };
-        for (const id in wreq.c) {
-            const ex = (wreq.c as any)[id]?.exports;
-            if (!ex || typeof ex !== "object" && typeof ex !== "function") continue;
-            for (const k of Object.keys(ex)) {
-                let v: any;
-                try { v = ex[k]; } catch { continue; }
-                if (test(v)) { claimFn = v; break; }
-                if (v && typeof v === "object") for (const k2 of Object.keys(v)) { let w: any; try { w = v[k2]; } catch { continue; } if (test(w)) { claimFn = w; break; } }
-                if (claimFn) break;
-            }
-            if (claimFn) break;
-        }
-        if (claimFn) claimDebug = { ...claimDebug, fn: { args: claimFn.length, src: Function.prototype.toString.call(claimFn).slice(0, 2500) } };
-    } catch (e) { console.error(TAG, "claim fn", e); }
-    return claimFn;
+function claimCss() {
+    if (document.getElementById("orbek-claim-css")) return;
+    const st = document.createElement("style");
+    st.id = "orbek-claim-css";
+    st.textContent = `
+.${HL} { outline: 2px solid #a98bff !important; outline-offset: 3px; border-radius: 12px; box-shadow: 0 0 0 6px rgba(150,120,255,.25), 0 0 40px rgba(150,120,255,.45) !important; animation: orbekPulse 1.6s ease-in-out infinite; }
+@keyframes orbekPulse { 50% { box-shadow: 0 0 0 10px rgba(150,120,255,.12), 0 0 60px rgba(150,120,255,.6); } }
+#orbek-claim-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; align-items: center; gap: 12px; padding: 10px 14px 10px 16px; border-radius: 14px; color: #fff; font: 600 14px/1.3 var(--font-primary, sans-serif); background: linear-gradient(135deg, rgba(88,101,242,.95), rgba(163,91,255,.95)); box-shadow: 0 16px 40px -12px rgba(80,60,200,.8), inset 0 1px 0 rgba(255,255,255,.25); }
+#orbek-claim-bar b { font-weight: 800; } #orbek-claim-bar span.n { opacity: .8; font-weight: 600; }
+#orbek-claim-bar button { all: unset; cursor: pointer; padding: 6px 11px; border-radius: 9px; background: rgba(255,255,255,.16); font-weight: 700; font-size: 13px; }
+#orbek-claim-bar button:hover { background: rgba(255,255,255,.28); }`;
+    document.head.appendChild(st);
 }
 
-function unwatchClaims() { if (origPost) (RestAPI as any).post = origPost; origPost = null; }
-
-async function claim(q: Quest, byHand: boolean): Promise<boolean> {
-    if (claiming) return false;
-    claiming = true;
-    claimTried.set(q.id, Date.now());
-    try {
-        const fn = discordClaimFn();
-        if (fn) { // tak jak przycisk w Discordzie: platforma 0 (wszędzie), miejsce 10 (strona zadań)
-            let thrown: any = null, seen: any = null, okSeen = false;
-            for (const loc of [11, 10]) { // 11: pasek zadania, 10: strona zadań – Discord przyjmował oba
-                const mark = Date.now();
-                thrown = null;
-                try { await fn(q.id, 0, loc); } catch (e) { thrown = e; }
-                await new Promise(r => setTimeout(r, 600));
-                seen = claimDebug.seen;
-                okSeen = !!(seen && seen.at >= mark - 50 && seen.ok);
-                if (okSeen || questsStore()?.getQuest?.(q.id)?.userStatus?.claimedAt) break;
-            }
-            const st = questsStore()?.getQuest?.(q.id)?.userStatus;
-            if (okSeen || st?.claimedAt) {
-                claimDebug = { ...claimDebug, lastTry: { via: "discord", at: Date.now(), ok: true } };
-                known.set(q.id, { ...q, claimedAt: Date.now() });
-                say("claimed", q);
-                lastLoad = 0;
-                return true;
-            }
-            claimDebug = { ...claimDebug, lastTry: { via: "discord", at: Date.now(), ok: false, err: thrown ? errText(thrown) : seen?.err, status: thrown?.status ?? seen?.status, raw: thrown?.body } };
-            throw thrown ?? { body: { message: seen?.err ?? "Discord did not claim" } };
-        }
-        if (claimTpl?.ok) { // Discord już odbierał, ale jego funkcji nie ma w załadowanym kodzie – trzeba otworzyć stronę zadań
-            say("claimNoFn", q);
-            if (byHand) openQuests();
-            return false;
-        }
-        let url = `/quests/${q.id}/claim-reward`;
-        let body: any = { platform: 0, location: 11, is_targeted: false, metadata_raw: null, metadata_sealed: null, traffic_metadata_raw: null, traffic_metadata_sealed: null };
-        if (claimTpl?.ok) { // to, co Discord sam wysłał – z zadaniem podmienionym; zapieczętowane dane były dla tamtego zadania
-            url = claimTpl.url.replace("{id}", q.id);
-            body = JSON.parse(JSON.stringify(claimTpl.body ?? {}));
-            for (const k of Object.keys(body ?? {})) if (/sealed/i.test(k)) body[k] = null;
-        }
-        ownPost = true;
-        try { await RestAPI.post({ url, body }); } catch (e: any) {
-            claimDebug = { ...claimDebug, lastTry: { url, body, at: Date.now(), status: e?.status, code: e?.body?.code, err: errText(e), raw: e?.body } };
-            throw e;
-        } finally { ownPost = false; }
-        claimDebug = { ...claimDebug, lastTry: { url, at: Date.now(), ok: true } };
-        known.set(q.id, { ...q, claimedAt: Date.now() });
-        say("claimed", q);
-        lastLoad = 0; // przeczytaj listę (i Orby) od nowa
-        return true;
-    } catch (e: any) {
-        const b = e?.body ?? {};
-        claimRefused.set(q.id, Date.now());
-        const k = b.captcha_key || b.captcha_sitekey || b.captcha_service ? "claimCaptcha" : claimTpl?.ok ? "claimFail" : "claimLearn";
-        lastClaimEv = { k, q, msg: errText(e) };
-        if (testing && k !== "claimCaptcha") events.push({ k: "claimSkip", id: q.id, name: q.name, msg: errText(e) }); // w teście: tylko wpis do dziennika
-        else say(k, q, errText(e));
-        if (byHand) openQuests();
-        return false;
-    } finally {
-        claiming = false;
+function claimBar(text: string | null) {
+    let bar = document.getElementById("orbek-claim-bar");
+    if (text == null) { bar?.remove(); return; }
+    claimCss();
+    if (!bar) {
+        bar = document.createElement("div");
+        bar.id = "orbek-claim-bar";
+        document.body.appendChild(bar);
     }
+    bar.innerHTML = "";
+    const t = document.createElement("div");
+    t.innerHTML = text;
+    const skip = document.createElement("button"); skip.textContent = "Pomiń"; skip.onclick = () => claimNext(true);
+    const end = document.createElement("button"); end.textContent = "Zakończ"; end.onclick = () => claimEnd();
+    bar.append(t, skip, end);
+}
+
+function unhighlight() { document.querySelectorAll("." + HL).forEach(e => e.classList.remove(HL)); }
+
+// karta zadania na stronie zadań: obrazek z adresu …/quests/<id>/…, w górę do elementu z przyciskiem
+function questCard(id: string): HTMLElement | null {
+    const img = document.querySelector(`img[src*="/quests/${id}/"], video[src*="/quests/${id}/"], source[src*="/quests/${id}/"]`);
+    let el: HTMLElement | null = img?.parentElement ?? null;
+    for (let i = 0; el && i < 12; i++, el = el.parentElement) {
+        const r = el.getBoundingClientRect();
+        if (el.querySelector("button") && r.width > 250 && r.height > 180) return el;
+    }
+    return null;
+}
+
+function claimShow() {
+    clearTimeout(claimFindT);
+    unhighlight();
+    const q = known.get(claimCur);
+    const n = claimTotal - claimQueue.length;
+    claimBar(`🎁 Odbierz <b>${(q?.name ?? "nagrodę").replace(/</g, "&lt;")}</b> <span class="n">${n}/${claimTotal}</span>`);
+    let tries = 0;
+    const find = () => {
+        const card = questCard(claimCur);
+        if (card) {
+            card.classList.add(HL);
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            return;
+        }
+        if (++tries < 40) claimFindT = setTimeout(find, 500); // strona zadań jeszcze się ładuje
+    };
+    find();
+}
+
+function claimNext(skip = false) {
+    if (skip && claimCur) say("claimSkip", known.get(claimCur));
+    claimCur = "";
+    while (claimQueue.length) {
+        const id = claimQueue.shift()!;
+        const q = known.get(id);
+        if (q && q.completedAt && !q.claimedAt) { claimCur = id; break; }
+    }
+    if (!claimCur) { claimEnd(true); return; }
+    claimShow();
+}
+
+function claimEnd(done = false) {
+    clearTimeout(claimFindT);
+    unhighlight();
+    if (done && claimTotal) say("claimAllDone");
+    claimQueue = []; claimCur = ""; claimTotal = 0;
+    claimBar(null);
+}
+
+function claimStart(ids: string[]) {
+    const list = ids.filter(id => { const q = known.get(id); return q && q.completedAt && !q.claimedAt; });
+    if (!list.length) { say("claimNone"); return; }
+    claimQueue = list; claimTotal = list.length;
+    openQuests();
+    setTimeout(() => claimNext(), 700);
+}
+
+// Discord wydał nagrodę (kliknięciem w Discordzie) – następna
+function onClaimed(e: any) {
+    const id = String(e?.questId ?? "");
+    const q = known.get(id);
+    if (q) { known.set(id, { ...q, claimedAt: Date.now() }); say("claimed", q); }
+    claimQueue = claimQueue.filter(x => x !== id);
+    if (id && id === claimCur) setTimeout(() => claimNext(), 900); // chwila na okienko z nagrodą
+    lastLoad = 0;
 }
 
 function openQuests() {
     try { NavigationRouter.transitionTo("/quest-home"); } catch (e) { console.error(TAG, e); }
     Native.focusDiscord();
-}
-
-// Nagrody do odebrania: najpierw te z komputera, na końcu zadania „na telefonie” (Discord może chcieć ich odbioru
-// w aplikacji mobilnej); te, których Discord niedawno nie przyjął, czekają 6 godzin.
-const claimRefused = new Map<string, number>();
-function claimable(): Quest[] {
-    const now = Date.now();
-    return [...known.values()]
-        .filter(q => q.completedAt && !q.claimedAt && !(q.expiresAt && q.expiresAt < now) && now - (claimRefused.get(q.id) ?? 0) > 6 * 3600_000)
-        .sort((a, b) => Number(a.task.includes("MOBILE")) - Number(b.task.includes("MOBILE")));
-}
-
-async function autoClaimTick() {
-    if (!autoClaim || claiming) return;
-    for (const q of claimable()) {
-        if (Date.now() - (claimTried.get(q.id) ?? 0) < 30 * 60_000) continue;
-        await claim(q, false);
-        return; // jedna na raz, kolejna przy następnym obrocie
-    }
 }
 
 function setProgress(run: Run, id: string, p: number) {
@@ -544,16 +505,6 @@ async function doCmd(c: any) {
         case "refresh":
             await load();
             break;
-        case "claimTest": { // spróbuj odebrać teraz – do trzech różnych nagród, aż któraś przejdzie
-            const list = claimable().slice(0, 3);
-            if (!list.length) { say("claimNone"); break; }
-            testing = true;
-            let ok = false;
-            for (const c of list) if ((ok = await claim(c, false))) break;
-            testing = false;
-            if (!ok) say(lastClaimEv.k, lastClaimEv.q, lastClaimEv.msg);
-            break;
-        }
         case "enroll":
             if (!q) break;
             try { await enroll(q); say("enrolled", q); } catch (e) { say("enrollFail", q, errText(e)); }
@@ -572,8 +523,9 @@ async function doCmd(c: any) {
         case "stopAll":
             stopAll();
             break;
-        case "claim":
-            if (q && autoClaim && q.completedAt && !q.claimedAt) await claim(q, true);
+        case "claim": // jedna nagroda albo wszystkie po kolei
+            if (c.ids?.length) claimStart(c.ids);
+            else if (q && q.completedAt && !q.claimedAt) claimStart([q.id]);
             else openQuests();
             break;
     }
@@ -600,7 +552,6 @@ async function tick() {
             events: events.splice(0),
             desktop: isDesktop(),
             orbTile, orbGlyph, orbTiles,
-            claimDebug: (() => { const j = JSON.stringify(claimDebug); if (j === claimDebugSent) return undefined; claimDebugSent = j; return claimDebug; })(),
             orbDebug: (() => { const j = JSON.stringify(orbDebug); if (j === orbDebugSent) return undefined; orbDebugSent = j; return orbDebug; })()
         });
         const raw = await Native.sync(body);
@@ -608,12 +559,10 @@ async function tick() {
             lastOk = Date.now();
             const res = JSON.parse(raw);
             autoAllowed = !!res.auto;
-            autoClaim = !!res.claim;
             if (Number(res.refresh) >= 1) refreshMs = Number(res.refresh) * 60_000;
             maxParallel = Math.max(0, Number(res.parallel ?? 1));
             if (!autoAllowed && (runs.size || queue.length)) stopAll();
             for (const c of res.cmds ?? []) await doCmd(c);
-            autoClaimTick();
         } else if (Date.now() - lastOk > 30_000 && (runs.size || queue.length)) {
             stopAll(); // Orbek zniknął – nic nie robimy na ślepo
         }
@@ -636,13 +585,14 @@ export default definePlugin({
 
     start() {
         alive = true;
-        watchClaims();
+        FluxDispatcher.subscribe("QUESTS_CLAIM_REWARD_SUCCESS", onClaimed);
         timer = setTimeout(tick, 3000);
     },
 
     stop() {
         alive = false;
-        unwatchClaims();
+        FluxDispatcher.unsubscribe("QUESTS_CLAIM_REWARD_SUCCESS", onClaimed);
+        claimEnd();
         if (timer) clearTimeout(timer);
         stopAll();
     }

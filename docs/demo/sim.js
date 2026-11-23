@@ -21,11 +21,11 @@
   }));
   const S = {
     app: 'Orbek', version: window.ORBEK_VERSION || '0.0.0', lang, winGen: 0, connected: true, lastAt: now, user: { id: '1', name: 'Demo', avatar: '' },
-    usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6, cpuMin: 0.1, cpuMax: 2.4, ramMin: 88, ramMax: 112 }, claimNote: { state: 'idle', at: 0 }, rpc: { state: 'idle', ready: true }, orbTile: '', orbGlyph: '',
+    usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6, cpuMin: 0.1, cpuMax: 2.4, ramMin: 88, ramMax: 112 }, rpc: { state: 'idle', ready: true }, orbTile: '', orbGlyph: '',
     games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + q.id + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
     loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord',
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
-    settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], autoClaim: false, refreshMin: 10, rpcOn: true, rpcQuest: true, rpcOrbs: true, rpcToGet: true, rpcBtn: true, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
+    settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], refreshMin: 10, rpcOn: true, rpcQuest: true, rpcOrbs: true, rpcToGet: true, rpcBtn: true, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
     setup: { running: false, done: false, err: '', steps: [], lines: [], full: true },
     update: { state: 'current', latest: '', checked: now, doneAt: 0 },
   };
@@ -68,12 +68,11 @@
       case 'stop': S.queue = S.queue.filter((x) => x !== o.id); S.runs = S.runs.filter((r) => r.id !== o.id); break;
       case 'stopAll': S.queue = []; S.runs = []; break;
       case 'claim': if (q) q.claimedAt = Date.now(); break;
-      case 'settings': Object.assign(S.settings, o.patch || {}); if ((o.patch || {}).autoClaim) op({ op: 'claimTest' }); if ('lang' in (o.patch || {})) S.lang = o.patch.lang || lang; if (!S.settings.autoMode) { S.queue = []; S.runs = []; } break;
+      case 'settings': Object.assign(S.settings, o.patch || {}); if ('lang' in (o.patch || {})) S.lang = o.patch.lang || lang; if (!S.settings.autoMode) { S.queue = []; S.runs = []; } break;
       case 'setup': setupDemo(true); break;
       case 'pluginInstall': setupDemo(false); break;
       case 'clearLog': S.log = []; break;
-      case 'claimTest': S.settings.claimNote = undefined; S.claimNote = { state: 'testing', at: Date.now() };
-        setTimeout(() => { const q = S.quests.find((x) => x.completedAt && !x.claimedAt); if (q) { q.claimedAt = Date.now(); S.claimNote = { state: 'ok', at: Date.now() }; say('ok', q.name + ' ✓'); } else S.claimNote = { state: 'none', at: Date.now() }; }, 1500); break;
+      case 'claimAll': for (const q of S.quests) if (q.completedAt && !q.claimedAt) { q.claimedAt = Date.now(); say('ok', q.name + ' ✓'); } break;
     }
     return { ok: true };
   };

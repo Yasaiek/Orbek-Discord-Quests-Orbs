@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+- Automatic claiming removed: Discord refuses claims that a person didn't click.
+- Instead: "Claim one by one in Discord". Orbek opens Discord's quests page, scrolls to the first reward waiting, highlights it and shows a bar "Claim … 1/5" (Skip, End). You click "Claim reward" in Discord; once Discord gives it, the next one comes up.
+
 ## 0.3.9
 - Claim test tries up to three rewards (phone-video quests last) and both places Discord claims from; one quest Discord refuses no longer stops the others – it waits 6 hours and goes to the journal.
 
