@@ -541,3 +541,6 @@ func argbForImage(img image.Image) []byte {
 	}
 	return data
 }
+
+// Notify is only on Windows.
+func Notify(title, text string, quiet bool) error { return nil }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2
+- Reminders: when a quest is done but its reward isn't claimed and the quest ends within 24 h (or 6, 12, 48 h – Settings → Reminders), Orbek shows a Windows notification with a sound, plays a sound in the open panel and offers to claim one by one. Once per quest.
+
+## 0.4.1
+- Claiming one by one: the "Congratulations" window closes by itself and the next reward's claim button is selected – press Enter or click to claim it.
+
 ## 0.4.0
 - Automatic claiming removed: Discord refuses claims that a person didn't click.
 - Instead: "Claim one by one in Discord". Orbek opens Discord's quests page, scrolls to the first reward waiting, highlights it and shows a bar "Claim … 1/5" (Skip, End). You click "Claim reward" in Discord; once Discord gives it, the next one comes up.

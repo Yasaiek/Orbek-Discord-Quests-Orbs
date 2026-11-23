@@ -23,3 +23,5 @@ func systemLocale() string {
 
 func hideWindow(cmd *exec.Cmd) {}
 func tagWindows()              {}
+
+func notify(title, text string) {}

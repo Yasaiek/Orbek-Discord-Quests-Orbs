@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.0";
+const PLUGIN_VERSION = "0.4.1";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -231,6 +231,8 @@ function claimCss() {
     const st = document.createElement("style");
     st.id = "orbek-claim-css";
     st.textContent = `
+.orbek-claim-btn { box-shadow: 0 0 0 3px #fff, 0 0 0 6px #a98bff, 0 0 24px #a98bff !important; }
+.orbek-claim-btn:focus-visible { outline: none !important; }
 .${HL} { outline: 2px solid #a98bff !important; outline-offset: 3px; border-radius: 12px; box-shadow: 0 0 0 6px rgba(150,120,255,.25), 0 0 40px rgba(150,120,255,.45) !important; animation: orbekPulse 1.6s ease-in-out infinite; }
 @keyframes orbekPulse { 50% { box-shadow: 0 0 0 10px rgba(150,120,255,.12), 0 0 60px rgba(150,120,255,.6); } }
 #orbek-claim-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; align-items: center; gap: 12px; padding: 10px 14px 10px 16px; border-radius: 14px; color: #fff; font: 600 14px/1.3 var(--font-primary, sans-serif); background: linear-gradient(135deg, rgba(88,101,242,.95), rgba(163,91,255,.95)); box-shadow: 0 16px 40px -12px rgba(80,60,200,.8), inset 0 1px 0 rgba(255,255,255,.25); }
@@ -257,7 +259,20 @@ function claimBar(text: string | null) {
     bar.append(t, skip, end);
 }
 
-function unhighlight() { document.querySelectorAll("." + HL).forEach(e => e.classList.remove(HL)); }
+function unhighlight() {
+    document.querySelectorAll("." + HL).forEach(e => e.classList.remove(HL));
+    document.querySelectorAll(".orbek-claim-btn").forEach(e => e.classList.remove("orbek-claim-btn"));
+}
+
+// okienko „Gratulacje” po odebraniu – zamykamy je, żeby od razu była następna nagroda
+function closeRewardModal() {
+    const layer = document.querySelector('[class*="layerContainer"] [role="dialog"], [role="dialog"][aria-modal="true"]');
+    if (!layer) return;
+    const close = layer.querySelector('button[aria-label]:not([aria-label=""])') as HTMLButtonElement | null;
+    const label = (close?.getAttribute("aria-label") ?? "").toLowerCase();
+    if (close && /zamknij|close|schließen|fermer|cerrar|chiudi|fechar|закрыть|закрити|kapat|閉じる|关闭/.test(label)) close.click();
+    else document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", keyCode: 27, bubbles: true }));
+}
 
 // karta zadania na stronie zadań: obrazek z adresu …/quests/<id>/…, w górę do elementu z przyciskiem
 function questCard(id: string): HTMLElement | null {
@@ -275,13 +290,16 @@ function claimShow() {
     unhighlight();
     const q = known.get(claimCur);
     const n = claimTotal - claimQueue.length;
-    claimBar(`🎁 Odbierz <b>${(q?.name ?? "nagrodę").replace(/</g, "&lt;")}</b> <span class="n">${n}/${claimTotal}</span>`);
+    claimBar(`🎁 Odbierz <b>${(q?.name ?? "nagrodę").replace(/</g, "&lt;")}</b> <span class="n">${n}/${claimTotal} · Enter = odbierz</span>`);
     let tries = 0;
     const find = () => {
         const card = questCard(claimCur);
         if (card) {
             card.classList.add(HL);
             card.scrollIntoView({ behavior: "smooth", block: "center" });
+            // zaznaczenie na przycisku odbioru: Enter albo kliknięcie odbiera (to robisz Ty)
+            const btn = [...card.querySelectorAll("button")].find(b => /odbierz|claim|receber|reclamar|récupérer|abholen|riscatta|получ|отрим|al$|受け取|领取/i.test(b.textContent ?? "")) as HTMLButtonElement | undefined;
+            if (btn) { btn.classList.add("orbek-claim-btn"); setTimeout(() => btn.focus({ preventScroll: true }), 450); }
             return;
         }
         if (++tries < 40) claimFindT = setTimeout(find, 500); // strona zadań jeszcze się ładuje
@@ -323,7 +341,7 @@ function onClaimed(e: any) {
     const q = known.get(id);
     if (q) { known.set(id, { ...q, claimedAt: Date.now() }); say("claimed", q); }
     claimQueue = claimQueue.filter(x => x !== id);
-    if (id && id === claimCur) setTimeout(() => claimNext(), 900); // chwila na okienko z nagrodą
+    if (id && id === claimCur) setTimeout(() => { closeRewardModal(); setTimeout(() => claimNext(), 350); }, 1600); // chwila, żeby zobaczyć nagrodę
     lastLoad = 0;
 }
 

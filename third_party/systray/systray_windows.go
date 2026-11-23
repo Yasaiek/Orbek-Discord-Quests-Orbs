@@ -1193,3 +1193,41 @@ func systrayRightClick() {
 
 	wt.showMenu()
 }
+
+// Notify shows a Windows notification from the tray icon (a balloon; on Windows 10/11 it shows as a toast,
+// with the system notification sound unless quiet).
+func Notify(title, text string, quiet bool) error {
+	if !wt.isReady() {
+		return ErrTrayNotReadyYet
+	}
+	const (
+		NIF_INFO     = 0x00000010
+		NIIF_USER    = 0x00000004
+		NIIF_NOSOUND = 0x00000010
+		NIIF_LARGE   = 0x00000020
+	)
+	tb, err := windows.UTF16FromString(title)
+	if err != nil {
+		return err
+	}
+	bb, err := windows.UTF16FromString(text)
+	if err != nil {
+		return err
+	}
+	wt.muNID.Lock()
+	defer wt.muNID.Unlock()
+	wt.nid.InfoTitle = [64]uint16{}
+	wt.nid.Info = [256]uint16{}
+	copy(wt.nid.InfoTitle[:63], tb)
+	copy(wt.nid.Info[:255], bb)
+	wt.nid.Flags |= NIF_INFO
+	wt.nid.InfoFlags = NIIF_USER | NIIF_LARGE
+	if quiet {
+		wt.nid.InfoFlags |= NIIF_NOSOUND
+	}
+	wt.nid.BalloonIcon = wt.nid.Icon
+	wt.nid.Size = uint32(unsafe.Sizeof(*wt.nid))
+	err = wt.nid.modify()
+	wt.nid.Flags &^= NIF_INFO // later changes (tooltip, icon) must not show it again
+	return err
+}

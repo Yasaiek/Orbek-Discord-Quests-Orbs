@@ -261,5 +261,16 @@
 "cl.text": "À récupérer : {n} – Discord les montre l'une après l'autre, tu cliques juste « Récupérer ».",
 "L.claimSkipped": "%s : passée lors de la récupération.",
 "L.claimAllDone": "Toutes les récompenses récupérées.",
-"L.claimNothing": "Rien à récupérer."
+"L.claimNothing": "Rien à récupérer.",
+"exp.title": "Une récompense va être perdue",
+"exp.one": "%s – plus que %s. Récupère-la dans Discord.",
+"exp.many": "%d récompenses vont être perdues – récupère-les dans Discord.",
+"exp.hours": "%d h",
+"exp.mins": "%d min",
+"L.expiring": "%s : la récompense sera perdue dans %s – récupère-la !",
+"set.expTitle": "Rappels",
+"set.expWarn": "Me rappeler les récompenses sur le point d'être perdues",
+"set.expHint": "Une notification Windows avec un son quand une quête est faite, que la récompense n'est pas récupérée et que la quête finit bientôt.",
+"set.expWhen": "Combien de temps avant la fin",
+"exp.titleUi": "Une récompense va être perdue !"
 }

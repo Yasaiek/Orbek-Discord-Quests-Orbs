@@ -64,7 +64,7 @@ func (e *Engine) view() map[string]any {
 		"app": appName, "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
-		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "statsOn": statsURL != "", "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
+		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "statsOn": statsURL != "", "alert": e.alert, "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done)},
 		"quests":   quests,
@@ -164,6 +164,12 @@ func (s *server) handleOp(r opReq) map[string]any {
 				}
 			case "autoUpdate":
 				e.set.AutoUpdate = boolean(v)
+			case "expiryWarn":
+				e.set.ExpiryWarn = boolean(v)
+			case "expiryHours":
+				if n := int(num(v)); n >= 1 && n <= 168 {
+					e.set.ExpiryHours = n
+				}
 			case "stats":
 				e.set.Stats = boolean(v)
 			case "orbAnim":

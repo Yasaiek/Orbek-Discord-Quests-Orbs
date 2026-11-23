@@ -261,5 +261,16 @@
 "cl.text": "Waiting to claim: {n} – Discord shows them one after another, you just click “Claim reward”.",
 "L.claimSkipped": "%s: skipped while claiming.",
 "L.claimAllDone": "All rewards claimed.",
-"L.claimNothing": "Nothing to claim."
+"L.claimNothing": "Nothing to claim.",
+"exp.title": "A reward is about to be lost",
+"exp.one": "%s – %s left. Claim it in Discord.",
+"exp.many": "%d rewards are about to be lost – claim them in Discord.",
+"exp.hours": "%d h",
+"exp.mins": "%d min",
+"L.expiring": "%s: the reward is lost in %s – claim it!",
+"set.expTitle": "Reminders",
+"set.expWarn": "Remind me of rewards about to be lost",
+"set.expHint": "A Windows notification with a sound when a quest is done but its reward isn't claimed and the quest ends soon.",
+"set.expWhen": "How long before the end",
+"exp.titleUi": "A reward is about to be lost!"
 }

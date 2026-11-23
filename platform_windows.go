@@ -279,3 +279,6 @@ func darkMenus() {
 		syscall.SyscallN(p)
 	}
 }
+
+// notify shows a Windows notification from the tray icon, with the system sound.
+func notify(title, text string) { systray.Notify(title, text, false) }

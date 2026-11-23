@@ -265,3 +265,6 @@ func systray_menu_will_open() {
 	default:
 	}
 }
+
+// Notify is only on Windows.
+func Notify(title, text string, quiet bool) error { return nil }

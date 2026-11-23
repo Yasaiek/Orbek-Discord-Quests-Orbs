@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.4.0"
+var version = "0.4.2"
 
 const appName = "Orbek"
 
@@ -33,20 +33,23 @@ type Settings struct {
 	AutoUpdate  bool     `json:"autoUpdate"`
 	RefreshMin  int      `json:"refreshMin"` // how often the plugin reads the quest list again (minutes)
 	// Discord activity: on, and what it shows (quest and progress, Orbs you have, Orbs to get, the buttons)
-	RpcOn      bool              `json:"rpcOn"`
-	RpcQuest   bool              `json:"rpcQuest"`
-	RpcOrbs    bool              `json:"rpcOrbs"`
-	RpcToGet   bool              `json:"rpcToGet"`
-	RpcBtn     bool              `json:"rpcBtn"`
-	RpcInit    bool              `json:"rpcInit"` // the choices above have their defaults
-	OrbAnim    bool              `json:"orbAnim"` // the Orbs picture moves
-	LookInit   bool              `json:"lookInit"`
-	Stats      bool              `json:"stats"` // anonymous statistics for the website (on unless switched off)
-	StatsInit  bool              `json:"statsInit"`
-	VencordDir string            `json:"vencordDir"`         // where the Vencord source is (for installing the plugin)
-	OrbTile    string            `json:"orbTile"`            // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
-	OrbGlyph   string            `json:"orbGlyph"`           // the big reward tile and the small white sign
-	OrbTiles   map[string]string `json:"orbTiles,omitempty"` // Orbs amount → Discord's tile for it (learnt by the plugin)
+	RpcOn       bool              `json:"rpcOn"`
+	RpcQuest    bool              `json:"rpcQuest"`
+	RpcOrbs     bool              `json:"rpcOrbs"`
+	RpcToGet    bool              `json:"rpcToGet"`
+	RpcBtn      bool              `json:"rpcBtn"`
+	RpcInit     bool              `json:"rpcInit"` // the choices above have their defaults
+	OrbAnim     bool              `json:"orbAnim"` // the Orbs picture moves
+	LookInit    bool              `json:"lookInit"`
+	Stats       bool              `json:"stats"` // anonymous statistics for the website (on unless switched off)
+	StatsInit   bool              `json:"statsInit"`
+	ExpiryWarn  bool              `json:"expiryWarn"`  // remind of rewards about to be lost
+	ExpiryHours int               `json:"expiryHours"` // how long before the end
+	ExpiryInit  bool              `json:"expiryInit"`
+	VencordDir  string            `json:"vencordDir"`         // where the Vencord source is (for installing the plugin)
+	OrbTile     string            `json:"orbTile"`            // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
+	OrbGlyph    string            `json:"orbGlyph"`           // the big reward tile and the small white sign
+	OrbTiles    map[string]string `json:"orbTiles,omitempty"` // Orbs amount → Discord's tile for it (learnt by the plugin)
 }
 
 // Quest is what the plugin reports (already in a plain shape).
@@ -168,7 +171,9 @@ type Engine struct {
 
 	games      map[string]int64 // games seen in quests (name → last seen)
 	gameIcons  map[string]string
-	rpcState   string // Discord activity: off | noid | idle | nodiscord | badid | refused | ok
+	warned     map[string]int64 // quests already reminded of
+	alert      expiryAlert      // the last reminder (the panel plays a sound for a new one)
+	rpcState   string           // Discord activity: off | noid | idle | nodiscord | badid | refused | ok
 	gamesSaved time.Time
 	onQuit     func()
 	winGen     int
@@ -182,6 +187,9 @@ func newEngine(dir string) *Engine {
 	readJSON(filepath.Join(dir, "settings.json"), &e.set)
 	if !e.set.RpcInit {
 		e.set.RpcQuest, e.set.RpcOrbs, e.set.RpcToGet, e.set.RpcBtn, e.set.RpcInit = true, true, true, true, true
+	}
+	if !e.set.ExpiryInit {
+		e.set.ExpiryWarn, e.set.ExpiryHours, e.set.ExpiryInit = true, 24, true
 	}
 	if !e.set.StatsInit {
 		e.set.Stats, e.set.StatsInit = true, true
@@ -339,6 +347,7 @@ func (e *Engine) run() {
 	go usageLoop(e.quit)
 	go e.discordLoop()
 	go e.statsLoop("orbek")
+	go e.expiryLoop()
 	t := time.NewTicker(30 * time.Second)
 	defer t.Stop()
 	for {

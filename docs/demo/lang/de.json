@@ -261,5 +261,16 @@
 "cl.text": "Zum Abholen: {n} – Discord zeigt sie nacheinander, du klickst nur „Belohnung abholen“.",
 "L.claimSkipped": "%s: beim Abholen übersprungen.",
 "L.claimAllDone": "Alle Belohnungen abgeholt.",
-"L.claimNothing": "Nichts zum Abholen."
+"L.claimNothing": "Nichts zum Abholen.",
+"exp.title": "Eine Belohnung verfällt gleich",
+"exp.one": "%s – noch %s. Hol sie in Discord ab.",
+"exp.many": "%d Belohnungen verfallen gleich – hol sie in Discord ab.",
+"exp.hours": "%d Std.",
+"exp.mins": "%d Min.",
+"L.expiring": "%s: Die Belohnung verfällt in %s – hol sie ab!",
+"set.expTitle": "Erinnerungen",
+"set.expWarn": "An bald verfallende Belohnungen erinnern",
+"set.expHint": "Eine Windows-Benachrichtigung mit Ton, wenn eine Quest erledigt, die Belohnung aber nicht abgeholt ist und die Quest bald endet.",
+"set.expWhen": "Wie lange vor dem Ende",
+"exp.titleUi": "Eine Belohnung verfällt gleich!"
 }

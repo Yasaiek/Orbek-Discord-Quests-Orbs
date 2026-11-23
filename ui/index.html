@@ -400,6 +400,11 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
       </div>
     </div>
     <div class="card">
+      <h3><i data-ic="alert"></i><span data-i="set.expTitle"></span></h3>
+      <label class="row"><span><span data-i="set.expWarn"></span><small data-i="set.expHint"></small></span><input type="checkbox" class="sw" data-set="expiryWarn"></label>
+      <div class="frow"><div class="fl"><b data-i="set.expWhen"></b></div><div class="pks" id="fExp"></div></div>
+    </div>
+    <div class="card">
       <h3><i data-ic="refresh"></i><span data-i="set.refTitle"></span></h3>
       <div class="frow"><div class="fl"><b data-i="set.refEvery"></b><small data-i="set.refHint"></small></div>
         <div class="every"><input type="number" id="refN" min="1" max="999"><div class="pks" id="refU"></div></div></div>
@@ -867,6 +872,9 @@ function renderFilters(force) {
   const list = [...new Set([...(st.gameList || []), ...games])].filter((n) => !q || n.toLowerCase().includes(q));
   if (!list.length) box.append(el('small', 'muted', games.length ? '–' : t('f.noGames')));
   for (const n of list) box.append(chip(n, gameIcon(n), (st.gameList || []).includes(n), () => setPatch({ gameList: toggleIn(st.gameList, n) })));
+  // reminders before a reward is lost
+  const fe = $('fExp'); fe.textContent = ''; fe.classList.toggle('off', !st.expiryWarn);
+  for (const h of [6, 12, 24, 48]) { const b = el('button', 'pk' + ((st.expiryHours || 24) === h ? ' on' : ''), h + ' h'); b.type = 'button'; b.onclick = () => setPatch({ expiryHours: h }); fe.append(b); }
   // how often to look for new quests
   const mins = st.refreshMin || 10;
   if (!refUnit) refUnit = mins % 1440 === 0 ? 'd' : mins % 60 === 0 ? 'h' : 'm';
@@ -901,6 +909,26 @@ function drawLangDD() {
 }
 $('langBtn').onclick = (e) => { e.stopPropagation(); $('langDD').classList.toggle('open'); };
 document.addEventListener('click', () => $('langDD').classList.remove('open'));
+// a new reminder from Orbek: a sound and a toast in the panel too
+let alertSeen = +(localStorage.getItem('alertSeen') || 0);
+function chime() {
+  try {
+    const a = new (window.AudioContext || window.webkitAudioContext)(), t0 = a.currentTime;
+    [[880, 0], [1175, 0.14], [1568, 0.28]].forEach(([f, d]) => {
+      const o = a.createOscillator(), g = a.createGain(); o.type = 'sine'; o.frequency.value = f;
+      g.gain.setValueAtTime(0.0001, t0 + d); g.gain.exponentialRampToValueAtTime(0.25, t0 + d + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + d + 0.45);
+      o.connect(g).connect(a.destination); o.start(t0 + d); o.stop(t0 + d + 0.5);
+    });
+  } catch (e) {}
+}
+function checkAlert() {
+  const al = S.alert || {};
+  if (!al.at || al.at <= alertSeen) return;
+  alertSeen = al.at; try { localStorage.setItem('alertSeen', String(al.at)); } catch (e) {}
+  if (Date.now() - al.at > 5 * 60000) return; // old news after a restart of the panel
+  chime();
+  ask(t('exp.titleUi'), al.text, t('cl.go'), true).then((go) => { if (go) op({ op: 'claimAll' }); });
+}
 function renderSettings() {
   drawLangDD();
   $('statsRow').hidden = !S.statsOn;
@@ -959,6 +987,7 @@ async function tick() {
   busy = false;
 }
 tick(); setInterval(tick, 1000);
+setInterval(() => { if (S && !MINI) checkAlert(); }, 1500);
 setInterval(() => { if (S && (S.runs || []).length) updateLive(); }, 250);
 </script>
 </body>
