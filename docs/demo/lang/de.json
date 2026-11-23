@@ -186,5 +186,12 @@
 "guide.8": "Orbek aktualisiert sich selbst von GitHub. Gibt es ein neueres Plugin, erscheint die Leiste „Plugin aktualisieren“.",
 "L.setupFail": "Einrichtung fehlgeschlagen: %v",
 "L.setupDone": "Einrichtung abgeschlossen – Discord startet neu.",
-"dur.s": "{s} Sek."
+"dur.s": "{s} Sek.",
+"do.PLAY_ON_DESKTOP": "Spiele {game} für {t} und gewinne: {r}.",
+"do.WATCH_VIDEO": "Sieh dir das Video an ({t}) und gewinne: {r}.",
+"do.WATCH_VIDEO_ON_MOBILE": "Sieh dir das Video in der Discord-App auf dem Handy an ({t}) und gewinne: {r}.",
+"do.STREAM_ON_DESKTOP": "Streame {game} {t} lang für einen Freund im Sprachkanal und gewinne: {r}.",
+"do.PLAY_ACTIVITY": "Spiele die Aktivität {game} für {t} und gewinne: {r}.",
+"do.ACHIEVEMENT_IN_ACTIVITY": "Erfülle das Ziel in {game} und gewinne: {r}.",
+"do.other": "Schließe die Quest ab und gewinne: {r}."
 }

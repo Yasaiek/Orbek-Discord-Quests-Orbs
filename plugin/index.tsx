@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.2.0";
+const PLUGIN_VERSION = "0.2.1";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -107,6 +107,25 @@ function fromStore(): Quest[] {
 
 const known = new Map<string, Quest>();
 let loaded = false, loadErr = "", orbs: number | null = null, lastLoad = 0;
+
+// Obrazek Orbów, którego Discord używa na swojej stronie zadań (statyczny plik discord.com/assets/…).
+// Szukamy go w tym, co Discord ma akurat na ekranie: <img> obok napisu „… Orbs”.
+let orbIcon = "", orbLook = 0;
+function findOrbIcon() {
+    if (orbIcon || Date.now() - orbLook < 5000) return;
+    orbLook = Date.now();
+    try {
+        for (const img of Array.from(document.querySelectorAll("img"))) {
+            const src = img.currentSrc || img.src;
+            if (!src || !/\/assets\/[^?#]+\.(svg|png|webp|gif)/i.test(src) || img.naturalWidth < 24) continue;
+            const alt = `${img.alt ?? ""} ${img.getAttribute("aria-label") ?? ""}`;
+            let hit = /\borbs?\b/i.test(alt);
+            for (let n: HTMLElement | null = img.parentElement, i = 0; !hit && n && i < 4; n = n.parentElement, i++)
+                hit = n.children.length <= 6 && /\d[\d\s.,]*\s*Orbs?\b/i.test(n.textContent ?? "") && (n.textContent ?? "").length < 220;
+            if (hit) { orbIcon = new URL(src, location.href).href; return; }
+        }
+    } catch { }
+}
 
 async function load() {
     lastLoad = Date.now();
@@ -371,6 +390,7 @@ async function tick() {
     try {
         if (!lastLoad || Date.now() - lastLoad > 10 * 60_000) await load();
         mergeLive();
+        findOrbIcon();
         const me = UserStore.getCurrentUser();
         const body = JSON.stringify({
             v: 1,
@@ -381,7 +401,8 @@ async function tick() {
             runs: [...runs.values()].map(r => ({ id: r.id, progress: r.progress, progressAt: r.progressAt, note: r.note, since: r.since })),
             queue: [...queue],
             events: events.splice(0),
-            desktop: isDesktop()
+            desktop: isDesktop(),
+            orbIcon
         });
         const raw = await Native.sync(body);
         if (raw) {

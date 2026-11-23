@@ -22,3 +22,4 @@ func systemLocale() string {
 }
 
 func hideWindow(cmd *exec.Cmd) {}
+func tagWindows() {}

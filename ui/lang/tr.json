@@ -186,5 +186,12 @@
 "guide.8": "Orbek kendini GitHub'dan günceller. Daha yeni bir eklenti çıktığında “Eklentiyi güncelle” çubuğu görünür.",
 "L.setupFail": "Kurulum başarısız: %v",
 "L.setupDone": "Kurulum bitti – Discord yeniden başlıyor.",
-"dur.s": "{s} sn"
+"dur.s": "{s} sn",
+"do.PLAY_ON_DESKTOP": "{game} oyununu {t} oyna ve kazan: {r}.",
+"do.WATCH_VIDEO": "Videoyu izle ({t}) ve kazan: {r}.",
+"do.WATCH_VIDEO_ON_MOBILE": "Videoyu Discord mobil uygulamasında izle ({t}) ve kazan: {r}.",
+"do.STREAM_ON_DESKTOP": "{game} oyununu bir arkadaşına sesli kanalda {t} yayınla ve kazan: {r}.",
+"do.PLAY_ACTIVITY": "{game} etkinliğini {t} oyna ve kazan: {r}.",
+"do.ACHIEVEMENT_IN_ACTIVITY": "{game} içindeki hedefi tamamla ve kazan: {r}.",
+"do.other": "Görevi tamamla ve kazan: {r}."
 }

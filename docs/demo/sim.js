@@ -4,18 +4,18 @@
   const qs = new URLSearchParams(location.search);
   let lang = qs.get('lang') || 'en';
   const now = Date.now(), H = 3600e3;
-  const rw = (type, name, orbs) => ({ type, name: name || '', orbs: orbs || 0, img: '' });
+  const rw = (type, name, orbs, img) => ({ type, name: name || '', orbs: orbs || 0, img: img ? 'art/' + img + '.svg' : '' });
   const Q = [
     ['d1', 'Neon Drift – watch the trailer', 'Neon Drift', 'Lumen Games', 'WATCH_VIDEO', 60, 0, [rw(4, '', 700)], 30],
-    ['d2', 'Play Skyforge Arena', 'Skyforge Arena', 'Ironpeak', 'PLAY_ON_DESKTOP', 900, 360, [rw(3, 'Avatar decoration: Ember Crown')], 96],
+    ['d2', 'Play Skyforge Arena', 'Skyforge Arena', 'Ironpeak', 'PLAY_ON_DESKTOP', 900, 360, [rw(3, 'Avatar decoration: Ember Crown', 0, 'crown')], 96],
     ['d3', 'Play Pocket Chess together', 'Pocket Chess', 'Discord', 'PLAY_ACTIVITY', 600, 0, [rw(4, '', 450)], 8],
-    ['d4', 'Stream Frontier Ops', 'Frontier Ops', 'Northwind', 'STREAM_ON_DESKTOP', 900, 0, [rw(2, 'Weapon crate'), rw(4, '', 300)], 200],
-    ['d5', 'Moonfall – watch the reveal', 'Moonfall', 'Starlight', 'WATCH_VIDEO', 90, 90, [rw(3, 'Profile effect: Aurora')], 50, true],
+    ['d4', 'Stream Frontier Ops', 'Frontier Ops', 'Northwind', 'STREAM_ON_DESKTOP', 900, 0, [rw(2, 'Weapon crate', 0, 'crate'), rw(4, '', 300)], 200],
+    ['d5', 'Moonfall – watch the reveal', 'Moonfall', 'Starlight', 'WATCH_VIDEO', 90, 90, [rw(3, 'Profile effect: Aurora', 0, 'aurora')], 50, true],
     ['d6', 'Play Rally Kings', 'Rally Kings', 'Gearbox Lane', 'PLAY_ON_DESKTOP', 900, 0, [rw(4, '', 1000)], 140],
     ['d7', 'Tide Tactics – watch the gameplay video', 'Tide Tactics', 'Harbor', 'WATCH_VIDEO', 120, 0, [rw(4, '', 500)], 70],
-    ['d8', 'Play Garden Golf', 'Garden Golf', 'Discord', 'PLAY_ACTIVITY', 900, 0, [rw(3, 'Avatar decoration: Clover')], 20],
+    ['d8', 'Play Garden Golf', 'Garden Golf', 'Discord', 'PLAY_ACTIVITY', 900, 0, [rw(3, 'Avatar decoration: Clover', 0, 'clover')], 20],
   ].map(([id, name, game, publisher, task, target, progress, rewards, hours, done]) => ({
-    id, name, game, publisher, task, target, progress, rewards, hero: '', startsAt: now - 40 * H, expiresAt: now + hours * H,
+    id, name, game, publisher, task, target, progress, rewards, hero: 'art/' + id + '.svg', startsAt: now - 40 * H, expiresAt: now + hours * H,
     enrolledAt: progress ? now - 2 * H : 0, completedAt: done ? now - H : 0, claimedAt: 0, auto: true,
     orbs: rewards.reduce((n, r) => n + (r.type === 4 ? r.orbs : 0), 0), cosmetic: rewards.some((r) => r.type === 3),
   }));

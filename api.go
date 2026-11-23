@@ -63,7 +63,7 @@ func (e *Engine) view() map[string]any {
 		"app": appName, "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
-		"pluginLatest": pluginVersion(), "vencord": vencord,
+		"pluginLatest": pluginVersion(), "vencord": vencord, "orbIcon": e.set.OrbIcon,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done)},
 		"quests":   quests,

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+- Fixed: the setup stopped at "pnpm install" (Cannot find module …pnpm.cjs). New npm versions block pnpm 12's install script; Orbek now runs pnpm from its own Node entry, which needs no script.
+- Orbek has its own taskbar button instead of landing under another browser-app window (e.g. Loorek).
+- Every quest says what to do and what you get, like Discord does ("Play X for 15 min to win: 700 Orbs").
+- Orbs show Discord's own Orbs picture: the plugin picks it up from Discord's quests page once you have opened it.
+- The live preview on the site has pictures on every quest.
+
 ## 0.2.0
 - Progress is live: the plugin reports every second and the rings and bars move smoothly between reports.
 - Settings: how many quests Orbek may do at once (1–50 or all).

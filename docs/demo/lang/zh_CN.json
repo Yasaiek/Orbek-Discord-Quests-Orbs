@@ -186,5 +186,12 @@
 "guide.8": "Orbek 会从 GitHub 自动更新。有更新的插件时会出现“更新插件”提示条。",
 "L.setupFail": "安装失败：%v",
 "L.setupDone": "安装完成——Discord 正在重启。",
-"dur.s": "{s} 秒"
+"dur.s": "{s} 秒",
+"do.PLAY_ON_DESKTOP": "玩 {game} {t}，即可获得：{r}。",
+"do.WATCH_VIDEO": "观看视频（{t}），即可获得：{r}。",
+"do.WATCH_VIDEO_ON_MOBILE": "在 Discord 手机应用中观看视频（{t}），即可获得：{r}。",
+"do.STREAM_ON_DESKTOP": "在语音频道向好友直播 {game} {t}，即可获得：{r}。",
+"do.PLAY_ACTIVITY": "玩活动 {game} {t}，即可获得：{r}。",
+"do.ACHIEVEMENT_IN_ACTIVITY": "在 {game} 中完成目标，即可获得：{r}。",
+"do.other": "完成任务，即可获得：{r}。"
 }

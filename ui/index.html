@@ -117,6 +117,7 @@ body.still .q, body.still .mt { animation: none; }
 @keyframes blink { 50% { opacity: .3; } }
 .qb { padding: 2px 15px 15px; display: flex; flex-direction: column; gap: 9px; flex: 1; position: relative; }
 .qt { font: 650 16px var(--display); line-height: 1.25; }
+.qd { color: var(--sub); font-size: 12.5px; line-height: 1.45; } .qd b.g { color: #5ee0d0; font-weight: 600; } .qd b.r { color: var(--text); font-weight: 600; }
 .qm { color: var(--sub); font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .qm svg.i { width: 13px; height: 13px; color: var(--dim); }
 .track { height: 7px; border-radius: 5px; background: rgba(255,255,255,.07); overflow: hidden; }
@@ -414,7 +415,7 @@ function progressOf(q) {
 }
 const pct = (q) => (q.target ? Math.min(100, Math.floor(progressOf(q) / q.target * 100)) : q.completedAt ? 100 : 0);
 // Discord's own Orb picture, from the quests that give Orbs
-const orbImg = () => { for (const q of S.quests) for (const r of q.rewards || []) if (r.type === 4 && r.img) return r.img; return ''; };
+const orbImg = () => { if (S.orbIcon) return S.orbIcon; for (const q of S.quests) for (const r of q.rewards || []) if (r.type === 4 && r.img) return r.img; return ''; };
 
 function ring(q, size) {
   const v = pct(q), live = !!runOf(q), R = 18, C = 2 * Math.PI * R;
@@ -485,7 +486,7 @@ function card(q, i) {
   b.append(el('div', 'qt', q.name));
   const meta = el('div', 'qm'); meta.append([q.game, q.publisher].filter(Boolean).join(' · '));
   if (q.expiresAt) { meta.append(el('span', '', '·'), icon('clock'), left(q.expiresAt)); }
-  b.append(meta);
+  b.append(meta, doLine(q));
   if (q.target > 0) {
     const p = progressOf(q), row = el('div', 'pr'), g = el('div', 'grow');
     const tr = el('div', 'track' + (q.completedAt ? ' ok' : '')), f = el('div'); f.style.width = pct(q) + '%'; tr.append(f);
@@ -497,6 +498,16 @@ function card(q, i) {
   const acts = actions(q); if (acts.childNodes.length) b.append(acts);
   c.append(hero, b);
   return c;
+}
+
+// what the quest asks for and what it gives, the way Discord says it
+function doLine(q) {
+  const key = DICT['do.' + q.task] ? 'do.' + q.task : 'do.other';
+  const reward = (q.rewards || []).map(rewardName).join(', ') || '—';
+  const parts = t(key, { t: mins(q.target || 0), n: q.target || 1, r: '\u0002', game: '\u0001' }).split(/(\u0001|\u0002)/);
+  const d = el('div', 'qd');
+  for (const x of parts) d.append(x === '\u0001' ? el('b', 'g', q.game || q.name) : x === '\u0002' ? el('b', 'r', reward) : x);
+  return d;
 }
 
 // mini view: just the reward and a ring, all side by side

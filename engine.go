@@ -5,11 +5,12 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 )
 
-var version = "0.2.0"
+var version = "0.2.1"
 
 const appName = "Orbek"
 
@@ -27,6 +28,7 @@ type Settings struct {
 	Parallel    int    `json:"parallel"`    // how many quests at once (0 = no limit)
 	AutoUpdate  bool   `json:"autoUpdate"`
 	VencordDir  string `json:"vencordDir"` // where the Vencord source is (for installing the plugin)
+	OrbIcon     string `json:"orbIcon"`    // Discord's own Orbs picture, as the plugin found it in Discord
 }
 
 // Quest is what the plugin reports (already in a plain shape).
@@ -93,6 +95,7 @@ type Sync struct {
 	Events  []Event    `json:"events"`
 	Desktop bool       `json:"desktop"` // the Discord app (not a browser): games can be done
 	Plugin  string     `json:"plugin"`  // the plugin's version
+	OrbIcon string     `json:"orbIcon"` // Discord's Orbs picture (from Discord's own page), when the plugin saw one
 }
 
 type BUser struct {
@@ -175,6 +178,10 @@ func (e *Engine) onSync(s Sync) map[string]any {
 		e.log.OK("L.connected", name)
 	}
 	e.last, e.lastAt = s, time.Now()
+	if ic := s.OrbIcon; ic != "" && ic != e.set.OrbIcon && strings.HasPrefix(ic, "https://") {
+		e.set.OrbIcon = ic
+		e.saveSettings()
+	}
 	for _, ev := range s.Events {
 		switch ev.K {
 		case "start":

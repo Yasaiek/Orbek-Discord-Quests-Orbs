@@ -186,5 +186,12 @@
 "guide.8": "Orbek se met à jour tout seul depuis GitHub. Quand un plugin plus récent sort, une barre « Mettre à jour le plugin » apparaît.",
 "L.setupFail": "L'installation a échoué : %v",
 "L.setupDone": "Installation terminée – Discord redémarre.",
-"dur.s": "{s} s"
+"dur.s": "{s} s",
+"do.PLAY_ON_DESKTOP": "Joue à {game} pendant {t} pour gagner : {r}.",
+"do.WATCH_VIDEO": "Regarde la vidéo ({t}) pour gagner : {r}.",
+"do.WATCH_VIDEO_ON_MOBILE": "Regarde la vidéo dans l'appli Discord sur mobile ({t}) pour gagner : {r}.",
+"do.STREAM_ON_DESKTOP": "Streame {game} à un ami dans un salon vocal pendant {t} pour gagner : {r}.",
+"do.PLAY_ACTIVITY": "Joue à l'activité {game} pendant {t} pour gagner : {r}.",
+"do.ACHIEVEMENT_IN_ACTIVITY": "Remplis l'objectif dans {game} pour gagner : {r}.",
+"do.other": "Termine la quête pour gagner : {r}."
 }

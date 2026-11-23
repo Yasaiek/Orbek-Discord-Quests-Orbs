@@ -327,7 +327,6 @@ func (e *Engine) buildVencord(node, vdir string) error {
 		ver = strings.SplitN(strings.TrimPrefix(pkg.PM, "pnpm@"), "+", 2)[0]
 	}
 	pnpmDir := filepath.Join(toolsDir(e.dir), "pnpm-"+ver)
-	pnpm := filepath.Join(pnpmDir, "node_modules", "pnpm", "bin", "pnpm.cjs")
 	nodeDir := filepath.Dir(node)
 	env := append(os.Environ(), "PATH="+nodeDir+string(os.PathListSeparator)+os.Getenv("PATH"), "CI=1", "npm_config_update_notifier=false")
 	run := func(dir string, args ...string) error {
@@ -338,7 +337,8 @@ func (e *Engine) buildVencord(node, vdir string) error {
 		hideWindow(cmd)
 		return cmd.Run()
 	}
-	if _, err := os.Stat(pnpm); err != nil {
+	pnpm := pnpmEntry(pnpmDir)
+	if pnpm == "" {
 		npm := findIn(nodeDir, "npm-cli.js")
 		if npm == "" { // a system Node keeps npm in lib/node_modules next to bin
 			npm = findIn(filepath.Join(filepath.Dir(nodeDir), "lib"), "npm-cli.js")
@@ -347,9 +347,15 @@ func (e *Engine) buildVencord(node, vdir string) error {
 			return errors.New("npm missing next to node")
 		}
 		s.line("pnpm %s: installing…", ver)
+		os.RemoveAll(pnpmDir)
 		os.MkdirAll(pnpmDir, 0o755)
-		if err := run(pnpmDir, npm, "install", "--no-audit", "--no-fund", "--prefix", pnpmDir, "pnpm@"+ver); err != nil {
+		// No install scripts: newer npm blocks them anyway, and pnpm runs from its own Node entry
+		// (bin/pnpm.mjs, which finds the native binary from the optional package).
+		if err := run(pnpmDir, npm, "install", "--no-audit", "--no-fund", "--ignore-scripts", "--prefix", pnpmDir, "pnpm@"+ver); err != nil {
 			return fmt.Errorf("pnpm: %w", err)
+		}
+		if pnpm = pnpmEntry(pnpmDir); pnpm == "" {
+			return errors.New("pnpm: no entry point found after installing")
 		}
 	}
 	s.line("pnpm install…")
@@ -363,6 +369,17 @@ func (e *Engine) buildVencord(node, vdir string) error {
 		return fmt.Errorf("pnpm build: %w", err)
 	}
 	return nil
+}
+
+// pnpmEntry finds the file Node runs pnpm from: bin/pnpm.cjs up to pnpm 10, bin/pnpm.mjs from pnpm 11.
+func pnpmEntry(dir string) string {
+	base := filepath.Join(dir, "node_modules", "pnpm", "bin")
+	for _, n := range []string{"pnpm.cjs", "pnpm.mjs", "pnpm.js"} {
+		if _, err := os.Stat(filepath.Join(base, n)); err == nil {
+			return filepath.Join(base, n)
+		}
+	}
+	return ""
 }
 
 // ---- 5. into Discord ----

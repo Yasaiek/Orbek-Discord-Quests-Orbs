@@ -186,5 +186,12 @@
 "guide.8": "OrbekはGitHubから自動で更新されます。新しいプラグインが出ると「プラグインを更新」のバーが表示されます。",
 "L.setupFail": "セットアップに失敗しました：%v",
 "L.setupDone": "セットアップ完了 – Discordを再起動しています。",
-"dur.s": "{s}秒"
+"dur.s": "{s}秒",
+"do.PLAY_ON_DESKTOP": "{game}を{t}プレイして獲得：{r}。",
+"do.WATCH_VIDEO": "動画を視聴（{t}）して獲得：{r}。",
+"do.WATCH_VIDEO_ON_MOBILE": "Discordモバイルアプリで動画を視聴（{t}）して獲得：{r}。",
+"do.STREAM_ON_DESKTOP": "ボイスチャンネルでフレンドに{game}を{t}配信して獲得：{r}。",
+"do.PLAY_ACTIVITY": "アクティビティ{game}を{t}プレイして獲得：{r}。",
+"do.ACHIEVEMENT_IN_ACTIVITY": "{game}で目標を達成して獲得：{r}。",
+"do.other": "クエストを完了して獲得：{r}。"
 }

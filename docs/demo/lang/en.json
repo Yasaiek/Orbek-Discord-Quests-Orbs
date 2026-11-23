@@ -186,5 +186,12 @@
 "guide.8": "Orbek updates itself from GitHub. When a newer plugin is out you will see an “Update plugin” bar.",
 "L.setupFail": "Setup failed: %v",
 "L.setupDone": "Setup finished – Discord is restarting.",
-"dur.s": "{s} s"
+"dur.s": "{s} s",
+"do.PLAY_ON_DESKTOP": "Play {game} for {t} to win {r}.",
+"do.WATCH_VIDEO": "Watch the video ({t}) to win {r}.",
+"do.WATCH_VIDEO_ON_MOBILE": "Watch the video in the Discord mobile app ({t}) to win {r}.",
+"do.STREAM_ON_DESKTOP": "Stream {game} to a friend in a voice channel for {t} to win {r}.",
+"do.PLAY_ACTIVITY": "Play the {game} activity for {t} to win {r}.",
+"do.ACHIEVEMENT_IN_ACTIVITY": "Complete the goal in {game} to win {r}.",
+"do.other": "Complete the quest to win {r}."
 }
