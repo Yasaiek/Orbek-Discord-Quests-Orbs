@@ -109,7 +109,12 @@ func main() {
 	if open && os.Getenv("ORBEK_NO_WINDOW") == "" {
 		srv.show()
 	}
-	runTray(e, srv.show)
+	runTray(e, trayActions{
+		Open:    srv.show,
+		Mini:    func() { go srv.showMini() },
+		StopAll: func() { e.push(Cmd{Op: "stopAll"}) },
+		Update:  func() { go e.updateCheck(true) },
+	})
 	os.Remove(instPath)
 	e.shutdown()
 	time.Sleep(300 * time.Millisecond)

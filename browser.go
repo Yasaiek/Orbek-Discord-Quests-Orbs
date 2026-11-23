@@ -74,6 +74,7 @@ func openPanel(url, dataDir string) error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
+	trackProcess(cmd.Process.Pid)
 	go cmd.Wait()
 	go tagWindows()
 	return nil
@@ -92,6 +93,7 @@ func openMini(url, dataDir string) error {
 	if err := cmd.Start(); err != nil {
 		return err
 	}
+	trackProcess(cmd.Process.Pid)
 	go cmd.Wait()
 	go tagWindows()
 	return nil

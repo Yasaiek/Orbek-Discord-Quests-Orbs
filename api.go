@@ -63,7 +63,7 @@ func (e *Engine) view() map[string]any {
 		"app": appName, "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
-		"pluginLatest": pluginVersion(), "vencord": vencord, "orbIcon": e.set.OrbIcon,
+		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "orbTile": e.set.OrbTile, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done)},
 		"quests":   quests,
@@ -118,10 +118,24 @@ func (s *server) handleOp(r opReq) map[string]any {
 				e.set.AutoMode = boolean(v)
 			case "autoAll":
 				e.set.AutoAll = boolean(v)
-			case "autoOnly":
-				if x := str(v); x == "all" || x == "orbs" || x == "cosmetic" {
-					e.set.AutoOnly = x
+			case "autoKinds":
+				e.set.AutoKinds = cleanList(v, allKinds)
+			case "autoTasks":
+				e.set.AutoTasks = cleanList(v, allTasks)
+			case "autoGames":
+				if x := str(v); x == "all" || x == "only" || x == "except" {
+					e.set.AutoGames = x
 				}
+			case "gameList":
+				list := []string{}
+				if arr, ok := v.([]any); ok {
+					for _, x := range arr {
+						if s := strings.TrimSpace(str(x)); s != "" && !has(list, s) {
+							list = append(list, s)
+						}
+					}
+				}
+				e.set.GameList = list
 			case "openOnStart":
 				e.set.OpenOnStart = boolean(v)
 			case "autostart":
@@ -133,6 +147,8 @@ func (s *server) handleOp(r opReq) map[string]any {
 				}
 			case "autoUpdate":
 				e.set.AutoUpdate = boolean(v)
+			case "autoClaim":
+				e.set.AutoClaim = boolean(v)
 			}
 		}
 		off := !e.set.AutoMode

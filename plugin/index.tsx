@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.2.1";
+const PLUGIN_VERSION = "0.2.2";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -108,22 +108,35 @@ function fromStore(): Quest[] {
 const known = new Map<string, Quest>();
 let loaded = false, loadErr = "", orbs: number | null = null, lastLoad = 0;
 
-// Obrazek Orbów, którego Discord używa na swojej stronie zadań (statyczny plik discord.com/assets/…).
-// Szukamy go w tym, co Discord ma akurat na ekranie: <img> obok napisu „… Orbs”.
-let orbIcon = "", orbLook = 0;
+// Obrazki Orbów z samej strony zadań Discorda (statyczne pliki discord.com/assets/…), z tego, co Discord
+// ma akurat na ekranie obok napisu „… Orbs”: duży kafelek nagrody (kolorowy) i mały znaczek (biały).
+let orbTile = "", orbGlyph = "", orbLook = 0;
 function findOrbIcon() {
-    if (orbIcon || Date.now() - orbLook < 5000) return;
+    if (orbTile || Date.now() - orbLook < 4000) return;
     orbLook = Date.now();
     try {
-        for (const img of Array.from(document.querySelectorAll("img"))) {
-            const src = img.currentSrc || img.src;
-            if (!src || !/\/assets\/[^?#]+\.(svg|png|webp|gif)/i.test(src) || img.naturalWidth < 24) continue;
-            const alt = `${img.alt ?? ""} ${img.getAttribute("aria-label") ?? ""}`;
-            let hit = /\borbs?\b/i.test(alt);
-            for (let n: HTMLElement | null = img.parentElement, i = 0; !hit && n && i < 4; n = n.parentElement, i++)
-                hit = n.children.length <= 6 && /\d[\d\s.,]*\s*Orbs?\b/i.test(n.textContent ?? "") && (n.textContent ?? "").length < 220;
-            if (hit) { orbIcon = new URL(src, location.href).href; return; }
+        const near = (e: Element) => {
+            for (let n: Element | null = e.parentElement, i = 0; n && i < 5; n = n.parentElement, i++) {
+                const txt = n.textContent ?? "";
+                if (txt.length < 320 && /\d[\d\s.,]*\s*Orbs?\b/i.test(txt)) return true;
+            }
+            return false;
+        };
+        let best = "", bestW = 0;
+        const consider = (url: string, el: Element, label: string) => {
+            if (!url || !/\/assets\/[^?#]+\.(svg|png|webp|gif|avif)/i.test(url)) return;
+            if (!/\borbs?\b/i.test(label) && !near(el)) return;
+            const w = el.getBoundingClientRect().width;
+            const abs = new URL(url, location.href).href;
+            if (w >= 36) { if (w > bestW) { best = abs; bestW = w; } } else if (w > 0 && !orbGlyph) orbGlyph = abs;
+        };
+        for (const img of Array.from(document.querySelectorAll("img")))
+            consider(img.currentSrc || img.src, img, `${img.alt ?? ""} ${img.getAttribute("aria-label") ?? ""}`);
+        for (const el of Array.from(document.querySelectorAll<HTMLElement>("[style*='background']"))) {
+            const m = /url\(["']?([^"')]+)/.exec(el.style.backgroundImage || "");
+            if (m) consider(m[1], el, el.getAttribute("aria-label") ?? "");
         }
+        if (best) orbTile = best;
     } catch { }
 }
 
@@ -182,6 +195,53 @@ async function enroll(q: Quest): Promise<Quest> {
     const out = { ...q, enrolledAt: time(us.enrolledAt) || Date.now() };
     known.set(q.id, out);
     return out;
+}
+
+// ---------- odbieranie nagród (eksperymentalne) ----------
+// To samo zapytanie, które wysyła przycisk „Odbierz nagrodę” w Discordzie. Jeśli Discord zażąda captchy,
+// pokazuje ją sam (jak przy kliknięciu) albo zapytanie wraca z błędem – wtedy otwieramy stronę zadań, żeby
+// odebrać ręcznie. Captchy nikt tu nie rozwiązuje za człowieka.
+let autoClaim = false;
+const claimTried = new Map<string, number>();
+let claiming = false;
+
+async function claim(q: Quest, byHand: boolean): Promise<boolean> {
+    if (claiming) return false;
+    claiming = true;
+    claimTried.set(q.id, Date.now());
+    try {
+        await RestAPI.post({
+            url: `/quests/${q.id}/claim-reward`,
+            body: { platform: 0, location: 11, is_targeted: false, metadata_raw: null, metadata_sealed: null, traffic_metadata_raw: null, traffic_metadata_sealed: null }
+        });
+        known.set(q.id, { ...q, claimedAt: Date.now() });
+        say("claimed", q);
+        lastLoad = 0; // przeczytaj listę (i Orby) od nowa
+        return true;
+    } catch (e: any) {
+        const b = e?.body ?? {};
+        if (b.captcha_key || b.captcha_sitekey || b.captcha_service) say("claimCaptcha", q);
+        else say("claimFail", q, errText(e));
+        if (byHand) openQuests();
+        return false;
+    } finally {
+        claiming = false;
+    }
+}
+
+function openQuests() {
+    try { NavigationRouter.transitionTo("/quest-home"); } catch (e) { console.error(TAG, e); }
+    Native.focusDiscord();
+}
+
+async function autoClaimTick() {
+    if (!autoClaim || claiming) return;
+    for (const q of known.values()) {
+        if (!q.completedAt || q.claimedAt || (q.expiresAt && q.expiresAt < Date.now())) continue;
+        if (Date.now() - (claimTried.get(q.id) ?? 0) < 30 * 60_000) continue;
+        await claim(q, false);
+        return; // jedna na raz, kolejna przy następnym obrocie
+    }
 }
 
 function setProgress(run: Run, id: string, p: number) {
@@ -376,8 +436,8 @@ async function doCmd(c: any) {
             stopAll();
             break;
         case "claim":
-            try { NavigationRouter.transitionTo("/quest-home"); } catch (e) { console.error(TAG, e); }
-            Native.focusDiscord();
+            if (q && autoClaim && q.completedAt && !q.claimedAt) await claim(q, true);
+            else openQuests();
             break;
     }
 }
@@ -402,16 +462,18 @@ async function tick() {
             queue: [...queue],
             events: events.splice(0),
             desktop: isDesktop(),
-            orbIcon
+            orbTile, orbGlyph
         });
         const raw = await Native.sync(body);
         if (raw) {
             lastOk = Date.now();
             const res = JSON.parse(raw);
             autoAllowed = !!res.auto;
+            autoClaim = !!res.claim;
             maxParallel = Math.max(0, Number(res.parallel ?? 1));
             if (!autoAllowed && (runs.size || queue.length)) stopAll();
             for (const c of res.cmds ?? []) await doCmd(c);
+            autoClaimTick();
         } else if (Date.now() - lastOk > 30_000 && (runs.size || queue.length)) {
             stopAll(); // Orbek zniknął – nic nie robimy na ślepo
         }

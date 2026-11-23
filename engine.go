@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.2.1"
+var version = "0.2.2"
 
 const appName = "Orbek"
 
@@ -19,16 +19,22 @@ const appName = "Orbek"
 // Requests to Discord therefore come from the real Discord client, and the account's token never leaves it.
 
 type Settings struct {
-	Lang        string `json:"lang"`        // "" = the system's
-	AutoMode    bool   `json:"autoMode"`    // the user allowed doing quests automatically
-	AutoAll     bool   `json:"autoAll"`     // ...and open quests are done without asking
-	AutoOnly    string `json:"autoOnly"`    // which of them: all | orbs | cosmetic
-	OpenOnStart bool   `json:"openOnStart"` // show the panel when the program starts
-	Autostart   bool   `json:"autostart"`   // start with Windows
-	Parallel    int    `json:"parallel"`    // how many quests at once (0 = no limit)
-	AutoUpdate  bool   `json:"autoUpdate"`
-	VencordDir  string `json:"vencordDir"` // where the Vencord source is (for installing the plugin)
-	OrbIcon     string `json:"orbIcon"`    // Discord's own Orbs picture, as the plugin found it in Discord
+	Lang        string   `json:"lang"`               // "" = the system's
+	AutoMode    bool     `json:"autoMode"`           // the user allowed doing quests automatically
+	AutoAll     bool     `json:"autoAll"`            // ...and open quests are done without asking
+	AutoOnly    string   `json:"autoOnly,omitempty"` // up to 0.2.1: all | orbs | cosmetic (now AutoKinds)
+	AutoKinds   []string `json:"autoKinds"`          // which rewards the automat goes for: orbs, cosmetic, ingame, code, other
+	AutoTasks   []string `json:"autoTasks"`          // which tasks: video, play, activity, stream
+	AutoGames   string   `json:"autoGames"`          // all | only (the games in GameList) | except (all but those)
+	GameList    []string `json:"gameList"`
+	OpenOnStart bool     `json:"openOnStart"` // show the panel when the program starts
+	Autostart   bool     `json:"autostart"`   // start with Windows
+	Parallel    int      `json:"parallel"`    // how many quests at once (0 = no limit)
+	AutoUpdate  bool     `json:"autoUpdate"`
+	AutoClaim   bool     `json:"autoClaim"`  // experimental: claim finished quests through Discord's own request
+	VencordDir  string   `json:"vencordDir"` // where the Vencord source is (for installing the plugin)
+	OrbTile     string   `json:"orbTile"`    // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
+	OrbGlyph    string   `json:"orbGlyph"`   // the big reward tile and the small white sign
 }
 
 // Quest is what the plugin reports (already in a plain shape).
@@ -84,18 +90,19 @@ func (q *Quest) open(now int64) bool {
 
 // Sync is one report of the plugin.
 type Sync struct {
-	V       int        `json:"v"`
-	User    *BUser     `json:"user"`
-	Quests  []Quest    `json:"quests"`
-	Loaded  bool       `json:"loaded"` // the plugin has read the list at least once
-	Err     string     `json:"err"`
-	Orbs    *float64   `json:"orbs"`
-	Runs    []RunState `json:"runs"`
-	Queue   []string   `json:"queue"`
-	Events  []Event    `json:"events"`
-	Desktop bool       `json:"desktop"` // the Discord app (not a browser): games can be done
-	Plugin  string     `json:"plugin"`  // the plugin's version
-	OrbIcon string     `json:"orbIcon"` // Discord's Orbs picture (from Discord's own page), when the plugin saw one
+	V        int        `json:"v"`
+	User     *BUser     `json:"user"`
+	Quests   []Quest    `json:"quests"`
+	Loaded   bool       `json:"loaded"` // the plugin has read the list at least once
+	Err      string     `json:"err"`
+	Orbs     *float64   `json:"orbs"`
+	Runs     []RunState `json:"runs"`
+	Queue    []string   `json:"queue"`
+	Events   []Event    `json:"events"`
+	Desktop  bool       `json:"desktop"` // the Discord app (not a browser): games can be done
+	Plugin   string     `json:"plugin"`  // the plugin's version
+	OrbTile  string     `json:"orbTile"` // Discord's Orbs pictures (from Discord's own page), when the plugin saw them
+	OrbGlyph string     `json:"orbGlyph"`
 }
 
 type BUser struct {
@@ -141,17 +148,23 @@ type Engine struct {
 	upd      updState
 	setup    setupState
 
-	quit   chan struct{}
-	onQuit func()
-	winGen int
-	apiKey string
-	port   int
+	quit chan struct{}
+
+	games      map[string]int64 // games seen in quests (name → last seen)
+	gamesSaved time.Time
+	onQuit     func()
+	winGen     int
+	apiKey     string
+	port       int
 }
 
 func newEngine(dir string) *Engine {
 	e := &Engine{dir: dir, log: newLogger(dir), fails: map[string]time.Time{}, autoSent: map[string]time.Time{}, quit: make(chan struct{})}
-	e.set = Settings{AutoOnly: "all", OpenOnStart: true, AutoUpdate: true}
+	e.set = Settings{OpenOnStart: true, AutoUpdate: true}
 	readJSON(filepath.Join(dir, "settings.json"), &e.set)
+	e.set.migrateFilters()
+	e.set.AutoOnly = ""
+	e.loadGames()
 	return e
 }
 
@@ -178,9 +191,12 @@ func (e *Engine) onSync(s Sync) map[string]any {
 		e.log.OK("L.connected", name)
 	}
 	e.last, e.lastAt = s, time.Now()
-	if ic := s.OrbIcon; ic != "" && ic != e.set.OrbIcon && strings.HasPrefix(ic, "https://") {
-		e.set.OrbIcon = ic
-		e.saveSettings()
+	e.noteGamesLocked(s.Quests)
+	for _, f := range []struct{ got, have *string }{{&s.OrbTile, &e.set.OrbTile}, {&s.OrbGlyph, &e.set.OrbGlyph}} {
+		if ic := *f.got; ic != "" && ic != *f.have && strings.HasPrefix(ic, "https://") {
+			*f.have = ic
+			e.saveSettings()
+		}
 	}
 	for _, ev := range s.Events {
 		switch ev.K {
@@ -198,6 +214,12 @@ func (e *Engine) onSync(s Sync) map[string]any {
 			e.log.OK("L.enrolled", ev.Name)
 		case "enrollFail":
 			e.log.Warn("L.enrollFail", ev.Name, ev.Msg)
+		case "claimed":
+			e.log.OK("L.claimed", ev.Name)
+		case "claimCaptcha":
+			e.log.Warn("L.claimCaptcha", ev.Name)
+		case "claimFail":
+			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
 		}
 	}
 	e.autoQueueLocked()
@@ -206,7 +228,7 @@ func (e *Engine) onSync(s Sync) map[string]any {
 	if cmds == nil {
 		cmds = []Cmd{}
 	}
-	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "lang": curLang.Load()}
+	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "claim": e.set.AutoClaim, "lang": curLang.Load()}
 }
 
 // desktopTask: done by the Discord app on the computer itself.
@@ -234,21 +256,11 @@ func (e *Engine) autoQueueLocked() {
 		if at, ok := e.autoSent[q.ID]; ok && time.Since(at) < 2*time.Minute {
 			continue
 		}
-		if q.Task == "STREAM_ON_DESKTOP" { // needs a voice channel with someone: only when asked by hand
-			continue
-		}
 		if at, ok := e.fails[q.ID]; ok && time.Since(at) < 3*time.Hour {
 			continue
 		}
-		switch e.set.AutoOnly {
-		case "orbs":
-			if q.orbs() == 0 {
-				continue
-			}
-		case "cosmetic":
-			if !q.cosmetic() {
-				continue
-			}
+		if !e.set.autoWants(q) {
+			continue
 		}
 		qs = append(qs, q)
 	}
@@ -277,6 +289,7 @@ func (e *Engine) run() {
 	e.log.Info("L.started", version)
 	e.writeBridge()
 	go e.updateLoop()
+	go usageLoop(e.quit)
 	t := time.NewTicker(30 * time.Second)
 	defer t.Stop()
 	for {

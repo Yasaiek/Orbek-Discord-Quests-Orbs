@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.2
+- Settings → Automat: choose which rewards (Orbs, Discord cosmetics, in-game items, codes, other), which tasks (videos, playing, activities, streaming) and which games (all, only chosen, all but chosen – from the games Orbek has seen) the automat takes.
+- Experimental: claim finished quests by themselves, with Discord's own request. If Discord wants a captcha, it shows it in Discord or Orbek opens the quests page.
+- Right-click menu in the tray: state, PC usage, open, small window, stop everything, updates, website, folder, quit – with icons.
+- PC usage (CPU and RAM of Orbek with its windows) on the quests page and in the tray.
+- Discord's own Orbs pictures: the colourful reward tile, or Discord's Orbs sign until the tile is seen.
+- Progress on one line: time, bar and the ring centred together.
+- Language picker with flags.
+
 ## 0.2.1
 - Fixed: the setup stopped at "pnpm install" (Cannot find module …pnpm.cjs). New npm versions block pnpm 12's install script; Orbek now runs pnpm from its own Node entry, which needs no script.
 - Orbek has its own taskbar button instead of landing under another browser-app window (e.g. Loorek).

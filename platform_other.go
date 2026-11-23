@@ -8,7 +8,7 @@ import (
 )
 
 // On other systems (used for development and tests) there is no tray: just wait until quit.
-func runTray(e *Engine, open func()) { <-e.quit }
+func runTray(e *Engine, a trayActions) { <-e.quit }
 
 func setAutostart(on bool) error { return nil }
 
@@ -22,4 +22,4 @@ func systemLocale() string {
 }
 
 func hideWindow(cmd *exec.Cmd) {}
-func tagWindows() {}
+func tagWindows()              {}

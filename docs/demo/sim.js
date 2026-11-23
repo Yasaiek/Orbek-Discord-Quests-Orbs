@@ -21,9 +21,11 @@
   }));
   const S = {
     app: 'Orbek', version: window.ORBEK_VERSION || '0.0.0', lang, winGen: 0, connected: true, lastAt: now, user: { id: '1', name: 'Demo', avatar: '' },
+    usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6 }, orbTile: '', orbGlyph: '',
+    games: Q.map((q) => ({ name: q.game, last: now })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
     loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord',
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
-    settings: { lang: '', autoMode: true, autoAll: false, autoOnly: 'all', openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
+    settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], autoClaim: false, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
     setup: { running: false, done: false, err: '', steps: [], lines: [], full: true },
     update: { state: 'current', latest: '', checked: now, doneAt: 0 },
   };
@@ -39,6 +41,7 @@
       say('info', q.name + ': …');
     }
   };
+  setInterval(() => { S.usage = { cpu: +(0.2 + Math.random() * 0.6 + S.runs.length * 0.15).toFixed(2), ram: 90 + Math.round(Math.random() * 8), ramPct: 0.6, procs: 6 }; }, 2000);
   setInterval(() => { // the demo runs ~20× faster than Discord
     for (const r of S.runs.slice()) {
       const q = find(r.id); const step = q.task.startsWith('WATCH') ? 7 : 20;

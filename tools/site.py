@@ -57,6 +57,8 @@ with open("docs/demo/index.html", "w", encoding="utf-8", newline="\n") as fh:
 shutil.copyfile("ui/icon.svg", "docs/demo/icon.svg")
 shutil.rmtree("docs/demo/lang", ignore_errors=True)
 shutil.copytree("ui/lang", "docs/demo/lang")
+shutil.rmtree("docs/demo/flags", ignore_errors=True)
+shutil.copytree("ui/flags", "docs/demo/flags")
 
 # ---- READMEs ----
 def readme(code, root):
