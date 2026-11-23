@@ -1,0 +1,53 @@
+name: Release
+
+# Every push to main that carries a new version number (var version in engine.go)
+# builds Orbek.exe and publishes it as a release. The app updates itself from these releases.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24.x'
+          cache: false
+      - name: Read version
+        id: v
+        run: |
+          V=$(grep -oP 'var version = "\K[0-9]+\.[0-9]+\.[0-9]+' engine.go)
+          test -n "$V"
+          echo "v=$V" >> "$GITHUB_OUTPUT"
+          if gh release view "v$V" >/dev/null 2>&1; then echo "exists=1" >> "$GITHUB_OUTPUT"; fi
+      - name: Build
+        if: steps.v.outputs.exists != '1'
+        env:
+          GOOS: windows
+          GOARCH: amd64
+          CGO_ENABLED: '0'
+          GOPROXY: direct
+          GOSUMDB: 'off'
+          GOFLAGS: -mod=mod
+        run: |
+          go build -trimpath -ldflags "-H=windowsgui -s -w" -o Orbek.exe .
+          SHA=$(sha256sum Orbek.exe | cut -d' ' -f1)
+          SIZE=$(stat -c %s Orbek.exe)
+          printf '{"version":"%s","sha256":"%s","size":%s}\n' "${{ steps.v.outputs.v }}" "$SHA" "$SIZE" > version.json
+          cp Orbek.exe Orbek-update.bin   # the same file for the built-in updater (keeps Orbek.exe's download count honest)
+          cat version.json
+      - name: Publish release
+        if: steps.v.outputs.exists != '1'
+        run: |
+          V="${{ steps.v.outputs.v }}"
+          awk -v v="## $V" '$0==v{f=1;next} /^## /{f=0} f' CHANGELOG.md > notes.md
+          test -s notes.md || echo "Orbek $V" > notes.md
+          gh release create "v$V" Orbek.exe Orbek-update.bin version.json --title "Orbek $V" --notes-file notes.md
