@@ -275,5 +275,10 @@
 "exp.titleUi": "奖励即将失效！",
 "set.clTitle": "领取奖励",
 "set.clickSelf": "自动点击“领取奖励”",
-"set.clickSelfHint": "逐个领取时，插件会自己点击“领取奖励”。如果 Discord 显示验证码，由你来完成——之后 Orbek 会进入下一个。"
+"set.clickSelfHint": "逐个领取时，插件会自己点击“领取奖励”。如果 Discord 显示验证码，由你来完成——之后 Orbek 会进入下一个。",
+"empty.noneT": "暂时没有任务",
+"empty.doneT": "全部完成！🎉",
+"empty.next": "新任务会自动出现在这里——Orbek 每 {t} 检查一次 Discord。",
+"empty.filterHint": "剩余的任务（{n}）被当前标签、搜索或筛选隐藏了。",
+"empty.reset": "全部显示"
 }

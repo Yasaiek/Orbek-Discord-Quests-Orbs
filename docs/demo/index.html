@@ -221,6 +221,12 @@ body.still .q, body.still .mt { animation: none; }
 .acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
 .note { font-size: 12px; color: var(--warn); display: flex; gap: 6px; align-items: flex-start; }
 .empty { text-align: center; color: var(--sub); padding: 56px 20px; background: var(--card); border: 1px dashed var(--line2); border-radius: 16px; }
+.empty.big { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 48px 20px; border-style: solid; background: radial-gradient(ellipse at 50% 0%, rgba(120,90,255,.14), transparent 60%), var(--card); }
+.empty .eic { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; color: #fff; background: var(--grad); box-shadow: 0 16px 34px -14px rgba(120,90,255,.9), inset 0 1px 0 rgba(255,255,255,.3); margin-bottom: 6px; }
+.empty .eic svg.i { width: 30px; height: 30px; stroke-width: 2.4; }
+.empty h3 { margin: 0; font: 700 19px var(--display); color: var(--text); }
+.empty p { margin: 0; max-width: 460px; line-height: 1.5; }
+.empty .btn { margin-top: 8px; }
 .setup { background: linear-gradient(120deg, rgba(240,178,50,.1), rgba(19,21,37,.9) 50%); border: 1px solid rgba(240,178,50,.35); border-radius: 16px; padding: 18px 20px; margin-bottom: 18px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
 .setup .grow { flex: 1; min-width: 280px; }
 .setup h3 { margin: 0 0 4px; font: 650 16px var(--display); color: var(--warn); display: flex; align-items: center; gap: 8px; }
@@ -439,7 +445,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.4.3"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.4"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -744,6 +750,22 @@ function renderKpis(orbIcon) {
 }
 const vnum = (v) => (v || '0').split('.').map(Number).reduce((a, n) => a * 1000 + n, 0);
 
+// what to say when the list is empty: no Discord yet, loading, all done, nothing new, or only the filters
+function emptyState() {
+  const d = el('div', 'empty');
+  if (!S.connected) { d.textContent = t('empty.noDiscord'); return d; }
+  if (!S.loaded) { d.textContent = t('empty.loading'); return d; }
+  const left = S.quests.filter((q) => !q.claimedAt && !(q.expiresAt && q.expiresAt <= now()));
+  const mins = (S.settings && S.settings.refreshMin) || 10;
+  const every = mins % 1440 === 0 ? (mins / 1440) + ' ' + t('u.d') : mins % 60 === 0 ? (mins / 60) + ' ' + t('u.h') : mins + ' ' + t('u.m');
+  const big = (ic, h, p) => { d.classList.add('big'); const i = el('div', 'eic'); i.append(icon(ic)); d.append(i, el('h3', '', h), el('p', '', p)); return d; };
+  if (!S.quests.length) return big('quests', t('empty.noneT'), t('empty.next', { t: every }));
+  if (!left.length) return big('check', t('empty.doneT'), t('empty.next', { t: every }));
+  big('search', t('empty.filter'), t('empty.filterHint', { n: left.length }));
+  const b = el('button', 'btn sm'); b.append(icon('refresh'), t('empty.reset'));
+  b.onclick = () => { ui.tab = 'all'; ui.cos = false; ui.q = ''; $('search').value = ''; keep(); render(true); };
+  d.append(b); return d;
+}
 function render(force) {
   if (!S || !LANG) return;
   const list = shown();
@@ -777,7 +799,7 @@ function render(force) {
   if (!MINI) controls();
   const box = $('list'); box.textContent = '';
   if (!list.length) {
-    box.append(el('div', 'empty', !S.connected ? t('empty.noDiscord') : !S.loaded ? t('empty.loading') : S.quests.length ? t('empty.filter') : t('empty.none')));
+    box.append(emptyState());
   } else if (ui.view === 'mini') {
     const g = el('div', 'mini'); list.forEach((q, i) => { const x = tile(q, i); x.dataset.id = q.id; g.append(x); }); box.append(g);
   } else {

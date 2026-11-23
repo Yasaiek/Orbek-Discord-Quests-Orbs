@@ -275,5 +275,10 @@
 "exp.titleUi": "報酬がまもなく失われます！",
 "set.clTitle": "報酬の受け取り",
 "set.clickSelf": "「報酬を受け取る」を自動で押す",
-"set.clickSelfHint": "順番に受け取るとき、プラグインが「報酬を受け取る」を押します。DiscordがCAPTCHAを表示したらあなたが解き、その後Orbekが次に進みます。"
+"set.clickSelfHint": "順番に受け取るとき、プラグインが「報酬を受け取る」を押します。DiscordがCAPTCHAを表示したらあなたが解き、その後Orbekが次に進みます。",
+"empty.noneT": "現在クエストはありません",
+"empty.doneT": "すべて完了！🎉",
+"empty.next": "新しいクエストは自動でここに表示されます – Orbekは{t}ごとにDiscordを確認します。",
+"empty.filterHint": "残りのクエスト（{n}）はタブ・検索・フィルターで非表示になっています。",
+"empty.reset": "すべて表示"
 }

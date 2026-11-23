@@ -275,5 +275,10 @@
 "exp.titleUi": "Bir ödül kaybolmak üzere!",
 "set.clTitle": "Ödül alma",
 "set.clickSelf": "“Ödülü al”a kendisi bassın",
-"set.clickSelfHint": "Tek tek alırken eklenti “Ödülü al”a kendisi basar. Discord captcha gösterirse sen çözersin – sonra Orbek sıradakine geçer."
+"set.clickSelfHint": "Tek tek alırken eklenti “Ödülü al”a kendisi basar. Discord captcha gösterirse sen çözersin – sonra Orbek sıradakine geçer.",
+"empty.noneT": "Şu an görev yok",
+"empty.doneT": "Hepsi tamam! 🎉",
+"empty.next": "Yeni görevler buraya kendiliğinden gelir – Orbek Discord'u her {t} kontrol eder.",
+"empty.filterHint": "Kalan görevler ({n}) seçili sekme, arama ya da filtreyle gizlendi.",
+"empty.reset": "Hepsini göster"
 }

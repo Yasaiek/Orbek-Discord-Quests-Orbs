@@ -275,5 +275,10 @@
 "exp.titleUi": "Eine Belohnung verfällt gleich!",
 "set.clTitle": "Belohnungen abholen",
 "set.clickSelf": "„Belohnung abholen“ selbst drücken",
-"set.clickSelfHint": "Beim Abholen nacheinander drückt das Plugin „Belohnung abholen“. Zeigt Discord ein Captcha, löst du es – dann geht Orbek zur nächsten."
+"set.clickSelfHint": "Beim Abholen nacheinander drückt das Plugin „Belohnung abholen“. Zeigt Discord ein Captcha, löst du es – dann geht Orbek zur nächsten.",
+"empty.noneT": "Gerade keine Quests",
+"empty.doneT": "Alles erledigt! 🎉",
+"empty.next": "Neue Quests erscheinen hier von selbst – Orbek schaut alle {t} bei Discord nach.",
+"empty.filterHint": "Die übrigen Quests ({n}) sind durch Tab, Suche oder Filter ausgeblendet.",
+"empty.reset": "Alle zeigen"
 }

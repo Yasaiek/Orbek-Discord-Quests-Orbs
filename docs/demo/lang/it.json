@@ -275,5 +275,10 @@
 "exp.titleUi": "Un premio sta per andare perso!",
 "set.clTitle": "Riscatto premi",
 "set.clickSelf": "Premi «Riscatta premio» da solo",
-"set.clickSelfHint": "Nel riscatto uno alla volta il plugin preme «Riscatta premio». Se Discord mostra un captcha lo risolvi tu, poi Orbek passa al successivo."
+"set.clickSelfHint": "Nel riscatto uno alla volta il plugin preme «Riscatta premio». Se Discord mostra un captcha lo risolvi tu, poi Orbek passa al successivo.",
+"empty.noneT": "Nessuna missione per ora",
+"empty.doneT": "Tutto fatto! 🎉",
+"empty.next": "Le nuove missioni appariranno qui da sole – Orbek controlla Discord ogni {t}.",
+"empty.filterHint": "Le missioni rimaste ({n}) sono nascoste da scheda, ricerca o filtro.",
+"empty.reset": "Mostra tutte"
 }

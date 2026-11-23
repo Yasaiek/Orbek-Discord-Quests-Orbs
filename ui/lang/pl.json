@@ -275,5 +275,10 @@
 "exp.titleUi": "Nagroda zaraz przepadnie!",
 "set.clTitle": "Odbieranie nagród",
 "set.clickSelf": "Klikaj „Odbierz nagrodę” samo",
-"set.clickSelfHint": "Przy odbieraniu po kolei plugin sam naciska „Odbierz nagrodę”. Jeśli Discord pokaże captchę, rozwiązujesz ją Ty – potem Orbek przechodzi do następnej."
+"set.clickSelfHint": "Przy odbieraniu po kolei plugin sam naciska „Odbierz nagrodę”. Jeśli Discord pokaże captchę, rozwiązujesz ją Ty – potem Orbek przechodzi do następnej.",
+"empty.noneT": "Brak zadań na teraz",
+"empty.doneT": "Wszystko zrobione! 🎉",
+"empty.next": "Nowe zadania pojawią się tutaj same – Orbek sprawdza Discorda co {t}.",
+"empty.filterHint": "Pozostałe zadania ({n}) są ukryte przez wybraną zakładkę, wyszukiwanie albo filtr.",
+"empty.reset": "Pokaż wszystkie"
 }

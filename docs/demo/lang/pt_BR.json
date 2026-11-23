@@ -275,5 +275,10 @@
 "exp.titleUi": "Uma recompensa está para se perder!",
 "set.clTitle": "Resgate de recompensas",
 "set.clickSelf": "Apertar “Resgatar recompensa” sozinho",
-"set.clickSelfHint": "No resgate um a um, o plugin aperta “Resgatar recompensa”. Se o Discord mostrar captcha, você resolve – e o Orbek passa para a próxima."
+"set.clickSelfHint": "No resgate um a um, o plugin aperta “Resgatar recompensa”. Se o Discord mostrar captcha, você resolve – e o Orbek passa para a próxima.",
+"empty.noneT": "Sem missões agora",
+"empty.doneT": "Tudo feito! 🎉",
+"empty.next": "As novas missões aparecem aqui sozinhas – o Orbek verifica o Discord a cada {t}.",
+"empty.filterHint": "As missões restantes ({n}) estão ocultas pela aba, busca ou filtro.",
+"empty.reset": "Mostrar todas"
 }

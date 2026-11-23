@@ -275,5 +275,10 @@
 "exp.titleUi": "¡Una recompensa está por perderse!",
 "set.clTitle": "Reclamar recompensas",
 "set.clickSelf": "Pulsar «Reclamar recompensa» solo",
-"set.clickSelfHint": "Al reclamar una a una, el plugin pulsa «Reclamar recompensa». Si Discord muestra un captcha, lo resuelves tú y Orbek pasa a la siguiente."
+"set.clickSelfHint": "Al reclamar una a una, el plugin pulsa «Reclamar recompensa». Si Discord muestra un captcha, lo resuelves tú y Orbek pasa a la siguiente.",
+"empty.noneT": "Ahora no hay misiones",
+"empty.doneT": "¡Todo hecho! 🎉",
+"empty.next": "Las misiones nuevas aparecerán aquí solas – Orbek revisa Discord cada {t}.",
+"empty.filterHint": "Las misiones restantes ({n}) están ocultas por la pestaña, la búsqueda o el filtro.",
+"empty.reset": "Mostrar todas"
 }

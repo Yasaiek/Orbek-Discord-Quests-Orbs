@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.4
+- An empty list says what's going on: "All done!" when every quest is finished, "No quests right now" when Discord has none (both say when Orbek checks again), and only when the tab, search or a filter hides the rest – that, with a "Show all" button.
+
 ## 0.4.3
 - Claiming one by one: the plugin presses "Claim reward" itself (Settings → Claiming rewards); a captcha, when Discord shows one, is yours to solve. If Discord doesn't give the reward, the bar says so and waits for your click.
 

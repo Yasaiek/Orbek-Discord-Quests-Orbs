@@ -275,5 +275,10 @@
 "exp.titleUi": "Une récompense va être perdue !",
 "set.clTitle": "Récupérer les récompenses",
 "set.clickSelf": "Appuyer sur « Récupérer » tout seul",
-"set.clickSelfHint": "En récupérant une par une, le plugin appuie sur « Récupérer la récompense ». Si Discord affiche un captcha, tu le résous – puis Orbek passe à la suivante."
+"set.clickSelfHint": "En récupérant une par une, le plugin appuie sur « Récupérer la récompense ». Si Discord affiche un captcha, tu le résous – puis Orbek passe à la suivante.",
+"empty.noneT": "Pas de quêtes pour l'instant",
+"empty.doneT": "Tout est fait ! 🎉",
+"empty.next": "Les nouvelles quêtes apparaîtront ici toutes seules – Orbek vérifie Discord toutes les {t}.",
+"empty.filterHint": "Les quêtes restantes ({n}) sont masquées par l'onglet, la recherche ou le filtre.",
+"empty.reset": "Tout afficher"
 }

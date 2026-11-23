@@ -275,5 +275,10 @@
 "exp.titleUi": "A reward is about to be lost!",
 "set.clTitle": "Claiming rewards",
 "set.clickSelf": "Press “Claim reward” by itself",
-"set.clickSelfHint": "When claiming one by one, the plugin presses “Claim reward”. If Discord shows a captcha, you solve it – then Orbek goes on to the next one."
+"set.clickSelfHint": "When claiming one by one, the plugin presses “Claim reward”. If Discord shows a captcha, you solve it – then Orbek goes on to the next one.",
+"empty.noneT": "No quests right now",
+"empty.doneT": "All done! 🎉",
+"empty.next": "New quests will show up here by themselves – Orbek checks Discord every {t}.",
+"empty.filterHint": "The remaining quests ({n}) are hidden by the chosen tab, search or filter.",
+"empty.reset": "Show all"
 }
