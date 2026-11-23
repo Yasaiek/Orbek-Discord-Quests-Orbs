@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2
+- Coloured buttons no longer show a thin line at their left edge.
+
 ## 0.3.1
 - Discord activity is on: Orbek's own Discord application is built in (Settings → Discord activity).
 
