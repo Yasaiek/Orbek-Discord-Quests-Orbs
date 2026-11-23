@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.2.3";
+const PLUGIN_VERSION = "0.3.0";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -110,36 +110,49 @@ function fromStore(): Quest[] {
 const known = new Map<string, Quest>();
 let loaded = false, loadErr = "", orbs: number | null = null, lastLoad = 0;
 
-// Obrazki Orbów z samej strony zadań Discorda (statyczne pliki discord.com/assets/…), z tego, co Discord
-// ma akurat na ekranie obok napisu „… Orbs”: duży kafelek nagrody (kolorowy) i mały znaczek (biały).
-let orbTile = "", orbGlyph = "", orbLook = 0;
+// Obrazki Orbów z samej strony zadań Discorda: duży kafelek nagrody (kolorowy) i mały znaczek (biały).
+// Szukamy ich w tym, co Discord ma na ekranie, gdy otwarta jest strona zadań: od napisu z „Orbs” w górę
+// drzewa, najbliższy obrazek (img, video albo tło). Kandydatów zapisujemy też do orbDebug – Orbek trzyma
+// ich w data/orb-debug.json, żeby dało się sprawdzić, co Discord pokazuje.
+let orbTile = "", orbGlyph = "", orbLook = 0, orbDebug: any[] = [], orbDebugSent = "";
+function mediaOf(e: Element): string {
+    if (e instanceof HTMLImageElement) return e.currentSrc || e.src;
+    if (e instanceof HTMLVideoElement) return e.currentSrc || e.src || e.poster || (e.querySelector("source") as HTMLSourceElement | null)?.src || "";
+    const m = /url\(["']?([^"')]+)/.exec(getComputedStyle(e).backgroundImage || "");
+    return m ? m[1] : "";
+}
 function findOrbIcon() {
     if (orbTile || Date.now() - orbLook < 4000) return;
     orbLook = Date.now();
+    if (!/quest/i.test(location.pathname)) return;
     try {
-        const near = (e: Element) => {
-            for (let n: Element | null = e.parentElement, i = 0; n && i < 5; n = n.parentElement, i++) {
-                const txt = n.textContent ?? "";
-                if (txt.length < 320 && /\d[\d\s.,]*\s*Orbs?\b/i.test(txt)) return true;
+        const cands = new Map<string, { src: string; w: number; h: number; tag: string; lvl: number; txt: string; }>();
+        const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let n = 0;
+        for (let t = walk.nextNode(); t && n < 400; t = walk.nextNode()) {
+            if (!/\bOrbs?\b/i.test(t.nodeValue ?? "")) continue;
+            n++;
+            let el: Element | null = t.parentElement;
+            for (let lvl = 0; el && lvl < 8; lvl++, el = el.parentElement) {
+                const media = [el, ...Array.from(el.querySelectorAll("img,video,[style*='background'],[class*='image'],[class*='Image'],[class*='tile'],[class*='Tile'],[class*='icon'],[class*='Icon']"))];
+                for (const m of media.slice(0, 60)) {
+                    const src = mediaOf(m);
+                    if (!src || src.startsWith("data:") || /\/quests\/\d+\/\d+\.(jpg|jpeg)/i.test(src)) continue;
+                    const r = m.getBoundingClientRect();
+                    if (r.width < 8) continue;
+                    const abs = new URL(src, location.href).href;
+                    const old = cands.get(abs);
+                    if (!old || old.lvl > lvl) cands.set(abs, { src: abs, w: Math.round(r.width), h: Math.round(r.height), tag: m.tagName.toLowerCase(), lvl, txt: (t.nodeValue ?? "").trim().slice(0, 60) });
+                }
             }
-            return false;
-        };
-        let best = "", bestW = 0;
-        const consider = (url: string, el: Element, label: string) => {
-            if (!url || !/\/assets\/[^?#]+\.(svg|png|webp|gif|avif)/i.test(url)) return;
-            if (!/\borbs?\b/i.test(label) && !near(el)) return;
-            const w = el.getBoundingClientRect().width;
-            const abs = new URL(url, location.href).href;
-            if (w >= 36) { if (w > bestW) { best = abs; bestW = w; } } else if (w > 0 && !orbGlyph) orbGlyph = abs;
-        };
-        for (const img of Array.from(document.querySelectorAll("img")))
-            consider(img.currentSrc || img.src, img, `${img.alt ?? ""} ${img.getAttribute("aria-label") ?? ""}`);
-        for (const el of Array.from(document.querySelectorAll<HTMLElement>("[style*='background']"))) {
-            const m = /url\(["']?([^"')]+)/.exec(el.style.backgroundImage || "");
-            if (m) consider(m[1], el, el.getAttribute("aria-label") ?? "");
         }
-        if (best) orbTile = best;
-    } catch { }
+        const list = [...cands.values()].sort((x, y) => x.lvl - y.lvl || y.w - x.w);
+        orbDebug = list.slice(0, 25);
+        const big = list.filter(c => c.w >= 36 && c.w <= 200 && Math.abs(c.w - c.h) <= 12 && !/\/avatars\/|\/icons\/|\/app-icons\//.test(c.src));
+        const small = list.filter(c => c.w < 36 && /\/assets\//.test(c.src));
+        if (big.length) orbTile = big[0].src;
+        if (!orbGlyph && small.length) orbGlyph = small[0].src;
+    } catch (e) { console.error(TAG, "orb icon", e); }
 }
 
 async function load() {
@@ -184,7 +197,7 @@ const runs = new Map<string, Run>();
 const queue: string[] = [];
 let autoAllowed = false, maxParallel = 1; // 0 = bez limitu
 const events: any[] = [];
-const say = (k: string, q: Quest, msg = "") => events.push({ k, id: q.id, name: q.name, msg });
+const say = (k: string, q?: Quest, msg = "") => events.push({ k, id: q?.id ?? "", name: q?.name ?? "", msg });
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 const isDesktop = () => typeof (window as any).DiscordNative !== "undefined";
@@ -204,6 +217,7 @@ async function enroll(q: Quest): Promise<Quest> {
 // pokazuje ją sam (jak przy kliknięciu) albo zapytanie wraca z błędem – wtedy otwieramy stronę zadań, żeby
 // odebrać ręcznie. Captchy nikt tu nie rozwiązuje za człowieka.
 let autoClaim = false;
+let refreshMs = 10 * 60_000; // co ile czytać listę zadań od nowa (Orbek to ustawia)
 const claimTried = new Map<string, number>();
 let claiming = false;
 
@@ -419,6 +433,11 @@ async function doCmd(c: any) {
         case "refresh":
             await load();
             break;
+        case "claimTest": { // spróbuj odebrać jedną nagrodę teraz
+            const c = [...known.values()].find(x => x.completedAt && !x.claimedAt && !(x.expiresAt && x.expiresAt < Date.now()));
+            if (c) await claim(c, false); else say("claimNone");
+            break;
+        }
         case "enroll":
             if (!q) break;
             try { await enroll(q); say("enrolled", q); } catch (e) { say("enrollFail", q, errText(e)); }
@@ -450,7 +469,7 @@ let alive = false, lastOk = 0;
 async function tick() {
     if (!alive) return;
     try {
-        if (!lastLoad || Date.now() - lastLoad > 10 * 60_000) await load();
+        if (!lastLoad || Date.now() - lastLoad > refreshMs) await load();
         mergeLive();
         findOrbIcon();
         const me = UserStore.getCurrentUser();
@@ -464,7 +483,8 @@ async function tick() {
             queue: [...queue],
             events: events.splice(0),
             desktop: isDesktop(),
-            orbTile, orbGlyph
+            orbTile, orbGlyph,
+            orbDebug: (() => { const j = JSON.stringify(orbDebug); if (j === orbDebugSent) return undefined; orbDebugSent = j; return orbDebug; })()
         });
         const raw = await Native.sync(body);
         if (raw) {
@@ -472,6 +492,7 @@ async function tick() {
             const res = JSON.parse(raw);
             autoAllowed = !!res.auto;
             autoClaim = !!res.claim;
+            if (Number(res.refresh) >= 1) refreshMs = Number(res.refresh) * 60_000;
             maxParallel = Math.max(0, Number(res.parallel ?? 1));
             if (!autoAllowed && (runs.size || queue.length)) stopAll();
             for (const c of res.cmds ?? []) await doCmd(c);

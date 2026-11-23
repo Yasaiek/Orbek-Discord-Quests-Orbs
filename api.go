@@ -63,7 +63,7 @@ func (e *Engine) view() map[string]any {
 		"app": appName, "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin,
-		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "orbTile": e.set.OrbTile, "orbGlyph": e.set.OrbGlyph,
+		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "claimNote": e.set.ClaimNote, "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != ""}, "orbTile": e.set.OrbTile, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done)},
 		"quests":   quests,
@@ -109,7 +109,7 @@ func (s *server) handleOp(r opReq) map[string]any {
 		e.push(Cmd{Op: "run", IDs: r.IDs})
 	case "settings":
 		e.mu.Lock()
-		langChanged, autostart := false, (*bool)(nil)
+		langChanged, autostart, testClaim := false, (*bool)(nil), false
 		for k, v := range r.Patch {
 			switch k {
 			case "lang":
@@ -149,11 +149,31 @@ func (s *server) handleOp(r opReq) map[string]any {
 				e.set.AutoUpdate = boolean(v)
 			case "autoClaim":
 				e.set.AutoClaim = boolean(v)
+				if e.set.AutoClaim {
+					testClaim = true
+				}
+			case "rpcOn":
+				e.set.RpcOn = boolean(v)
+			case "rpcQuest":
+				e.set.RpcQuest = boolean(v)
+			case "rpcOrbs":
+				e.set.RpcOrbs = boolean(v)
+			case "rpcToGet":
+				e.set.RpcToGet = boolean(v)
+			case "rpcBtn":
+				e.set.RpcBtn = boolean(v)
+			case "refreshMin":
+				if n := int(num(v)); n >= 1 && n <= 43200 {
+					e.set.RefreshMin = n
+				}
 			}
 		}
 		off := !e.set.AutoMode
 		e.saveSettings()
 		e.mu.Unlock()
+		if testClaim {
+			e.claimTest()
+		}
 		if off {
 			e.push(Cmd{Op: "stopAll"})
 		}
@@ -165,6 +185,8 @@ func (s *server) handleOp(r opReq) map[string]any {
 				e.log.Warn("L.autostartFail", err)
 			}
 		}
+	case "claimTest":
+		e.claimTest()
 	case "clearLog":
 		e.log.clear()
 	case "pluginInstall":

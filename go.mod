@@ -6,6 +6,7 @@ toolchain go1.24.7
 
 require (
 	fyne.io/systray v0.0.0
+	github.com/Microsoft/go-winio v0.6.2
 	golang.org/x/sys v0.31.0
 )
 

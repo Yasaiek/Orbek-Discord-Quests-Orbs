@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0
+- Quests page: counters for your Orbs, rewards waiting to be claimed and rewards in quests not done yet (Orbs plus cosmetics, in-game items, codes), and PC usage now, lowest and highest.
+- Settings redone: tick-box chips for rewards, tasks and games ("All games" or only the ticked ones), "how many at once" as buttons.
+- Claiming (experimental) has its own card: when switched on it is tested first; if Discord wants a captcha or refuses, it switches itself off and says why. "Test now" button.
+- How often to look for new quests: minutes, hours or days.
+- Discord activity (Rich Presence): shown only while Orbek does a quest – quest, progress, Orbs, a "Get Orbek" button; each part can be switched off. Turns on once Orbek's Discord application is set.
+- The plugin looks harder for Discord's own Orbs picture and notes what it saw (data/orb-debug.json).
+- Colourful tray menu icons; nicer buttons; guide steps with icon tiles (also on the website).
+
 ## 0.2.3
 - Games in the automat's filter show the game's tile; reward kinds have coloured icons (Orbs with Discord's own picture).
 

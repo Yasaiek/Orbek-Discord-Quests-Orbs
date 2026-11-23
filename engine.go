@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var version = "0.2.3"
+var version = "0.3.0"
 
 const appName = "Orbek"
 
@@ -19,22 +19,31 @@ const appName = "Orbek"
 // Requests to Discord therefore come from the real Discord client, and the account's token never leaves it.
 
 type Settings struct {
-	Lang        string   `json:"lang"`               // "" = the system's
-	AutoMode    bool     `json:"autoMode"`           // the user allowed doing quests automatically
-	AutoAll     bool     `json:"autoAll"`            // ...and open quests are done without asking
-	AutoOnly    string   `json:"autoOnly,omitempty"` // up to 0.2.1: all | orbs | cosmetic (now AutoKinds)
-	AutoKinds   []string `json:"autoKinds"`          // which rewards the automat goes for: orbs, cosmetic, ingame, code, other
-	AutoTasks   []string `json:"autoTasks"`          // which tasks: video, play, activity, stream
-	AutoGames   string   `json:"autoGames"`          // all | only (the games in GameList) | except (all but those)
-	GameList    []string `json:"gameList"`
-	OpenOnStart bool     `json:"openOnStart"` // show the panel when the program starts
-	Autostart   bool     `json:"autostart"`   // start with Windows
-	Parallel    int      `json:"parallel"`    // how many quests at once (0 = no limit)
-	AutoUpdate  bool     `json:"autoUpdate"`
-	AutoClaim   bool     `json:"autoClaim"`  // experimental: claim finished quests through Discord's own request
-	VencordDir  string   `json:"vencordDir"` // where the Vencord source is (for installing the plugin)
-	OrbTile     string   `json:"orbTile"`    // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
-	OrbGlyph    string   `json:"orbGlyph"`   // the big reward tile and the small white sign
+	Lang        string    `json:"lang"`               // "" = the system's
+	AutoMode    bool      `json:"autoMode"`           // the user allowed doing quests automatically
+	AutoAll     bool      `json:"autoAll"`            // ...and open quests are done without asking
+	AutoOnly    string    `json:"autoOnly,omitempty"` // up to 0.2.1: all | orbs | cosmetic (now AutoKinds)
+	AutoKinds   []string  `json:"autoKinds"`          // which rewards the automat goes for: orbs, cosmetic, ingame, code, other
+	AutoTasks   []string  `json:"autoTasks"`          // which tasks: video, play, activity, stream
+	AutoGames   string    `json:"autoGames"`          // all | only (the games in GameList) | except (all but those)
+	GameList    []string  `json:"gameList"`
+	OpenOnStart bool      `json:"openOnStart"` // show the panel when the program starts
+	Autostart   bool      `json:"autostart"`   // start with Windows
+	Parallel    int       `json:"parallel"`    // how many quests at once (0 = no limit)
+	AutoUpdate  bool      `json:"autoUpdate"`
+	ClaimNote   ClaimNote `json:"claimNote"`  // how the last try of claiming went
+	RefreshMin  int       `json:"refreshMin"` // how often the plugin reads the quest list again (minutes)
+	AutoClaim   bool      `json:"autoClaim"`  // experimental: claim finished quests through Discord's own request
+	// Discord activity: on, and what it shows (quest and progress, Orbs you have, Orbs to get, the buttons)
+	RpcOn      bool   `json:"rpcOn"`
+	RpcQuest   bool   `json:"rpcQuest"`
+	RpcOrbs    bool   `json:"rpcOrbs"`
+	RpcToGet   bool   `json:"rpcToGet"`
+	RpcBtn     bool   `json:"rpcBtn"`
+	RpcInit    bool   `json:"rpcInit"`    // the choices above have their defaults
+	VencordDir string `json:"vencordDir"` // where the Vencord source is (for installing the plugin)
+	OrbTile    string `json:"orbTile"`    // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
+	OrbGlyph   string `json:"orbGlyph"`   // the big reward tile and the small white sign
 }
 
 // Quest is what the plugin reports (already in a plain shape).
@@ -91,19 +100,20 @@ func (q *Quest) open(now int64) bool {
 
 // Sync is one report of the plugin.
 type Sync struct {
-	V        int        `json:"v"`
-	User     *BUser     `json:"user"`
-	Quests   []Quest    `json:"quests"`
-	Loaded   bool       `json:"loaded"` // the plugin has read the list at least once
-	Err      string     `json:"err"`
-	Orbs     *float64   `json:"orbs"`
-	Runs     []RunState `json:"runs"`
-	Queue    []string   `json:"queue"`
-	Events   []Event    `json:"events"`
-	Desktop  bool       `json:"desktop"` // the Discord app (not a browser): games can be done
-	Plugin   string     `json:"plugin"`  // the plugin's version
-	OrbTile  string     `json:"orbTile"` // Discord's Orbs pictures (from Discord's own page), when the plugin saw them
-	OrbGlyph string     `json:"orbGlyph"`
+	V        int             `json:"v"`
+	User     *BUser          `json:"user"`
+	Quests   []Quest         `json:"quests"`
+	Loaded   bool            `json:"loaded"` // the plugin has read the list at least once
+	Err      string          `json:"err"`
+	Orbs     *float64        `json:"orbs"`
+	Runs     []RunState      `json:"runs"`
+	Queue    []string        `json:"queue"`
+	Events   []Event         `json:"events"`
+	Desktop  bool            `json:"desktop"` // the Discord app (not a browser): games can be done
+	Plugin   string          `json:"plugin"`  // the plugin's version
+	OrbTile  string          `json:"orbTile"` // Discord's Orbs pictures (from Discord's own page), when the plugin saw them
+	OrbGlyph string          `json:"orbGlyph"`
+	OrbDebug json.RawMessage `json:"orbDebug,omitempty"` // what the plugin saw around "Orbs" on Discord's page
 }
 
 type BUser struct {
@@ -153,6 +163,7 @@ type Engine struct {
 
 	games      map[string]int64 // games seen in quests (name → last seen)
 	gameIcons  map[string]string
+	rpcState   string // Discord activity: off | noid | idle | nodiscord | badid | refused | ok
 	gamesSaved time.Time
 	onQuit     func()
 	winGen     int
@@ -164,6 +175,12 @@ func newEngine(dir string) *Engine {
 	e := &Engine{dir: dir, log: newLogger(dir), fails: map[string]time.Time{}, autoSent: map[string]time.Time{}, quit: make(chan struct{})}
 	e.set = Settings{OpenOnStart: true, AutoUpdate: true}
 	readJSON(filepath.Join(dir, "settings.json"), &e.set)
+	if !e.set.RpcInit {
+		e.set.RpcQuest, e.set.RpcOrbs, e.set.RpcToGet, e.set.RpcBtn, e.set.RpcInit = true, true, true, true, true
+	}
+	if e.set.RefreshMin <= 0 {
+		e.set.RefreshMin = 10
+	}
 	e.set.migrateFilters()
 	e.set.AutoOnly = ""
 	e.loadGames()
@@ -193,6 +210,9 @@ func (e *Engine) onSync(s Sync) map[string]any {
 		e.log.OK("L.connected", name)
 	}
 	e.last, e.lastAt = s, time.Now()
+	if len(s.OrbDebug) > 2 {
+		os.WriteFile(filepath.Join(e.dir, "orb-debug.json"), s.OrbDebug, 0o644)
+	}
 	e.noteGamesLocked(s.Quests)
 	for _, f := range []struct{ got, have *string }{{&s.OrbTile, &e.set.OrbTile}, {&s.OrbGlyph, &e.set.OrbGlyph}} {
 		if ic := *f.got; ic != "" && ic != *f.have && strings.HasPrefix(ic, "https://") {
@@ -218,10 +238,15 @@ func (e *Engine) onSync(s Sync) map[string]any {
 			e.log.Warn("L.enrollFail", ev.Name, ev.Msg)
 		case "claimed":
 			e.log.OK("L.claimed", ev.Name)
+			e.claimResultLocked("ok", "")
 		case "claimCaptcha":
 			e.log.Warn("L.claimCaptcha", ev.Name)
+			e.claimResultLocked("captcha", "")
 		case "claimFail":
 			e.log.Warn("L.claimFail", ev.Name, ev.Msg)
+			e.claimResultLocked("failed", ev.Msg)
+		case "claimNone":
+			e.claimResultLocked("none", "")
 		}
 	}
 	e.autoQueueLocked()
@@ -230,7 +255,7 @@ func (e *Engine) onSync(s Sync) map[string]any {
 	if cmds == nil {
 		cmds = []Cmd{}
 	}
-	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "claim": e.set.AutoClaim, "lang": curLang.Load()}
+	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "claim": e.set.AutoClaim, "refresh": e.set.RefreshMin, "lang": curLang.Load()}
 }
 
 // desktopTask: done by the Discord app on the computer itself.
@@ -292,6 +317,7 @@ func (e *Engine) run() {
 	e.writeBridge()
 	go e.updateLoop()
 	go usageLoop(e.quit)
+	go e.discordLoop()
 	t := time.NewTicker(30 * time.Second)
 	defer t.Stop()
 	for {
