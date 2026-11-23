@@ -29,13 +29,14 @@ func main() {
 		}
 	}
 	loadDicts()
-	dir := os.Getenv("ORBEK_DATA") // everything the program keeps lives in "data" next to the executable
+	dir := os.Getenv("ORBEK_DATA") // everything the program keeps lives in "Orbek-data" next to the executable
 	if dir == "" {
 		exe, err := os.Executable()
 		if err != nil {
 			exe = os.Args[0]
 		}
-		dir = filepath.Join(filepath.Dir(exe), "data")
+		dir = filepath.Join(filepath.Dir(exe), "Orbek-data")
+		moveOldData(filepath.Join(filepath.Dir(exe), "data"), dir)
 	}
 	os.MkdirAll(dir, 0o700)
 	instPath := filepath.Join(dir, "instance.json")

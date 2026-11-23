@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.10
+- Orbek keeps its files in its own Orbek-data folder. With Loorek in the same folder both programs shared data\\settings.json and overwrote each other's settings; Orbek's files are moved over on the first start.
+
 ## 0.4.9
 - Smoother CPU and RAM charts: averaged values drawn as a soft curve with a round marker, never cut off at the edges.
 - In a narrower window the three Orb tiles stay in one row and CPU and RAM sit side by side below them.
