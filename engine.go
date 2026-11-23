@@ -3,14 +3,16 @@ package main
 import (
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
 
-var version = "0.4.10"
+var version = "0.4.11"
 
 const appName = "Orbek"
 
@@ -169,7 +171,8 @@ type Engine struct {
 	upd      updState
 	setup    setupState
 
-	quit chan struct{}
+	quit    chan struct{}
+	closing bool // quitting: open windows close themselves
 
 	games      map[string]int64 // games seen in quests (name → last seen)
 	gameIcons  map[string]string
@@ -412,4 +415,45 @@ func (e *Engine) shutdown() {
 			os.Remove(p)
 		}
 	}
+}
+
+// quitApp: the user closes the program. Its windows go too: an open panel sees "closing" within a
+// second and closes itself, and whatever is still running of what Orbek started is ended.
+func (e *Engine) quitApp() {
+	e.mu.Lock()
+	again := e.closing
+	e.closing = true
+	e.mu.Unlock()
+	if again {
+		return
+	}
+	time.Sleep(1500 * time.Millisecond)
+	closeOurWindows()
+	if e.onQuit != nil {
+		e.onQuit()
+	}
+}
+
+// restartSelf starts this program again (after the data folder was changed); the new copy takes over
+// the port and key, so an open panel carries on.
+func (e *Engine) restartSelf(arg string) error {
+	exe, err := os.Executable()
+	if err != nil {
+		return err
+	}
+	e.mu.Lock()
+	gen := e.winGen
+	e.mu.Unlock()
+	cmd := exec.Command(exe, "--tray", arg)
+	cmd.Env = append(os.Environ(), "ORBEK_KEY="+e.apiKey, "ORBEK_GEN="+strconv.Itoa(gen), "ORBEK_PORT="+strconv.Itoa(e.port))
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	go func() {
+		time.Sleep(300 * time.Millisecond)
+		if e.onQuit != nil {
+			e.onQuit()
+		}
+	}()
+	return nil
 }

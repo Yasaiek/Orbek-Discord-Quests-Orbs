@@ -2,35 +2,63 @@ package main
 
 import (
 	"encoding/json"
-	"io"
 	"os"
 	"path/filepath"
 )
 
-// Up to 0.4.9 Orbek kept its files in "data" next to the executable. Loorek does the same, so with both
-// programs in one folder they shared settings.json and overwrote each other's settings. Orbek now has a
-// folder of its own; moveOldData moves what is Orbek's out of the old one, once.
+// hasData: Orbek's files are already in this folder.
+func hasData(dir string) bool {
+	for _, n := range []string{"settings.json", "games.json"} {
+		if _, err := os.Stat(filepath.Join(dir, n)); err == nil {
+			return true
+		}
+	}
+	return false
+}
+
+// legacyData brings the files over from where older versions kept them, next to the program file:
+// "Orbek-data" (0.4.10–0.4.11) or "data" (up to 0.4.9; shared with Loorek when both sat in one folder).
+func legacyData(dir string) {
+	exe, err := os.Executable()
+	if err != nil {
+		return
+	}
+	base := filepath.Dir(exe)
+	if old := filepath.Join(base, "Orbek-data"); hasData(old) || dirExists(old) {
+		if moveTree(old, dir) == nil {
+			return
+		}
+	}
+	moveOldData(filepath.Join(base, "data"), dir)
+}
+
+func dirExists(p string) bool {
+	st, err := os.Stat(p)
+	return err == nil && st.IsDir()
+}
+
+// moveOldData takes Orbek's files out of the old "data" folder. When Loorek lives there too, only what
+// is Orbek's is taken and the rest is left alone.
 func moveOldData(old, dir string) {
-	if _, err := os.Stat(dir); err == nil {
-		return // already moved
+	if !dirExists(old) {
+		return
 	}
-	if _, err := os.Stat(old); err != nil {
-		return // first start
-	}
-	shared := false // Loorek lives there too: take only Orbek's files, leave the rest
+	shared := false
 	for _, n := range []string{"auth.json", "login-profile", "hashes.json", "loorek-settings.json"} {
 		if _, err := os.Stat(filepath.Join(old, n)); err == nil {
 			shared = true
 		}
 	}
 	if !shared {
-		if os.Rename(old, dir) == nil {
+		if moveTree(old, dir) == nil {
 			return
 		}
 	}
 	os.MkdirAll(dir, 0o700)
-	os.Rename(filepath.Join(old, "tools"), filepath.Join(dir, "tools"))
-	for _, n := range []string{"games.json", "warned.json", "stats-id"} {
+	if moveTree(filepath.Join(old, "tools"), filepath.Join(dir, "tools")) != nil {
+		os.Rename(filepath.Join(old, "tools"), filepath.Join(dir, "tools"))
+	}
+	for _, n := range []string{"games.json", "warned.json"} {
 		copyFile(filepath.Join(old, n), filepath.Join(dir, n))
 	}
 	if b, err := os.ReadFile(filepath.Join(old, "settings.json")); err == nil {
@@ -39,18 +67,4 @@ func moveOldData(old, dir string) {
 			os.WriteFile(filepath.Join(dir, "settings.json"), b, 0o600)
 		}
 	}
-}
-
-func copyFile(src, dst string) {
-	in, err := os.Open(src)
-	if err != nil {
-		return
-	}
-	defer in.Close()
-	out, err := os.Create(dst)
-	if err != nil {
-		return
-	}
-	io.Copy(out, in)
-	out.Close()
 }

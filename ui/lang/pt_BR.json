@@ -294,5 +294,18 @@
 "pu.restart": "O Discord fecha por um momento e abre sozinho – se estiver num canal de voz, você será desconectado.",
 "pu.yes": "Sim, atualizar",
 "pu.later": "Não, depois",
-"pu.done": "Pronto! O Discord está reiniciando – o Orbek conecta já já."
+"pu.done": "Pronto! O Discord está reiniciando – o Orbek conecta já já.",
+"set.dataDir": "Pasta de dados",
+"set.dataHint": "Configurações, registros e os outros arquivos do programa.",
+"set.dataOpen": "Abrir",
+"set.dataPick": "Alterar…",
+"set.dataReset": "Padrão",
+"set.dataMoveQ": "Mover os dados?",
+"set.dataMoveT": "Os dados irão para %s. O programa será reiniciado.",
+"set.dataMove": "Mover",
+"set.dataBad": "Esta pasta não pode ser usada.",
+"set.dataSame": "Os dados já estão nesta pasta.",
+"L.dataMoving": "Movendo os dados para %s…",
+"L.dataMoved": "Os dados agora estão em %s.",
+"L.dataMoveFail": "Não foi possível reiniciar para mover os dados: %v"
 }

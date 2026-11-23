@@ -14,3 +14,5 @@ func (s *usageSampler) sample() Usage {
 	runtime.ReadMemStats(&m)
 	return Usage{RAM: float64(m.Sys) / (1 << 20), Procs: 1}
 }
+
+func closeOurWindows() {}

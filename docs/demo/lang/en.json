@@ -294,5 +294,18 @@
 "pu.restart": "Discord closes for a moment and starts again by itself – if you're in a voice channel, you'll be disconnected.",
 "pu.yes": "Yes, update",
 "pu.later": "No, later",
-"pu.done": "Done! Discord is restarting – Orbek will connect in a moment."
+"pu.done": "Done! Discord is restarting – Orbek will connect in a moment.",
+"set.dataDir": "Data folder",
+"set.dataHint": "Settings, logs and the program's other files.",
+"set.dataOpen": "Open",
+"set.dataPick": "Change…",
+"set.dataReset": "Default",
+"set.dataMoveQ": "Move the data?",
+"set.dataMoveT": "The data will go to %s. The program will restart.",
+"set.dataMove": "Move",
+"set.dataBad": "This folder cannot be used.",
+"set.dataSame": "The data is already in this folder.",
+"L.dataMoving": "Moving the data to %s…",
+"L.dataMoved": "Data is now in %s.",
+"L.dataMoveFail": "Could not restart to move the data: %v"
 }

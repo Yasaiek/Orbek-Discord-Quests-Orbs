@@ -294,5 +294,18 @@
 "pu.restart": "Discord se ferme un instant et redémarre tout seul – si tu es dans un salon vocal, tu seras déconnecté.",
 "pu.yes": "Oui, mettre à jour",
 "pu.later": "Non, plus tard",
-"pu.done": "Terminé ! Discord redémarre – Orbek va se connecter."
+"pu.done": "Terminé ! Discord redémarre – Orbek va se connecter.",
+"set.dataDir": "Dossier de données",
+"set.dataHint": "Réglages, journaux et autres fichiers du programme.",
+"set.dataOpen": "Ouvrir",
+"set.dataPick": "Changer…",
+"set.dataReset": "Par défaut",
+"set.dataMoveQ": "Déplacer les données ?",
+"set.dataMoveT": "Les données iront dans %s. Le programme va redémarrer.",
+"set.dataMove": "Déplacer",
+"set.dataBad": "Ce dossier ne peut pas être utilisé.",
+"set.dataSame": "Les données sont déjà dans ce dossier.",
+"L.dataMoving": "Déplacement des données vers %s…",
+"L.dataMoved": "Les données sont maintenant dans %s.",
+"L.dataMoveFail": "Impossible de redémarrer pour déplacer les données : %v"
 }

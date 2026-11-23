@@ -294,5 +294,18 @@
 "pu.restart": "Discordが一度閉じて自動で再起動します – ボイスチャンネルにいる場合は切断されます。",
 "pu.yes": "はい、更新する",
 "pu.later": "いいえ、後で",
-"pu.done": "完了！Discordを再起動しています – まもなくOrbekが接続します。"
+"pu.done": "完了！Discordを再起動しています – まもなくOrbekが接続します。",
+"set.dataDir": "データフォルダー",
+"set.dataHint": "設定、ログ、その他のプログラムのファイル。",
+"set.dataOpen": "開く",
+"set.dataPick": "変更…",
+"set.dataReset": "既定",
+"set.dataMoveQ": "データを移動しますか？",
+"set.dataMoveT": "データは %s に移動します。プログラムは再起動します。",
+"set.dataMove": "移動",
+"set.dataBad": "このフォルダーは使用できません。",
+"set.dataSame": "データはすでにこのフォルダーにあります。",
+"L.dataMoving": "データを %s に移動しています…",
+"L.dataMoved": "データは %s にあります。",
+"L.dataMoveFail": "データ移動のための再起動に失敗しました: %v"
 }

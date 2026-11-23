@@ -9,7 +9,7 @@ const siteURL = "https://yasaiek.github.io/Orbek-Discord-Quests-Orbs/"
 
 // trayActions are what the tray menu can do.
 type trayActions struct {
-	Open, Mini, StopAll, Update func()
+	Open, Mini, StopAll, Update, Quit func()
 }
 
 type trayInfo struct {

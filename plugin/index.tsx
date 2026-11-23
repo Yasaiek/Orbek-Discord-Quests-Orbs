@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.2";
+const PLUGIN_VERSION = "0.4.3";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -405,8 +405,11 @@ function setFake(questId: string, fake: any | null) {
     if (fakes.size && !realGames) {
         realGames = games.getRunningGames;
         realForPid = games.getGameForPID;
-        games.getRunningGames = () => [...fakes.values()];
-        games.getGameForPID = (p: number) => [...fakes.values()].find(f => f.pid === p);
+        // the games really running stay on the list: Discord must not think a game you play has closed
+        // (its overlay and game activity would let go of it)
+        const real = realGames, realPid = realForPid;
+        games.getRunningGames = () => [...(real.call(games) || []), ...fakes.values()];
+        games.getGameForPID = (p: number) => [...fakes.values()].find(f => f.pid === p) ?? realPid.call(games, p);
     }
     const all = [...fakes.values()];
     FluxDispatcher.dispatch({ type: "RUNNING_GAMES_CHANGE", removed: old && !fake ? [old] : [], added: fake ? [fake] : [], games: all } as any);
@@ -426,7 +429,8 @@ async function runDesktop(q: Quest, run: Run, stopped: () => boolean, stream: bo
     if (!app) throw new Error("Discord nie zna tej gry");
     const exe = (app.executables?.find((x: any) => x.os === "win32")?.name ?? `${app.name}.exe`).replace(">", "");
     const name = String(app.name).replace(/[\\/:*?"<>|]/g, "");
-    const pid = Math.floor(Math.random() * 30000) + 1000;
+    // an odd number: Windows process ids are multiples of 4, so this can never be a real program (a game you play)
+    const pid = Math.floor(Math.random() * 15000) * 2 + 1001;
     const fake = {
         cmdLine: `C:\\Program Files\\${name}\\${exe}`, exeName: exe, exePath: `c:/program files/${name.toLowerCase()}/${exe}`,
         hidden: false, isLauncher: false, id: q.appId, name: app.name, pid, pidPath: [pid], processName: app.name, start: Date.now()

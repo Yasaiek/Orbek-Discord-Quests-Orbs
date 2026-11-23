@@ -25,3 +25,11 @@ func hideWindow(cmd *exec.Cmd) {}
 func tagWindows()              {}
 
 func notify(title, text string) {}
+
+func openFolder(dir string) {
+	if os.Getenv("ORBEK_NO_WINDOW") == "" {
+		exec.Command("xdg-open", dir).Start()
+	}
+}
+
+func pickFolder(title, start string) string { return "" }

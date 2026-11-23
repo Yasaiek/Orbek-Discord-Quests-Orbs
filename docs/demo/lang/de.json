@@ -294,5 +294,18 @@
 "pu.restart": "Discord schließt sich kurz und startet von selbst neu – in einem Sprachkanal wirst du getrennt.",
 "pu.yes": "Ja, aktualisieren",
 "pu.later": "Nein, später",
-"pu.done": "Fertig! Discord startet neu – Orbek verbindet sich gleich."
+"pu.done": "Fertig! Discord startet neu – Orbek verbindet sich gleich.",
+"set.dataDir": "Datenordner",
+"set.dataHint": "Einstellungen, Protokolle und die übrigen Dateien des Programms.",
+"set.dataOpen": "Öffnen",
+"set.dataPick": "Ändern…",
+"set.dataReset": "Standard",
+"set.dataMoveQ": "Daten verschieben?",
+"set.dataMoveT": "Die Daten kommen nach %s. Das Programm startet neu.",
+"set.dataMove": "Verschieben",
+"set.dataBad": "Dieser Ordner kann nicht verwendet werden.",
+"set.dataSame": "Die Daten liegen bereits in diesem Ordner.",
+"L.dataMoving": "Verschiebe die Daten nach %s…",
+"L.dataMoved": "Die Daten liegen jetzt in %s.",
+"L.dataMoveFail": "Neustart zum Verschieben der Daten fehlgeschlagen: %v"
 }

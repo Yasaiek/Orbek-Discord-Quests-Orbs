@@ -294,5 +294,18 @@
 "pu.restart": "Discord kısa süre kapanıp kendiliğinden yeniden açılır – sesli kanaldaysan bağlantın kesilir.",
 "pu.yes": "Evet, güncelle",
 "pu.later": "Hayır, sonra",
-"pu.done": "Tamam! Discord yeniden başlıyor – Orbek birazdan bağlanacak."
+"pu.done": "Tamam! Discord yeniden başlıyor – Orbek birazdan bağlanacak.",
+"set.dataDir": "Veri klasörü",
+"set.dataHint": "Ayarlar, günlükler ve programın diğer dosyaları.",
+"set.dataOpen": "Aç",
+"set.dataPick": "Değiştir…",
+"set.dataReset": "Varsayılan",
+"set.dataMoveQ": "Veriler taşınsın mı?",
+"set.dataMoveT": "Veriler %s konumuna gidecek. Program yeniden başlayacak.",
+"set.dataMove": "Taşı",
+"set.dataBad": "Bu klasör kullanılamıyor.",
+"set.dataSame": "Veriler zaten bu klasörde.",
+"L.dataMoving": "Veriler %s konumuna taşınıyor…",
+"L.dataMoved": "Veriler artık %s konumunda.",
+"L.dataMoveFail": "Verileri taşımak için yeniden başlatılamadı: %v"
 }

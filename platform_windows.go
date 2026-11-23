@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"syscall"
 	"time"
 	"unsafe"
@@ -114,8 +115,8 @@ func runTray(e *Engine, a trayActions) {
 						exec.Command("explorer", filepath.Dir(exe)).Start()
 					}
 				case <-mQuit.ClickedCh:
-					systray.Quit()
-					return
+					a.Quit() // closes the windows too, then the program
+
 				case <-e.quit:
 					systray.Quit()
 					return
@@ -195,6 +196,7 @@ var (
 	procGetWindowText  = user32.NewProc("GetWindowTextW")
 	procGetClassName   = user32.NewProc("GetClassNameW")
 	procIsVisible      = user32.NewProc("IsWindowVisible")
+	procWindowPID      = user32.NewProc("GetWindowThreadProcessId")
 	procPropStoreForWn = syscall.NewLazyDLL("shell32.dll").NewProc("SHGetPropertyStoreForWindow")
 	procCoInit         = syscall.NewLazyDLL("ole32.dll").NewProc("CoInitializeEx")
 
@@ -229,7 +231,13 @@ func tagWindows() {
 	for end := time.Now().Add(25 * time.Second); time.Now().Before(end); time.Sleep(400 * time.Millisecond) {
 		enumFound = enumFound[:0]
 		procEnumWindows.Call(enumCB, 0)
+		own := ourPIDs()
 		for _, h := range enumFound {
+			var pid uint32
+			procWindowPID.Call(h, uintptr(unsafe.Pointer(&pid)))
+			if !own[pid] {
+				continue // only Orbek's own windows, never another program's
+			}
 			if !done[h] {
 				done[h] = setWindowAppID(h, exe)
 			}
@@ -282,3 +290,28 @@ func darkMenus() {
 
 // notify shows a Windows notification from the tray icon, with the system sound.
 func notify(title, text string) { systray.Notify(title, text, false) }
+
+func openFolder(dir string) { exec.Command("explorer", dir).Start() }
+
+// pickFolder shows the system folder picker (through PowerShell, in front of other windows) and returns
+// the folder picked, or "" when cancelled.
+func pickFolder(title, start string) string {
+	q := func(s string) string { return "'" + strings.ReplaceAll(s, "'", "''") + "'" }
+	script := `[Console]::OutputEncoding = [Text.Encoding]::UTF8
+Add-Type -AssemblyName System.Windows.Forms
+$f = New-Object System.Windows.Forms.Form -Property @{TopMost = $true; ShowInTaskbar = $false; Opacity = 0}
+$f.Show(); $f.Activate()
+$d = New-Object System.Windows.Forms.FolderBrowserDialog
+$d.Description = ` + q(title) + `
+$d.ShowNewFolderButton = $true
+$d.SelectedPath = ` + q(start) + `
+if ($d.ShowDialog($f) -eq 'OK') { $d.SelectedPath }
+$f.Close()`
+	cmd := exec.Command("powershell", "-NoProfile", "-STA", "-ExecutionPolicy", "Bypass", "-Command", script)
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true, CreationFlags: 0x08000000} // CREATE_NO_WINDOW
+	out, err := cmd.Output()
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}

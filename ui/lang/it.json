@@ -294,5 +294,18 @@
 "pu.restart": "Discord si chiude per un momento e si riavvia da solo – se sei in un canale vocale verrai disconnesso.",
 "pu.yes": "Sì, aggiorna",
 "pu.later": "No, dopo",
-"pu.done": "Fatto! Discord si riavvia – Orbek si collegherà a breve."
+"pu.done": "Fatto! Discord si riavvia – Orbek si collegherà a breve.",
+"set.dataDir": "Cartella dati",
+"set.dataHint": "Impostazioni, log e gli altri file del programma.",
+"set.dataOpen": "Apri",
+"set.dataPick": "Cambia…",
+"set.dataReset": "Predefinita",
+"set.dataMoveQ": "Spostare i dati?",
+"set.dataMoveT": "I dati andranno in %s. Il programma si riavvierà.",
+"set.dataMove": "Sposta",
+"set.dataBad": "Questa cartella non può essere usata.",
+"set.dataSame": "I dati sono già in questa cartella.",
+"L.dataMoving": "Sposto i dati in %s…",
+"L.dataMoved": "I dati ora sono in %s.",
+"L.dataMoveFail": "Impossibile riavviare per spostare i dati: %v"
 }

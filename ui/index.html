@@ -285,6 +285,8 @@ body.minimode .mini { grid-template-columns: 1fr; }
 .row:last-child { border-bottom: 0; }
 .row small { display: block; color: var(--sub); font-size: 12.5px; margin-top: 2px; max-width: 640px; }
 .row small.warn { color: var(--warn); }
+.row code.path { display: block; margin-top: 4px; font: 12px/1.4 Consolas, monospace; color: var(--text); opacity: .8; overflow-wrap: anywhere; }
+.rbtns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
 .sw { appearance: none; width: 42px; height: 24px; border-radius: 12px; background: #2a2d45; position: relative; cursor: pointer; flex-shrink: 0; transition: background .2s; }
 .sw::after { content: ""; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #d2d4e6; transition: transform .2s var(--ease), background .2s; }
 .sw:checked { background: var(--grad); } .sw:checked::after { transform: translateX(18px); background: #fff; }
@@ -480,6 +482,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
       <label class="row"><span><span data-i="set.orbAnim"></span><small data-i="set.orbAnimHint"></small></span><input type="checkbox" class="sw" data-set="orbAnim"></label>
       <label class="row"><span data-i="set.openOnStart"></span><input type="checkbox" class="sw" data-set="openOnStart"></label>
       <label class="row"><span data-i="set.autostart"></span><input type="checkbox" class="sw" data-set="autostart"></label>
+      <div class="row"><span><span data-i="set.dataDir"></span><small><span data-i="set.dataHint"></span><code class="path" id="dataInfo"></code></small></span><span class="rbtns"><button class="btn sm" id="dataOpen" data-i="set.dataOpen"></button><button class="btn sm" id="dataPick" data-i="set.dataPick"></button><button class="btn sm" id="dataReset" data-i="set.dataReset" hidden></button></span></div>
       <div class="row"><span><span data-i="set.about"></span><small id="about"></small></span><button class="btn bad sm" id="quit" data-i="set.quit"></button></div>
     </div>
   </section>
@@ -1068,6 +1071,8 @@ function renderSettings() {
     if (n.type === 'checkbox') n.checked = !!v; else n.value = v ?? '';
   });
   for (const k of ['autoAll']) document.querySelector(`[data-set=${k}]`).disabled = !S.settings.autoMode;
+  $('dataInfo').textContent = S.dataDir || '';
+  $('dataReset').hidden = !S.dataCustom;
   $('about').textContent = 'Orbek ' + S.version + (S.plugin ? ' · plugin ' + S.plugin : '');
   $('plugInfo').textContent = (S.plugin ? t('plug.have', { v: S.plugin }) : t('plug.none')) + ' · ' + t('plug.latest', { v: S.pluginLatest }) + ' · ' + (S.vencord ? t('plug.where', { p: S.vencord }) : t('plug.noVencord'));
 
@@ -1144,6 +1149,15 @@ $('goSetup').onclick = () => goPage('setup');
 $('instAll').onclick = async () => { if (await ask(t('inst.all'), t('inst.confirm'), t('inst.go'))) op({ op: 'setup' }); };
 $('updCheck').onclick = () => op({ op: 'updCheck' });
 $('updInstall').onclick = () => op({ op: 'updInstall' });
+// data folder: open it, or move it somewhere else (the program restarts and the panel carries on)
+$('dataOpen').onclick = () => op({ op: 'dataOpen' });
+async function moveData(path, target) {
+  if (!(await ask(t('set.dataMoveQ'), t('set.dataMoveT').replace('%s', target), t('set.dataMove')))) return;
+  const r = await api('/api/op', { op: 'dataMove', id: path });
+  if (!r.ok) ask(t('set.dataDir'), t(r.err === 'same' ? 'set.dataSame' : 'set.dataBad'), 'OK', true, true);
+}
+$('dataPick').onclick = async () => { const r = await api('/api/op', { op: 'dataPick' }); if (r.ok && r.path) moveData(r.path, r.target); };
+$('dataReset').onclick = () => moveData('', S.dataDefault);
 $('quit').onclick = async () => { if (await ask(t('set.quit'), t('set.quitConfirm'), t('set.quit'), true)) op({ op: 'quit' }).then(() => window.close()); };
 
 const gen = +(new URLSearchParams(location.search).get('g') || 0);
@@ -1153,6 +1167,7 @@ async function tick() {
   try {
     S = await api('/api/state');
     if (gen && S.winGen > gen) { window.close(); return; } // a newer panel window took over
+    if (S.closing) { window.close(); return; } // the program is quitting (from the tray too)
     if (VER && S.version !== VER) { location.reload(); return; } // Orbek was updated: load the new panel
     if (!VER) setTimeout(whatsNew, 800);
     VER = S.version;

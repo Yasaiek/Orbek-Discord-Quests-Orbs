@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.11
+- Data now lives in `%LOCALAPPDATA%\Yasaiek\Orbek` (shared Yasaiek folder, each program in its own subfolder). Files from the old places are moved over on the first start.
+- Settings → Data folder: open it, or pick another place; the data is moved and Orbek restarts.
+- Quitting from the tray (or the panel) now closes Orbek's windows too.
+- Orbek only ever looks at its own processes (checked by program name) and tags only its own windows: no other program, game included, is touched.
+- Plugin 0.4.3: while a quest pretends to play a game, the games you really play stay visible to Discord (its overlay no longer loses them), and the pretend game gets an id no real program can have.
+
 ## 0.4.10
 - Orbek keeps its files in its own Orbek-data folder. With Loorek in the same folder both programs shared data\\settings.json and overwrote each other's settings; Orbek's files are moved over on the first start.
 

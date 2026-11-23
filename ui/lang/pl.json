@@ -294,5 +294,18 @@
 "pu.restart": "Discord na chwilę się zamknie i sam uruchomi ponownie – jeśli jesteś na kanale głosowym, zostaniesz rozłączony.",
 "pu.yes": "Tak, zaktualizuj",
 "pu.later": "Nie, później",
-"pu.done": "Gotowe! Discord uruchamia się ponownie – za chwilę Orbek się połączy."
+"pu.done": "Gotowe! Discord uruchamia się ponownie – za chwilę Orbek się połączy.",
+"set.dataDir": "Folder danych",
+"set.dataHint": "Ustawienia, logi i inne pliki programu.",
+"set.dataOpen": "Otwórz",
+"set.dataPick": "Zmień…",
+"set.dataReset": "Domyślny",
+"set.dataMoveQ": "Przenieść dane?",
+"set.dataMoveT": "Dane trafią do %s. Program uruchomi się ponownie.",
+"set.dataMove": "Przenieś",
+"set.dataBad": "Tego folderu nie da się użyć.",
+"set.dataSame": "Dane już są w tym folderze.",
+"L.dataMoving": "Przenoszę dane do %s…",
+"L.dataMoved": "Dane są teraz w %s.",
+"L.dataMoveFail": "Nie udało się uruchomić ponownie, by przenieść dane: %v"
 }

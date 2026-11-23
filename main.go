@@ -19,31 +19,39 @@ type instanceFile struct {
 }
 
 func main() {
-	trayOnly, updated := false, false
+	trayOnly, updated, moved := false, false, false
 	for _, a := range os.Args[1:] {
 		switch a {
 		case "--tray":
 			trayOnly = true
 		case "--updated":
 			updated = true
+		case "--moved": // restarted after the data folder was changed in the settings
+			moved = true
 		}
 	}
 	loadDicts()
-	dir := os.Getenv("ORBEK_DATA") // everything the program keeps lives in "Orbek-data" next to the executable
+	// everything the program keeps lives in %LOCALAPPDATA%\Yasaiek\Orbek, or where the settings say
+	dir, fixed := os.Getenv("ORBEK_DATA"), true
 	if dir == "" {
-		exe, err := os.Executable()
-		if err != nil {
-			exe = os.Args[0]
-		}
-		dir = filepath.Join(filepath.Dir(exe), "Orbek-data")
-		moveOldData(filepath.Join(filepath.Dir(exe), "data"), dir)
+		dir, fixed = dataDirIn(dataRoot()), false
 	}
-	os.MkdirAll(dir, 0o700)
 	instPath := filepath.Join(dir, "instance.json")
 
-	// already running? ask that copy to show its panel and leave (not when this start is an update taking over)
+	// already running? ask that copy to show its panel and leave (not when this start takes over from it)
 	var inst instanceFile
-	if !updated && readJSON(instPath, &inst) == nil && inst.Port > 0 {
+	found := readJSON(instPath, &inst) == nil
+	if !found && !fixed { // a copy of an older version keeps its files next to the program
+		if exe, err := os.Executable(); err == nil {
+			for _, d := range []string{"Orbek-data", "data"} {
+				if readJSON(filepath.Join(filepath.Dir(exe), d, "instance.json"), &inst) == nil {
+					found = true
+					break
+				}
+			}
+		}
+	}
+	if !updated && !moved && found && inst.Port > 0 {
 		req, _ := http.NewRequest("GET", "http://127.0.0.1:"+strconv.Itoa(inst.Port)+"/api/show", nil)
 		req.Header.Set("X-Orbek-Key", inst.Key)
 		if res, err := (&http.Client{Timeout: 2 * time.Second}).Do(req); err == nil {
@@ -65,7 +73,7 @@ func main() {
 	var err error
 	for n, p := range ports {
 		ln, err = net.Listen("tcp", "127.0.0.1:"+strconv.Itoa(p))
-		for i := 0; err != nil && n == 0 && updated && i < 40; i++ { // the previous version is still letting go
+		for i := 0; err != nil && n == 0 && (updated || moved) && i < 40; i++ { // the previous copy is still letting go
 			time.Sleep(200 * time.Millisecond)
 			ln, err = net.Listen("tcp", "127.0.0.1:"+strconv.Itoa(p))
 		}
@@ -80,6 +88,11 @@ func main() {
 		fmt.Fprintln(os.Stderr, "cannot open a local port:", err)
 		os.Exit(1)
 	}
+	// the previous copy has let go of the files now: move them if they are somewhere else
+	if !fixed {
+		settleData(dir, legacyData)
+	}
+	os.MkdirAll(dir, 0o700)
 	e := newEngine(dir)
 	srv := &server{e: e, key: randHex(32), port: ln.Addr().(*net.TCPAddr).Port}
 	if k := os.Getenv("ORBEK_KEY"); k != "" {
@@ -96,6 +109,9 @@ func main() {
 		e.upd.Done = time.Now()
 		e.upd.From = os.Getenv("ORBEK_FROM")
 		e.log.OK("L.updDone", version)
+	}
+	if moved {
+		e.log.OK("L.dataMoved", dir)
 	}
 	e.onQuit = func() {
 		os.Remove(instPath)
@@ -116,6 +132,7 @@ func main() {
 		Mini:    func() { go srv.showMini() },
 		StopAll: func() { e.push(Cmd{Op: "stopAll"}) },
 		Update:  func() { go e.updateCheck(true) },
+		Quit:    func() { go e.quitApp() },
 	})
 	os.Remove(instPath)
 	e.shutdown()

@@ -294,5 +294,18 @@
 "pu.restart": "Discord 会短暂关闭并自动重新启动——如果你在语音频道中，会被断开。",
 "pu.yes": "是的，更新",
 "pu.later": "不，稍后",
-"pu.done": "完成！Discord 正在重启——Orbek 马上就会连接。"
+"pu.done": "完成！Discord 正在重启——Orbek 马上就会连接。",
+"set.dataDir": "数据文件夹",
+"set.dataHint": "设置、日志和程序的其他文件。",
+"set.dataOpen": "打开",
+"set.dataPick": "更改…",
+"set.dataReset": "默认",
+"set.dataMoveQ": "移动数据？",
+"set.dataMoveT": "数据将移至 %s。程序将重新启动。",
+"set.dataMove": "移动",
+"set.dataBad": "无法使用此文件夹。",
+"set.dataSame": "数据已在此文件夹中。",
+"L.dataMoving": "正在将数据移至 %s…",
+"L.dataMoved": "数据现在位于 %s。",
+"L.dataMoveFail": "无法重新启动以移动数据：%v"
 }

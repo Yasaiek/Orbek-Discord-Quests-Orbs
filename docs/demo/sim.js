@@ -23,7 +23,7 @@
     app: 'Orbek', version: window.ORBEK_VERSION || '0.0.0', lang, winGen: 0, connected: true, lastAt: now, user: { id: '1', name: 'Demo', avatar: '' },
     usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6, cpuMin: 0.1, cpuMax: 2.4, ramMin: 88, ramMax: 112, histCpu: Array.from({ length: 60 }, (_, i) => +(0.45 + Math.sin(i / 9) * 0.18 + Math.sin(i / 3.7) * 0.05).toFixed(2)), histRam: Array.from({ length: 60 }, (_, i) => +(94 + Math.sin(i / 14) * 3 + i / 30).toFixed(1)) }, rpc: { state: 'idle', ready: true }, orbTile: '', orbGlyph: '',
     games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + q.id + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
-    loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord',
+    loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord', dataDir: 'C:\\Users\\you\\AppData\\Local\\Yasaiek\\Orbek', dataDefault: 'C:\\Users\\you\\AppData\\Local\\Yasaiek\\Orbek', dataCustom: false,
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
     settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], refreshMin: 10, clickSelf: true, expiryWarn: true, expiryHours: 24, rpcOn: true, rpcQuest: true, rpcOrbs: true, rpcToGet: true, rpcBtn: true, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },
     setup: { running: false, done: false, err: '', steps: [], lines: [], full: true },

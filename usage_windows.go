@@ -3,7 +3,10 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"runtime"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -64,16 +67,23 @@ func ourProcesses() []uint32 {
 	defer windows.CloseHandle(snap)
 	parent := map[uint32]uint32{}
 	alive := map[uint32]bool{}
+	ours := map[uint32]bool{} // by program name: this program, browsers, and the tools of the plugin setup
+	self, _ := os.Executable()
+	selfName := strings.ToLower(filepath.Base(self))
 	var pe windows.ProcessEntry32
 	pe.Size = uint32(unsafe.Sizeof(pe))
 	for err = windows.Process32First(snap, &pe); err == nil; err = windows.Process32Next(snap, &pe) {
 		parent[pe.ProcessID] = pe.ParentProcessID
 		alive[pe.ProcessID] = true
+		n := strings.ToLower(windows.UTF16ToString(pe.ExeFile[:]))
+		if n == selfName || ownProgs[n] {
+			ours[pe.ProcessID] = true
+		}
 	}
 	roots := map[uint32]bool{uint32(windows.GetCurrentProcessId()): true}
 	launchedMu.Lock()
 	for pid := range launched {
-		if alive[pid] {
+		if alive[pid] && ours[pid] { // a number Windows gave to another program since is not ours
 			roots[pid] = true
 		} else {
 			delete(launched, pid)
@@ -82,6 +92,9 @@ func ourProcesses() []uint32 {
 	launchedMu.Unlock()
 	var out []uint32
 	for pid := range alive {
+		if !ours[pid] {
+			continue // never a game or any other program
+		}
 		for p, n := pid, 0; n < 12; p, n = parent[p], n+1 {
 			if roots[p] {
 				out = append(out, pid)
@@ -134,4 +147,32 @@ func (s *usageSampler) sample() Usage {
 	}
 	s.last, s.lastT = cur, now
 	return u
+}
+
+// the only programs Orbek ever looks at or ends: itself and what it starts (browser windows, and Node,
+// Git and pnpm while it sets up the plugin)
+var ownProgs = map[string]bool{"msedge.exe": true, "chrome.exe": true, "brave.exe": true, "node.exe": true,
+	"git.exe": true, "cmd.exe": true, "conhost.exe": true, "powershell.exe": true}
+
+// closeOurWindows ends whatever is still running of what Orbek started (its windows), when it quits.
+func closeOurWindows() {
+	self := uint32(windows.GetCurrentProcessId())
+	for _, pid := range ourProcesses() {
+		if pid == self {
+			continue
+		}
+		if h, err := windows.OpenProcess(windows.PROCESS_TERMINATE, false, pid); err == nil {
+			windows.TerminateProcess(h, 0)
+			windows.CloseHandle(h)
+		}
+	}
+}
+
+// ourPIDs: the same as a set.
+func ourPIDs() map[uint32]bool {
+	m := map[uint32]bool{}
+	for _, p := range ourProcesses() {
+		m[p] = true
+	}
+	return m
 }
