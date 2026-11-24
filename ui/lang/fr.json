@@ -318,5 +318,8 @@
 "q.manualT": "À faire soi-même",
 "q.manualGoal": "Objectif : {g}",
 "q.manualN": "Nécessaire : {n}",
-"q.show": "Afficher dans Discord"
+"q.show": "Afficher dans Discord",
+"upd.okNow": "✓ À jour",
+"upd.failShort": "Échec",
+"upd.checkedAt": "vérifié à {t}"
 }

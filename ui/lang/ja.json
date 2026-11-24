@@ -318,5 +318,8 @@
 "q.manualT": "自分で行う",
 "q.manualGoal": "目標: {g}",
 "q.manualN": "必要数: {n}",
-"q.show": "Discord で表示"
+"q.show": "Discord で表示",
+"upd.okNow": "✓ 最新です",
+"upd.failShort": "失敗しました",
+"upd.checkedAt": "確認: {t}"
 }

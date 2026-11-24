@@ -318,5 +318,8 @@
 "q.manualT": "Зробити самому",
 "q.manualGoal": "Мета: {g}",
 "q.manualN": "Потрібно: {n}",
-"q.show": "Показати в Discord"
+"q.show": "Показати в Discord",
+"upd.okNow": "✓ Остання версія",
+"upd.failShort": "Не вдалося",
+"upd.checkedAt": "перевірено о {t}"
 }

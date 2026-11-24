@@ -318,5 +318,8 @@
 "q.manualT": "Do it yourself",
 "q.manualGoal": "Goal: {g}",
 "q.manualN": "Needed: {n}",
-"q.show": "Show in Discord"
+"q.show": "Show in Discord",
+"upd.okNow": "✓ Up to date",
+"upd.failShort": "Check failed",
+"upd.checkedAt": "checked {t}"
 }

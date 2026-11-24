@@ -318,5 +318,8 @@
 "q.manualT": "Selbst erledigen",
 "q.manualGoal": "Ziel: {g}",
 "q.manualN": "Benötigt: {n}",
-"q.show": "In Discord zeigen"
+"q.show": "In Discord zeigen",
+"upd.okNow": "✓ Aktuell",
+"upd.failShort": "Fehlgeschlagen",
+"upd.checkedAt": "geprüft {t}"
 }

@@ -318,5 +318,8 @@
 "q.manualT": "Kendin yap",
 "q.manualGoal": "Hedef: {g}",
 "q.manualN": "Gereken: {n}",
-"q.show": "Discord'da göster"
+"q.show": "Discord'da göster",
+"upd.okNow": "✓ Güncel",
+"upd.failShort": "Başarısız",
+"upd.checkedAt": "kontrol: {t}"
 }

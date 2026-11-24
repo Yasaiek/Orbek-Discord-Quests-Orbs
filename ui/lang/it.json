@@ -318,5 +318,8 @@
 "q.manualT": "Da fare a mano",
 "q.manualGoal": "Obiettivo: {g}",
 "q.manualN": "Serve: {n}",
-"q.show": "Mostra in Discord"
+"q.show": "Mostra in Discord",
+"upd.okNow": "✓ Aggiornato",
+"upd.failShort": "Non riuscito",
+"upd.checkedAt": "controllato {t}"
 }

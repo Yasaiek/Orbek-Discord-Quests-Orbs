@@ -57,7 +57,9 @@ h2 { font: 650 17px var(--display); margin: 22px 0 10px; }
 .kpi .mm { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; min-width: 0; }
 .spkw { position: relative; height: 40px; }
 .spkw .spk { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.spkw .spkdot { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px var(--m2), 0 0 10px var(--m2); transition: top .6s ease; }
+.spkw .spkdot { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 2px var(--m2), 0 0 10px var(--m2); transition: top 1s ease-in-out; animation: spkBeat 2s ease-in-out infinite; }
+.spkw.glide .sa, .spkw.glide .sl { transition: d 1s ease-in-out; }
+@keyframes spkBeat { 50% { box-shadow: 0 0 0 2px var(--m2), 0 0 16px 3px var(--m2); } }
 .kpi .mrow { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 11.5px; color: var(--sub); font-variant-numeric: tabular-nums; }
 .kpi .mc { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 7px; background: rgba(255,255,255,.06); white-space: nowrap; }
 .kpi .mc i { font-style: normal; font-size: 8px; color: var(--m2); }
@@ -187,6 +189,7 @@ small.okc { color: #7fe0b2 !important; }
 .btn.sm { padding: 6px 12px; font-size: 12.5px; border-radius: 10px; } .btn.sm svg.i { width: 15px; height: 15px; }
 .btn.lg { padding: 12px 22px; font-size: 15px; border-radius: 14px; gap: 10px; } .btn.lg svg.i { width: 19px; height: 19px; }
 .btn[disabled] { opacity: .45; pointer-events: none; }
+.btn.done { opacity: 1 !important; color: #d2f9e5; border-color: rgba(62,207,142,.45); background: linear-gradient(135deg, rgba(62,207,142,.22), rgba(24,160,201,.12)); }
 .autobar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: linear-gradient(100deg, rgba(88,101,242,.16), rgba(163,91,255,.06)); border: 1px solid rgba(88,101,242,.35); border-radius: 14px; padding: 11px 14px; margin-bottom: 16px; }
 .autobar .grow { flex: 1; min-width: 240px; color: var(--sub); font-size: 13px; display: flex; align-items: center; gap: 9px; }
 .autobar .grow b { color: var(--text); }
@@ -795,32 +798,46 @@ function kindBadges(box, r, n) {
 }
 // a sparkline (area chart) of recent values, with min and max chips under it
 // a smooth sparkline: values averaged over a few points, drawn as a curve (monotone, so it never overshoots)
-function sparkSvg(hist, cls) {
-  const raw = hist.length ? hist : [0];
-  const k = raw.length > 30 ? 4 : raw.length > 10 ? 2 : 0; // moving average over 2k+1 points
-  const pts = raw.map((_, i) => { let s = 0, n = 0; for (let j = Math.max(0, i - k); j <= Math.min(raw.length - 1, i + k); j++) { s += raw[j]; n++; } return s / n; });
-  const W = 200, H = 46, mx = Math.max(...pts), mn = Math.min(...pts), pad = (mx - mn) * 0.2 || Math.max(mx * 0.2, 0.05);
+// a smooth chart of the last minutes: the values are averaged into 40 steps, softened, and drawn as a
+// rounded curve; when new values come the curve glides to its new shape instead of jumping
+function sparkPath(hist) {
+  const raw = hist.length ? hist : [0], N = 40;
+  let pts = [];
+  if (raw.length > N) { for (let b = 0; b < N; b++) { const a = Math.floor(b * raw.length / N), z = Math.max(a + 1, Math.floor((b + 1) * raw.length / N)); let s = 0; for (let j = a; j < z; j++) s += raw[j]; pts.push(s / (z - a)); } }
+  else pts = raw.slice();
+  for (let pass = 0; pass < 2; pass++) pts = pts.map((v, i) => (pts[Math.max(0, i - 1)] + 2 * v + pts[Math.min(pts.length - 1, i + 1)]) / 4);
+  if (pts.length === 1) pts.push(pts[0]);
+  const W = 200, H = 46, mx = Math.max(...pts), mn = Math.min(...pts), pad = (mx - mn) * 0.25 || Math.max(mx * 0.25, 0.05);
   const top = mx + pad, bot = Math.max(0, mn - pad);
-  const X = (i) => pts.length < 2 ? W : (i / (pts.length - 1)) * W, Y = (v) => H - 4 - ((v - bot) / (top - bot || 1)) * (H - 10);
-  const P = pts.map((v, i) => [X(i), Y(v)]);
-  // monotone cubic (Fritsch–Carlson) tangents
-  const n = P.length, d = [], m = [];
-  for (let i = 0; i < n - 1; i++) d.push((P[i + 1][1] - P[i][1]) / ((P[i + 1][0] - P[i][0]) || 1));
-  for (let i = 0; i < n; i++) m.push(i === 0 ? d[0] || 0 : i === n - 1 ? d[n - 2] || 0 : d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2);
-  let line = 'M' + P[0][0].toFixed(1) + ' ' + P[0][1].toFixed(1);
-  for (let i = 0; i < n - 1; i++) {
-    const h = (P[i + 1][0] - P[i][0]) / 3;
-    line += ` C${(P[i][0] + h).toFixed(1)} ${(P[i][1] + m[i] * h).toFixed(1)} ${(P[i + 1][0] - h).toFixed(1)} ${(P[i + 1][1] - m[i + 1] * h).toFixed(1)} ${P[i + 1][0].toFixed(1)} ${P[i + 1][1].toFixed(1)}`;
+  const P = pts.map((v, i) => [(i / (pts.length - 1)) * W, H - 5 - ((v - bot) / (top - bot || 1)) * (H - 12)]);
+  const c = (v) => Math.min(H - 2, Math.max(2, v)).toFixed(2);
+  let d = 'M' + P[0][0].toFixed(2) + ' ' + P[0][1].toFixed(2);
+  for (let i = 0; i < P.length - 1; i++) { // Catmull-Rom → Bézier: rounded through every point
+    const p0 = P[Math.max(0, i - 1)], p1 = P[i], p2 = P[i + 1], p3 = P[Math.min(P.length - 1, i + 2)];
+    d += ` C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(2)} ${c(p1[1] + (p2[1] - p0[1]) / 6)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(2)} ${c(p2[1] - (p3[1] - p1[1]) / 6)} ${p2[0].toFixed(2)} ${p2[1].toFixed(2)}`;
   }
-  if (n === 1) line += ` L${W} ${P[0][1].toFixed(1)}`;
-  const last = P[n - 1], id = 'sg' + cls;
-  return `<div class="spkw"><svg class="spk" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" shape-rendering="geometricPrecision"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--m2)" stop-opacity=".42"/><stop offset="1" stop-color="var(--m2)" stop-opacity="0"/></linearGradient></defs>`
-    + `<path d="${line} L${W} ${H} L0 ${H} Z" fill="url(#${id})"/><path d="${line}" fill="none" stroke="var(--m2)" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg>`
-    + `<i class="spkdot" style="left:${(last[0] / W * 100).toFixed(2)}%;top:${(last[1] / H * 100).toFixed(2)}%"></i></div>`;
+  const last = P[P.length - 1];
+  return { line: d, area: d + ` L${W} ${H} L0 ${H} Z`, x: last[0] / W * 100, y: last[1] / H * 100, n: P.length };
+}
+function sparkDraw(box, hist, cls) {
+  let w = box.querySelector('.spkw');
+  if (!w) {
+    const id = 'sg' + cls;
+    box.insertAdjacentHTML('afterbegin', `<div class="spkw"><svg class="spk" viewBox="0 0 200 46" preserveAspectRatio="none"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--m2)" stop-opacity=".42"/><stop offset="1" stop-color="var(--m2)" stop-opacity="0"/></linearGradient></defs>`
+      + `<path class="sa" fill="url(#${id})"/><path class="sl" fill="none" stroke="var(--m2)" stroke-width="2.2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg><i class="spkdot"></i></div>`);
+    w = box.querySelector('.spkw');
+  }
+  const p = sparkPath(hist), a = w.querySelector('.sa'), l = w.querySelector('.sl'), dot = w.querySelector('.spkdot');
+  const glide = w.dataset.n === String(p.n); // same number of steps: the shape can glide to the new one
+  w.classList.toggle('glide', glide); w.dataset.n = p.n;
+  a.style.d = `path("${p.area}")`; l.style.d = `path("${p.line}")`;
+  dot.style.left = p.x.toFixed(2) + '%'; dot.style.top = p.y.toFixed(2) + '%';
 }
 function spark(box, hist, fmt, lo, hi, cls) {
-  const pts = hist.length ? hist : [0], svg = sparkSvg(hist, cls);
-  box.innerHTML = svg + `<div class="mrow"><span class="mc"><i>▼</i>min <strong>${fmt(lo)}</strong></span><span class="mc"><i>▲</i>max <strong>${fmt(hi)}</strong></span><span class="mper">${Math.round(pts.length * 2 / 60) || '<1'} min</span></div>`;
+  const pts = hist.length ? hist : [0];
+  sparkDraw(box, hist, cls);
+  let row = box.querySelector('.mrow'); if (!row) { row = el('div', 'mrow'); box.append(row); }
+  row.innerHTML = `<span class="mc"><i>▼</i>min <strong>${fmt(lo)}</strong></span><span class="mc"><i>▲</i>max <strong>${fmt(hi)}</strong></span><span class="mper">${Math.round(pts.length * 2 / 60) || '<1'} min</span>`;
 }
 function renderKpis(orbIcon) {
   const big = (id, v) => { $(id).textContent = ''; $(id).append(orbIcon(), v); };
@@ -1111,6 +1128,7 @@ function renderSettings() {
 
   const u = S.update || {};
   $('updInfo').textContent = u.state === 'available' ? t('upd.avail', { v: u.latest }) : u.state === 'downloading' ? t('upd.downloading', { v: u.latest }) : u.state === 'checking' ? t('upd.checking') : u.state === 'failed' ? t('upd.failed') : u.state === 'current' ? t('upd.current') : t('upd.never');
+  if (u.checked && u.state !== 'checking') $('updInfo').textContent += ' · ' + t('upd.checkedAt', { t: new Date(u.checked).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
   if (u.doneAt && now() - u.doneAt < 600000) $('updInfo').textContent = t('upd.done', { v: S.version });
   $('updInstall').hidden = u.state !== 'available';
 }
@@ -1180,7 +1198,18 @@ const installPlugin = () => plugDialog(false);
 $('plugBtn').onclick = installPlugin; $('plugBtn2').onclick = installPlugin; $('instPlug').onclick = installPlugin;
 $('goSetup').onclick = () => goPage('setup');
 $('instAll').onclick = async () => { if (await ask(t('inst.all'), t('inst.confirm'), t('inst.go'))) op({ op: 'setup' }); };
-$('updCheck').onclick = () => op({ op: 'updCheck' });
+// "Check now": the check takes a moment; the button shows that it runs and what came out
+$('updCheck').onclick = async () => {
+  const b = $('updCheck'), t0 = Date.now(), key = 'upd.check', wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  b.disabled = true; b.dataset.i = 'upd.checking'; b.textContent = t('upd.checking');
+  await op({ op: 'updCheck' });
+  while (Date.now() - t0 < 35000) { const u = (S && S.update) || {}; if (u.state !== 'checking' && u.checked >= t0 - 1500) break; await wait(300); }
+  if (Date.now() - t0 < 900) await wait(900 - (Date.now() - t0));
+  const st = ((S && S.update) || {}).state;
+  b.dataset.i = st === 'current' ? 'upd.okNow' : st === 'failed' ? 'upd.failShort' : st === 'available' ? 'upd.check' : key; b.textContent = t(b.dataset.i);
+  b.classList.toggle('done', st === 'current');
+  setTimeout(() => { b.disabled = false; b.dataset.i = key; b.textContent = t(key); b.classList.remove('done'); }, 3500);
+};
 $('updInstall').onclick = () => op({ op: 'updInstall' });
 // data folder: open it, or move it somewhere else (the program restarts and the panel carries on)
 $('dataOpen').onclick = () => op({ op: 'dataOpen' });

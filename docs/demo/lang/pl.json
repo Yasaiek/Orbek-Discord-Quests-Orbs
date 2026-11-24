@@ -318,5 +318,8 @@
 "q.manualT": "Do zrobienia samemu",
 "q.manualGoal": "Cel: {g}",
 "q.manualN": "Potrzeba: {n}",
-"q.show": "Pokaż w Discordzie"
+"q.show": "Pokaż w Discordzie",
+"upd.okNow": "✓ Masz najnowszą",
+"upd.failShort": "Nie udało się",
+"upd.checkedAt": "sprawdzono {t}"
 }

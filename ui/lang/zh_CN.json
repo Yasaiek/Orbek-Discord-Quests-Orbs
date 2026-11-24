@@ -318,5 +318,8 @@
 "q.manualT": "需要手动完成",
 "q.manualGoal": "目标：{g}",
 "q.manualN": "需要：{n}",
-"q.show": "在 Discord 中显示"
+"q.show": "在 Discord 中显示",
+"upd.okNow": "✓ 已是最新",
+"upd.failShort": "检查失败",
+"upd.checkedAt": "检查于 {t}"
 }

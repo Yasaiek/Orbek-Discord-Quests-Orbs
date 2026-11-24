@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.16
+- Smoother CPU and RAM charts: values are averaged and softened, drawn as a rounded curve, and the curve glides to each new shape instead of jumping.
+- "Check now" for updates shows that it is checking and what came out ("✓ Up to date"), and the update line says when it last checked.
+
 ## 0.4.15
 - Hand-only quests ("Achievement in an activity") now say exactly why: the achievement has to be earned in the activity (a mini-game run inside Discord), the activity itself records the progress on its servers, and Discord accepts it only from there – not from Orbek or the plugin.
 - The card shows the task's goal in Discord's own words (when Discord gives it) and has a "Show in Discord" button that opens Discord's quest page on that quest.
