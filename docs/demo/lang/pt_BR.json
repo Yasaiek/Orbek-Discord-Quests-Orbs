@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Conquista em uma atividade",
 "task.other": "Outra missão",
 "q.manual": "O Orbek não consegue fazer esta missão sozinho – ela precisa ser feita à mão. O automático a ignora.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "O Orbek não consegue fazê-la: a conquista precisa ser obtida por você na atividade (o jogo dentro do Discord). O automático a ignora.",
-"plug.current": "Atualizado"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "É preciso conquistar um objetivo na atividade {act}, um minijogo aberto dentro do Discord. A própria atividade registra o progresso nos servidores dela e o Discord só o aceita de lá, não do Orbek nem do plugin – por isso o automático a ignora.",
+"plug.current": "Atualizado",
+"q.manualT": "Faça você mesmo",
+"q.manualGoal": "Objetivo: {g}",
+"q.manualN": "Necessário: {n}",
+"q.show": "Mostrar no Discord"
 }

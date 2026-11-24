@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Achievement in an activity",
 "task.other": "Other task",
 "q.manual": "Orbek can't do this task on its own – it has to be done by hand. The automat skips it.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek can't do this one: you have to earn the achievement yourself in the activity (the game played inside Discord). The automat skips it.",
-"plug.current": "Up to date"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "You have to earn an achievement in the activity {act} – a mini-game run inside Discord. The activity itself records the progress on its own servers and Discord accepts it only from there, not from Orbek or the plugin – so the automat skips this one.",
+"plug.current": "Up to date",
+"q.manualT": "Do it yourself",
+"q.manualGoal": "Goal: {g}",
+"q.manualN": "Needed: {n}",
+"q.show": "Show in Discord"
 }

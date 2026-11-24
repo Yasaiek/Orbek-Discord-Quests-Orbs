@@ -230,6 +230,11 @@ body.still .q, body.still .mt { animation: none; }
 .note { font-size: 12px; color: var(--warn); display: flex; gap: 6px; align-items: flex-start; }
 .note.manual { color: var(--sub); background: rgba(255,255,255,.04); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; line-height: 1.45; }
 .note.manual svg { color: var(--warn); flex-shrink: 0; margin-top: 1px; }
+.note.manual .mtx { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+.note.manual .mtx b { color: var(--text); font-size: 12.5px; }
+.note.manual .mtx .goal { color: var(--text); opacity: .85; }
+.note.manual .mtx .btn { margin-top: 4px; }
+.note.manual .mtx .btn svg { color: inherit; margin: 0; }
 .empty { text-align: center; color: var(--sub); padding: 56px 20px; background: var(--card); border: 1px dashed var(--line2); border-radius: 16px; }
 .empty.big { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 48px 20px; border-style: solid; background: radial-gradient(ellipse at 50% 0%, rgba(120,90,255,.14), transparent 60%), var(--card); }
 .empty .eic { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; color: #fff; background: var(--grad); box-shadow: 0 16px 34px -14px rgba(120,90,255,.9), inset 0 1px 0 rgba(255,255,255,.3); margin-bottom: 6px; }
@@ -679,6 +684,22 @@ function actions(q) {
 // tasks counted in seconds show minutes; others (achievements) are a plain count
 const TIMED = ['WATCH_VIDEO', 'WATCH_VIDEO_ON_MOBILE', 'PLAY_ON_DESKTOP', 'STREAM_ON_DESKTOP', 'PLAY_ACTIVITY'];
 const progText = (q, p) => TIMED.includes(q.task) ? t('q.prog', { a: mins(Math.min(p, q.target)), b: mins(q.target) }) : Math.min(p, q.target) + ' / ' + q.target;
+// why Orbek cannot do a task, what exactly it asks (Discord's own words when it gives them), and a way there
+function manualNote(q) {
+  const n = el('div', 'note manual'), tx = el('div', 'mtx');
+  const act = q.actName || q.name;
+  tx.append(el('b', '', t('q.manualT')), el('span', '', DICT['q.manual.' + q.task] ? t('q.manual.' + q.task, { act }) : t('q.manual')));
+  const goal = [q.taskTitle, q.taskDesc].filter(Boolean).join(' – ');
+  if (goal) tx.append(el('span', 'goal', t('q.manualGoal', { g: goal })));
+  else if (q.task === 'ACHIEVEMENT_IN_ACTIVITY' && q.target > 1) tx.append(el('span', 'goal', t('q.manualN', { n: q.target })));
+  if (S.connected) {
+    const go = el('button', 'btn sm'); go.append(icon('play'), t('q.show'));
+    go.onclick = (e) => { e.stopPropagation(); op({ op: 'show', id: q.id }); };
+    tx.append(go);
+  }
+  n.append(icon('alert'), tx);
+  return n;
+}
 function card(q, i) {
   const [stc, stl] = status(q), r = runOf(q);
   const c = el('div', 'q' + (r ? ' live' : '') + (q.claimedAt || (q.expiresAt && q.expiresAt <= now()) ? ' dim' : ''));
@@ -700,9 +721,7 @@ function card(q, i) {
     row.append(el('span', 'qm pl', progText(q, p)), tr, ring(q)); b.append(row);
     if (r && r.note) { const n = el('div', 'note'); n.append(icon('alert'), t(r.note)); b.append(n); }
   }
-  if (!q.auto && open(q) && !q.completedAt) { // Orbek cannot do this one: it has to be done by hand
-    const n = el('div', 'note manual'); n.append(icon('alert'), DICT['q.manual.' + q.task] || t('q.manual')); b.append(n);
-  }
+  if (!q.auto && open(q) && !q.completedAt) b.append(manualNote(q)); // Orbek cannot do this one: it has to be done by hand
   for (const rw of q.rewards || []) b.append(rewardEl(rw));
   const acts = actions(q); if (acts.childNodes.length) b.append(acts);
   c.append(hero, b);

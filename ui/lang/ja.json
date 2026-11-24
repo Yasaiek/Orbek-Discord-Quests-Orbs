@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "アクティビティでの実績",
 "task.other": "その他のクエスト",
 "q.manual": "このクエストは Orbek だけでは完了できません。手動で行う必要があります。自動モードはスキップします。",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "これは Orbek にはできません。アクティビティ（Discord 内のゲーム）で自分で実績を獲得してください。自動モードはスキップします。",
-"plug.current": "最新"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "アクティビティ「{act}」（Discord 内で起動するミニゲーム）で実績を獲得する必要があります。進行状況はアクティビティ自身がサーバーで記録し、Discord はそこからしか受け付けません。Orbek やプラグインからは送れないため、自動モードはスキップします。",
+"plug.current": "最新",
+"q.manualT": "自分で行う",
+"q.manualGoal": "目標: {g}",
+"q.manualN": "必要数: {n}",
+"q.show": "Discord で表示"
 }

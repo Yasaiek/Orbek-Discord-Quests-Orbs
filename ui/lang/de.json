@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Erfolg in einer Aktivität",
 "task.other": "Andere Aufgabe",
 "q.manual": "Orbek kann diese Aufgabe nicht selbst erledigen – sie muss von Hand gemacht werden. Der Automat überspringt sie.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Das schafft Orbek nicht: Den Erfolg musst du selbst in der Aktivität (dem Spiel in Discord) holen. Der Automat überspringt sie.",
-"plug.current": "Aktuell"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Du musst in der Aktivität {act} einen Erfolg holen – einem Minispiel, das in Discord läuft. Den Fortschritt zählt die Aktivität selbst auf ihren Servern, und Discord nimmt ihn nur von dort an, nicht von Orbek oder dem Plugin – deshalb überspringt der Automat sie.",
+"plug.current": "Aktuell",
+"q.manualT": "Selbst erledigen",
+"q.manualGoal": "Ziel: {g}",
+"q.manualN": "Benötigt: {n}",
+"q.show": "In Discord zeigen"
 }

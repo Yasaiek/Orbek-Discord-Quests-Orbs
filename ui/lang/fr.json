@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Succès dans une activité",
 "task.other": "Autre tâche",
 "q.manual": "Orbek ne peut pas faire cette tâche seul – il faut la faire à la main. L'automate l'ignore.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek ne peut pas la faire : le succès doit être obtenu par vous dans l'activité (le jeu lancé dans Discord). L'automate l'ignore.",
-"plug.current": "À jour"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Il faut obtenir un succès dans l'activité {act} – un mini-jeu lancé dans Discord. C'est l'activité elle-même qui enregistre la progression sur ses serveurs, et Discord ne l'accepte que d'elle, pas d'Orbek ni du plugin – l'automate l'ignore donc.",
+"plug.current": "À jour",
+"q.manualT": "À faire soi-même",
+"q.manualGoal": "Objectif : {g}",
+"q.manualN": "Nécessaire : {n}",
+"q.show": "Afficher dans Discord"
 }

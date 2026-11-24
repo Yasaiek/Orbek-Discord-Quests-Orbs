@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.15
+- Hand-only quests ("Achievement in an activity") now say exactly why: the achievement has to be earned in the activity (a mini-game run inside Discord), the activity itself records the progress on its servers, and Discord accepts it only from there – not from Orbek or the plugin.
+- The card shows the task's goal in Discord's own words (when Discord gives it) and has a "Show in Discord" button that opens Discord's quest page on that quest.
+- Plugin 0.4.4: reports what each task asks and can open a quest in Discord.
+
 ## 0.4.14
 - "What's new" shows file names cleanly (no code marks or doubled backslashes).
 

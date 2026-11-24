@@ -18,7 +18,7 @@ import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, Rest
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.3";
+const PLUGIN_VERSION = "0.4.4";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -33,6 +33,8 @@ interface Quest {
     rewards: Reward[]; hero: string; icon: string;
     startsAt: number; expiresAt: number; enrolledAt: number; completedAt: number; claimedAt: number;
     auto: boolean;
+    // what the task asks, as Discord describes it (for tasks Orbek cannot do: shown on the card)
+    taskTitle: string; taskDesc: string; actApp: string; actName: string; actUrl: string;
 }
 
 const CDN = "https://cdn.discordapp.com/";
@@ -71,6 +73,9 @@ function normalize(raw: any): Quest | null {
     let progress = Number(us.progress?.[task]?.value ?? 0);
     if (!progress && c.configVersion === 1) progress = Number(us.streamProgressSeconds ?? 0);
     const target = Number(tasks[task]?.target ?? 0);
+    const tk = tasks[task] ?? {};
+    const tc = c.taskConfigV2 ?? c.taskConfig ?? {};
+    const app = tk.applications?.[0] ?? {};
     return {
         id: q.id,
         name: c.messages?.questName ?? c.messages?.gameTitle ?? "Quest",
@@ -93,7 +98,12 @@ function normalize(raw: any): Quest | null {
         enrolledAt: time(us.enrolledAt),
         completedAt: time(us.completedAt),
         claimedAt: time(us.claimedAt),
-        auto: TASK_ORDER.includes(task) && target > 0
+        auto: TASK_ORDER.includes(task) && target > 0,
+        taskTitle: String(tk.title ?? tk.messages?.title ?? ""),
+        taskDesc: String(tk.description ?? tk.messages?.description ?? ""),
+        actApp: String(tc.developerApplicationId ?? app.id ?? ""),
+        actName: String(app.name ?? c.application?.name ?? ""),
+        actUrl: String(tc.enrollmentUrl ?? "")
     };
 }
 
@@ -315,6 +325,24 @@ function claimShow() {
         if (++tries < 40) claimFindT = setTimeout(find, 500); // strona zadań jeszcze się ładuje
     };
     find();
+}
+
+// otwiera stronę zadań Discorda i podświetla to zadanie na kilka sekund
+function showQuest(id: string) {
+    openQuests();
+    claimCss();
+    let tries = 0;
+    const find = () => {
+        const card = questCard(id);
+        if (card) {
+            card.classList.add(HL);
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            setTimeout(() => card.classList.remove(HL), 6000);
+            return;
+        }
+        if (++tries < 40) setTimeout(find, 500);
+    };
+    setTimeout(find, 700);
 }
 
 function claimNext(skip = false) {
@@ -563,6 +591,9 @@ async function doCmd(c: any) {
         }
         case "stopAll":
             stopAll();
+            break;
+        case "show": // pokaż zadanie w Discordzie (do zrobienia ręcznie)
+            if (c.id) showQuest(c.id);
             break;
         case "claim": // jedna nagroda albo wszystkie po kolei
             if (c.ids?.length) claimStart(c.ids);

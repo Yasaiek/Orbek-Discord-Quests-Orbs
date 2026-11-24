@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Etkinlikte başarım",
 "task.other": "Diğer görev",
 "q.manual": "Orbek bu görevi kendi başına yapamaz – elle yapılması gerekir. Otomat onu atlar.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Bunu Orbek yapamaz: başarımı etkinlikte (Discord içindeki oyunda) kendin kazanmalısın. Otomat onu atlar.",
-"plug.current": "Güncel"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "{act} etkinliğinde – Discord içinde açılan bir mini oyunda – bir başarım kazanman gerekiyor. İlerlemeyi etkinliğin kendisi kendi sunucularında kaydeder ve Discord bunu yalnızca ondan kabul eder, Orbek'ten veya eklentiden değil – bu yüzden otomat bu görevi atlar.",
+"plug.current": "Güncel",
+"q.manualT": "Kendin yap",
+"q.manualGoal": "Hedef: {g}",
+"q.manualN": "Gereken: {n}",
+"q.show": "Discord'da göster"
 }

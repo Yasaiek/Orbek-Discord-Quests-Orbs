@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Osiągnięcie w aktywności",
 "task.other": "Inne zadanie",
 "q.manual": "Orbek nie umie zrobić tego zadania sam – trzeba je wykonać ręcznie. Automat je pomija.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Tego Orbek nie zrobi: osiągnięcie trzeba zdobyć samemu w aktywności (grze odpalanej w Discordzie). Automat je pomija.",
-"plug.current": "Aktualny"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Trzeba zdobyć osiągnięcie w aktywności {act} – mini-grze odpalanej w Discordzie. Postęp zalicza sama aktywność na swoich serwerach i Discord przyjmuje go tylko od niej, nie od Orbka ani pluginu – dlatego automat to zadanie pomija.",
+"plug.current": "Aktualny",
+"q.manualT": "Do zrobienia samemu",
+"q.manualGoal": "Cel: {g}",
+"q.manualN": "Potrzeba: {n}",
+"q.show": "Pokaż w Discordzie"
 }

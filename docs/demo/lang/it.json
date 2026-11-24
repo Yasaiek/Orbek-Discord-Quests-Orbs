@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Obiettivo in un'attività",
 "task.other": "Altra missione",
 "q.manual": "Orbek non può completare questa missione da solo: va fatta a mano. L'automatico la salta.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek non può farla: l'obiettivo va ottenuto da te nell'attività (il gioco dentro Discord). L'automatico la salta.",
-"plug.current": "Aggiornato"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Devi ottenere un obiettivo nell'attività {act}, un minigioco avviato dentro Discord. È l'attività stessa a registrare i progressi sui suoi server e Discord li accetta solo da lì, non da Orbek né dal plugin: per questo l'automatico la salta.",
+"plug.current": "Aggiornato",
+"q.manualT": "Da fare a mano",
+"q.manualGoal": "Obiettivo: {g}",
+"q.manualN": "Serve: {n}",
+"q.show": "Mostra in Discord"
 }

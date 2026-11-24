@@ -52,6 +52,7 @@ func (e *Engine) view() map[string]any {
 			"target": q.Target, "progress": q.Progress, "rewards": q.Rewards, "hero": q.Hero, "icon": q.Icon,
 			"startsAt": q.Starts, "expiresAt": q.Expires, "enrolledAt": q.Enrolled, "completedAt": q.Completed, "claimedAt": q.Claimed,
 			"auto": q.Auto, "orbs": q.orbs(), "cosmetic": q.cosmetic(),
+			"taskTitle": q.TaskTitle, "taskDesc": q.TaskDesc, "actName": q.ActName, "actUrl": q.ActURL,
 		})
 	}
 	queue := s.Queue
@@ -110,7 +111,7 @@ func (s *server) handleOp(r opReq) map[string]any {
 			ids[i] = w[i].ID
 		}
 		e.push(Cmd{Op: "claim", IDs: ids})
-	case "enroll", "stop", "claim":
+	case "enroll", "stop", "claim", "show":
 		if r.ID == "" {
 			return map[string]any{"ok": false}
 		}

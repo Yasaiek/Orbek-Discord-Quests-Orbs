@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "Logro en una actividad",
 "task.other": "Otra tarea",
 "q.manual": "Orbek no puede hacer esta tarea solo: hay que hacerla a mano. El automático la omite.",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek no puede hacerla: el logro tienes que conseguirlo tú en la actividad (el juego dentro de Discord). El automático la omite.",
-"plug.current": "Actualizado"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Hay que conseguir un logro en la actividad {act}, un minijuego que se abre dentro de Discord. La propia actividad registra el progreso en sus servidores y Discord solo lo acepta de ella, no de Orbek ni del plugin; por eso el automático la omite.",
+"plug.current": "Actualizado",
+"q.manualT": "Hazlo tú",
+"q.manualGoal": "Objetivo: {g}",
+"q.manualN": "Necesario: {n}",
+"q.show": "Mostrar en Discord"
 }

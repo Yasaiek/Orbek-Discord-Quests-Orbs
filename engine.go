@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var version = "0.4.14"
+var version = "0.4.15"
 
 const appName = "Orbek"
 
@@ -74,6 +74,12 @@ type Quest struct {
 	Completed int64    `json:"completedAt"`
 	Claimed   int64    `json:"claimedAt"`
 	Auto      bool     `json:"auto"` // the plugin knows how to do this kind of task
+	// what the task asks, as Discord describes it (shown for tasks Orbek cannot do)
+	TaskTitle string `json:"taskTitle"`
+	TaskDesc  string `json:"taskDesc"`
+	ActApp    string `json:"actApp"`
+	ActName   string `json:"actName"`
+	ActURL    string `json:"actUrl"`
 }
 
 type Reward struct {
@@ -152,7 +158,7 @@ type Event struct {
 
 // Cmd: something the user asked for, waiting to be picked up by the plugin.
 type Cmd struct {
-	Op  string   `json:"op"` // refresh | enroll | run | stop | stopAll | claim
+	Op  string   `json:"op"` // refresh | enroll | run | stop | stopAll | claim | show
 	ID  string   `json:"id,omitempty"`
 	IDs []string `json:"ids,omitempty"`
 }

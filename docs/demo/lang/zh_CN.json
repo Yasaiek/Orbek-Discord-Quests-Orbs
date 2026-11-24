@@ -313,6 +313,10 @@
 "task.ACHIEVEMENT_IN_ACTIVITY": "活动中的成就",
 "task.other": "其他任务",
 "q.manual": "Orbek 无法自动完成此任务，需要手动完成。自动模式会跳过它。",
-"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek 无法完成此任务：需要你自己在活动（Discord 内的游戏）中获得成就。自动模式会跳过它。",
-"plug.current": "已是最新"
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "需要在活动 {act}（在 Discord 内启动的小游戏）中获得成就。进度由活动本身在其服务器上记录，Discord 只接受来自它的进度，不接受 Orbek 或插件提交的——因此自动模式会跳过此任务。",
+"plug.current": "已是最新",
+"q.manualT": "需要手动完成",
+"q.manualGoal": "目标：{g}",
+"q.manualN": "需要：{n}",
+"q.show": "在 Discord 中显示"
 }
