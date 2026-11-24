@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var version = "0.4.13"
+var version = "0.4.14"
 
 const appName = "Orbek"
 

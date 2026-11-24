@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.14
+- "What's new" shows file names cleanly (no code marks or doubled backslashes).
+
 ## 0.4.13
 - The plugin install button is off (shows "Up to date") while Discord already runs the newest plugin; Orbek also refuses a reinstall then.
 - Quests Orbek can't do by itself (e.g. "Achievement in an activity", where you have to earn the achievement yourself) get a clear note on the card, a proper name instead of the raw type, and a plain count (0 / 1) instead of minutes. The automat never picks them.
@@ -16,7 +19,7 @@
 - Plugin 0.4.3: while a quest pretends to play a game, the games you really play stay visible to Discord (its overlay no longer loses them), and the pretend game gets an id no real program can have.
 
 ## 0.4.10
-- Orbek keeps its files in its own Orbek-data folder. With Loorek in the same folder both programs shared data\\settings.json and overwrote each other's settings; Orbek's files are moved over on the first start.
+- Orbek keeps its files in its own Orbek-data folder. With Loorek in the same folder both programs shared `data\settings.json` and overwrote each other's settings; Orbek's files are moved over on the first start.
 
 ## 0.4.9
 - Smoother CPU and RAM charts: averaged values drawn as a soft curve with a round marker, never cut off at the edges.

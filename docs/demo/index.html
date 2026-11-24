@@ -490,7 +490,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.4.13"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.14"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -1061,7 +1061,7 @@ async function whatsNew() {
   const vers = []; let cur = null;
   for (const line of md.split(/\r?\n/)) {
     const h = /^##\s+v?([0-9][^\s]*)/.exec(line); if (h) { cur = { v: h[1], items: [] }; vers.push(cur); continue; }
-    const b = /^\s*[-*]\s+(.*)/.exec(line); if (b && cur) cur.items.push(b[1]);
+    const b = /^\s*[-*]\s+(.*)/.exec(line); if (b && cur) cur.items.push(b[1].replace(/`/g, ''));
   }
   const list = vers.filter((x) => vnum(x.v) > vnum(from) && vnum(x.v) <= vnum(S.version));
   if (!list.length) return;
