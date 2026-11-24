@@ -321,5 +321,6 @@
 "q.show": "In Discord zeigen",
 "upd.okNow": "✓ Aktuell",
 "upd.failShort": "Fehlgeschlagen",
-"upd.checkedAt": "geprüft {t}"
+"upd.checkedAt": "geprüft {t}",
+"inst.allOk": "Alles installiert – Plugin {v} läuft in Discord. Hier ist nichts zu tun."
 }

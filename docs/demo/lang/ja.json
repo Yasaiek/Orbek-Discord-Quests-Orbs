@@ -321,5 +321,6 @@
 "q.show": "Discord で表示",
 "upd.okNow": "✓ 最新です",
 "upd.failShort": "失敗しました",
-"upd.checkedAt": "確認: {t}"
+"upd.checkedAt": "確認: {t}",
+"inst.allOk": "すべてインストール済みです。プラグイン {v} は Discord で動作中です。ここで行うことはありません。"
 }

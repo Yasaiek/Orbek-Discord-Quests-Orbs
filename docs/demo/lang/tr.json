@@ -321,5 +321,6 @@
 "q.show": "Discord'da göster",
 "upd.okNow": "✓ Güncel",
 "upd.failShort": "Başarısız",
-"upd.checkedAt": "kontrol: {t}"
+"upd.checkedAt": "kontrol: {t}",
+"inst.allOk": "Her şey kurulu – eklenti {v} Discord'da çalışıyor. Burada yapılacak bir şey yok."
 }

@@ -321,5 +321,6 @@
 "q.show": "Pokaż w Discordzie",
 "upd.okNow": "✓ Masz najnowszą",
 "upd.failShort": "Nie udało się",
-"upd.checkedAt": "sprawdzono {t}"
+"upd.checkedAt": "sprawdzono {t}",
+"inst.allOk": "Wszystko zainstalowane – plugin {v} działa w Discordzie. Nic tu nie trzeba robić."
 }

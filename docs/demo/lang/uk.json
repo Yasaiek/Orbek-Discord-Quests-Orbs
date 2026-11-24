@@ -321,5 +321,6 @@
 "q.show": "Показати в Discord",
 "upd.okNow": "✓ Остання версія",
 "upd.failShort": "Не вдалося",
-"upd.checkedAt": "перевірено о {t}"
+"upd.checkedAt": "перевірено о {t}",
+"inst.allOk": "Усе встановлено — плагін {v} працює в Discord. Тут нічого робити не треба."
 }

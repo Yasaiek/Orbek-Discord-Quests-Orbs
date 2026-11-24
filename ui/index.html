@@ -314,6 +314,11 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
 @keyframes rot { to { transform: rotate(360deg); } }
 .console { font: 12px/1.6 "Cascadia Mono", Consolas, monospace; background: #080912; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; max-height: 260px; overflow-y: auto; color: #b8bdd8; white-space: pre-wrap; }
 .hero2 { display: flex; gap: 18px; align-items: center; background: linear-gradient(120deg, rgba(88,101,242,.18), rgba(163,91,255,.08) 60%, transparent); border: 1px solid rgba(88,101,242,.3); border-radius: 18px; padding: 20px 22px; margin-bottom: 18px; flex-wrap: wrap; }
+.hero2 .okbig { display: none; width: 46px; height: 46px; border-radius: 14px; place-items: center; color: #d2f9e5; background: linear-gradient(135deg, rgba(62,207,142,.35), rgba(24,160,201,.2)); border: 1px solid rgba(62,207,142,.45); flex-shrink: 0; }
+.hero2 .okbig svg.i { width: 24px; height: 24px; }
+#p-setup.fine .okbig { display: grid; }
+#p-setup.fine .hero2 { border-color: rgba(62,207,142,.35); background: linear-gradient(135deg, rgba(62,207,142,.12), rgba(24,160,201,.05)); }
+#p-setup.fine #instSteps, #p-setup.fine #instLog { display: none; }
 .hero2 .grow { flex: 1; min-width: 280px; } .hero2 h2 { margin: 0 0 6px; } .hero2 p { margin: 0; color: var(--sub); }
 .guide { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
 .gi { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; }
@@ -425,6 +430,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
   <section class="page" id="p-setup">
     <h1 data-i="nav.setup"></h1><p class="lead" data-i="inst.lead"></p>
     <div class="hero2">
+      <span class="okbig"><i data-ic="check"></i></span>
       <div class="grow"><h2 data-i="inst.title"></h2><p id="instState"></p></div>
       <button class="btn pri lg" id="instAll"><i data-ic="setup"></i><span data-i="inst.all"></span></button>
       <button class="btn lg" id="instPlug"><i data-ic="plug"></i><span data-i="inst.plugin"></span></button>
@@ -935,11 +941,24 @@ function renderLog() {
 }
 
 const STEPS = { node: 'inst.s.node', vencord: 'inst.s.vencord', plugin: 'inst.s.plugin', build: 'inst.s.build', inject: 'inst.s.inject', enable: 'inst.s.enable' };
+// everything installed and Discord runs the newest plugin: the Installation page has nothing to do, so it
+// leaves the menu (it comes back by itself when the plugin is old, or Discord has not connected for a minute,
+// e.g. after a Discord update removed Vencord)
+let setupOkAt = 0;
+function setupFine() {
+  const st = S.setup || {};
+  if (S.connected && S.plugin && vnum(S.plugin) >= vnum(S.pluginLatest) && !st.running && !st.err) setupOkAt = Date.now();
+  return !!setupOkAt && Date.now() - setupOkAt < 60000 && !st.running && !st.err;
+}
 function renderSetup() {
   const st = S.setup || {}, steps = st.steps && st.steps.length ? st.steps : Object.keys(STEPS).map((k) => ({ key: k, state: 'wait' }));
-  $('instState').textContent = st.running ? t('inst.running') : st.done ? t('inst.done') : st.err ? t('inst.failed', { e: st.err }) : S.connected ? t('inst.connected', { v: S.plugin || '?' }) : t('inst.intro');
+  const fine = setupFine(), navB = document.querySelector('nav button[data-p="setup"]');
+  navB.hidden = fine && !navB.classList.contains('on'); // never pulled away while it is open
+  $('p-setup').classList.toggle('fine', fine);
+  $('instState').textContent = st.running ? t('inst.running') : st.err ? t('inst.failed', { e: st.err }) : fine ? t('inst.allOk', { v: S.plugin }) : st.done ? t('inst.done') : S.connected ? t('inst.connected', { v: S.plugin || '?' }) : t('inst.intro');
   $('instAll').disabled = $('instPlug').disabled = !!st.running;
-  $('instPlug').hidden = !S.vencord || !!(S.connected && S.plugin && vnum(S.plugin) >= vnum(S.pluginLatest));
+  $('instAll').hidden = fine;
+  $('instPlug').hidden = fine || !S.vencord || !!(S.connected && S.plugin && vnum(S.plugin) >= vnum(S.pluginLatest));
   const box = $('instSteps'), sig = JSON.stringify(steps) + LANG;
   if (box.dataset.sig !== sig) {
     box.dataset.sig = sig; box.textContent = '';
