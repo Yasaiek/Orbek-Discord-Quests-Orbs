@@ -309,5 +309,10 @@
 "L.dataMoved": "Les données sont maintenant dans %s.",
 "L.dataMoveFail": "Impossible de redémarrer pour déplacer les données : %v",
 "plug.wait": "Plugin {v} installé – en attente du redémarrage de Discord…",
-"plug.stuck": "Discord utilise encore le plugin {a} alors que {b} a été installé. Redémarrez Discord ou réinstallez."
+"plug.stuck": "Discord utilise encore le plugin {a} alors que {b} a été installé. Redémarrez Discord ou réinstallez.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Succès dans une activité",
+"task.other": "Autre tâche",
+"q.manual": "Orbek ne peut pas faire cette tâche seul – il faut la faire à la main. L'automate l'ignore.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek ne peut pas la faire : le succès doit être obtenu par vous dans l'activité (le jeu lancé dans Discord). L'automate l'ignore.",
+"plug.current": "À jour"
 }

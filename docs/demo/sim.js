@@ -14,15 +14,16 @@
     ['d6', 'Play Rally Kings', 'Rally Kings', 'Gearbox Lane', 'PLAY_ON_DESKTOP', 900, 0, [rw(4, '', 1000)], 140],
     ['d7', 'Tide Tactics – watch the gameplay video', 'Tide Tactics', 'Harbor', 'WATCH_VIDEO', 120, 0, [rw(4, '', 500)], 70],
     ['d8', 'Play Garden Golf', 'Garden Golf', 'Discord', 'PLAY_ACTIVITY', 900, 0, [rw(3, 'Avatar decoration: Clover', 0, 'clover')], 20],
+    ['d9', 'Win a round of Pocket Chess', 'Pocket Chess', 'Discord', 'ACHIEVEMENT_IN_ACTIVITY', 1, 0, [rw(4, '', 700)], 110],
   ].map(([id, name, game, publisher, task, target, progress, rewards, hours, done]) => ({
-    id, name, game, publisher, task, target, progress, rewards, hero: 'art/' + id + '.svg', startsAt: now - 40 * H, expiresAt: now + hours * H,
-    enrolledAt: progress ? now - 2 * H : 0, completedAt: done ? now - H : 0, claimedAt: 0, auto: true,
+    id, name, game, publisher, task, target, progress, rewards, hero: 'art/' + (id === 'd9' ? 'd3' : id) + '.svg', startsAt: now - 40 * H, expiresAt: now + hours * H,
+    enrolledAt: progress ? now - 2 * H : 0, completedAt: done ? now - H : 0, claimedAt: 0, auto: task !== 'ACHIEVEMENT_IN_ACTIVITY',
     orbs: rewards.reduce((n, r) => n + (r.type === 4 ? r.orbs : 0), 0), cosmetic: rewards.some((r) => r.type === 3),
   }));
   const S = {
     app: 'Orbek', version: window.ORBEK_VERSION || '0.0.0', lang, winGen: 0, connected: true, lastAt: now, user: { id: '1', name: 'Demo', avatar: '' },
     usage: { cpu: 0.4, ram: 96, ramPct: 0.6, procs: 6, cpuMin: 0.1, cpuMax: 2.4, ramMin: 88, ramMax: 112, histCpu: Array.from({ length: 60 }, (_, i) => +(0.45 + Math.sin(i / 9) * 0.18 + Math.sin(i / 3.7) * 0.05).toFixed(2)), histRam: Array.from({ length: 60 }, (_, i) => +(94 + Math.sin(i / 14) * 3 + i / 30).toFixed(1)) }, rpc: { state: 'idle', ready: true }, orbTile: '', orbGlyph: '',
-    games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + q.id + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
+    games: Q.map((q) => ({ name: q.game, last: now, icon: 'art/' + (q.id === 'd9' ? 'd3' : q.id) + '.svg' })).filter((g, i, a) => a.findIndex((x) => x.name === g.name) === i),
     loaded: true, err: '', orbs: 1240, runs: [], queue: [], desktop: true, plugin: '0.0.0', pluginLatest: '0.0.0', vencord: 'C:\\Users\\you\\Documents\\Vencord', dataDir: 'C:\\Users\\you\\AppData\\Local\\Yasaiek\\Orbek', dataDefault: 'C:\\Users\\you\\AppData\\Local\\Yasaiek\\Orbek', dataCustom: false,
     quests: Q, log: [{ t: now, l: 'ok', m: 'Orbek started.' }],
     settings: { lang: '', autoMode: true, autoAll: false, autoKinds: ['orbs', 'cosmetic', 'ingame', 'code', 'other'], autoTasks: ['video', 'play', 'activity'], autoGames: 'all', gameList: [], refreshMin: 10, clickSelf: true, expiryWarn: true, expiryHours: 24, rpcOn: true, rpcQuest: true, rpcOrbs: true, rpcToGet: true, rpcBtn: true, openOnStart: true, autostart: false, parallel: 0, autoUpdate: true },

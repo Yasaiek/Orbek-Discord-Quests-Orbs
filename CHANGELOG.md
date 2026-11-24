@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.13
+- The plugin install button is off (shows "Up to date") while Discord already runs the newest plugin; Orbek also refuses a reinstall then.
+- Quests Orbek can't do by itself (e.g. "Achievement in an activity", where you have to earn the achievement yourself) get a clear note on the card, a proper name instead of the raw type, and a plain count (0 / 1) instead of minutes. The automat never picks them.
+
 ## 0.4.12
 - After a plugin update Orbek no longer offers the same update again while Discord restarts: it shows that it waits for Discord to come back with the new plugin, and the install buttons stay off meanwhile.
 - If Discord still runs the old plugin a few minutes after the update, Orbek says so (restart Discord or install again).

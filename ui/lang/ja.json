@@ -309,5 +309,10 @@
 "L.dataMoved": "データは %s にあります。",
 "L.dataMoveFail": "データ移動のための再起動に失敗しました: %v",
 "plug.wait": "プラグイン {v} をインストールしました。Discord の起動を待っています…",
-"plug.stuck": "{b} をインストールしましたが、Discord はまだプラグイン {a} を使っています。Discord を再起動するか、もう一度インストールしてください。"
+"plug.stuck": "{b} をインストールしましたが、Discord はまだプラグイン {a} を使っています。Discord を再起動するか、もう一度インストールしてください。",
+"task.ACHIEVEMENT_IN_ACTIVITY": "アクティビティでの実績",
+"task.other": "その他のクエスト",
+"q.manual": "このクエストは Orbek だけでは完了できません。手動で行う必要があります。自動モードはスキップします。",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "これは Orbek にはできません。アクティビティ（Discord 内のゲーム）で自分で実績を獲得してください。自動モードはスキップします。",
+"plug.current": "最新"
 }

@@ -309,5 +309,10 @@
 "L.dataMoved": "Os dados agora estão em %s.",
 "L.dataMoveFail": "Não foi possível reiniciar para mover os dados: %v",
 "plug.wait": "Plugin {v} instalado – aguardando o Discord iniciar com ele…",
-"plug.stuck": "O Discord ainda usa o plugin {a}, embora {b} tenha sido instalado. Reinicie o Discord ou instale de novo."
+"plug.stuck": "O Discord ainda usa o plugin {a}, embora {b} tenha sido instalado. Reinicie o Discord ou instale de novo.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Conquista em uma atividade",
+"task.other": "Outra missão",
+"q.manual": "O Orbek não consegue fazer esta missão sozinho – ela precisa ser feita à mão. O automático a ignora.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "O Orbek não consegue fazê-la: a conquista precisa ser obtida por você na atividade (o jogo dentro do Discord). O automático a ignora.",
+"plug.current": "Atualizado"
 }

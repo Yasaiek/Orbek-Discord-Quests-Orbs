@@ -309,5 +309,10 @@
 "L.dataMoved": "I dati ora sono in %s.",
 "L.dataMoveFail": "Impossibile riavviare per spostare i dati: %v",
 "plug.wait": "Plugin {v} installato – attendo che Discord si avvii con esso…",
-"plug.stuck": "Discord usa ancora il plugin {a} anche se è stato installato {b}. Riavvia Discord o reinstalla."
+"plug.stuck": "Discord usa ancora il plugin {a} anche se è stato installato {b}. Riavvia Discord o reinstalla.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Obiettivo in un'attività",
+"task.other": "Altra missione",
+"q.manual": "Orbek non può completare questa missione da solo: va fatta a mano. L'automatico la salta.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek non può farla: l'obiettivo va ottenuto da te nell'attività (il gioco dentro Discord). L'automatico la salta.",
+"plug.current": "Aggiornato"
 }

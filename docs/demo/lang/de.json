@@ -309,5 +309,10 @@
 "L.dataMoved": "Die Daten liegen jetzt in %s.",
 "L.dataMoveFail": "Neustart zum Verschieben der Daten fehlgeschlagen: %v",
 "plug.wait": "Plugin {v} installiert – warte, bis Discord damit startet…",
-"plug.stuck": "Discord nutzt noch Plugin {a}, obwohl {b} installiert wurde. Starte Discord neu oder installiere erneut."
+"plug.stuck": "Discord nutzt noch Plugin {a}, obwohl {b} installiert wurde. Starte Discord neu oder installiere erneut.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Erfolg in einer Aktivität",
+"task.other": "Andere Aufgabe",
+"q.manual": "Orbek kann diese Aufgabe nicht selbst erledigen – sie muss von Hand gemacht werden. Der Automat überspringt sie.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Das schafft Orbek nicht: Den Erfolg musst du selbst in der Aktivität (dem Spiel in Discord) holen. Der Automat überspringt sie.",
+"plug.current": "Aktuell"
 }

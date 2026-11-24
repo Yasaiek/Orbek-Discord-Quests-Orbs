@@ -309,5 +309,10 @@
 "L.dataMoved": "数据现在位于 %s。",
 "L.dataMoveFail": "无法重新启动以移动数据：%v",
 "plug.wait": "插件 {v} 已安装，正在等待 Discord 以新版本启动…",
-"plug.stuck": "虽然已安装 {b}，Discord 仍在使用插件 {a}。请重启 Discord 或重新安装。"
+"plug.stuck": "虽然已安装 {b}，Discord 仍在使用插件 {a}。请重启 Discord 或重新安装。",
+"task.ACHIEVEMENT_IN_ACTIVITY": "活动中的成就",
+"task.other": "其他任务",
+"q.manual": "Orbek 无法自动完成此任务，需要手动完成。自动模式会跳过它。",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek 无法完成此任务：需要你自己在活动（Discord 内的游戏）中获得成就。自动模式会跳过它。",
+"plug.current": "已是最新"
 }

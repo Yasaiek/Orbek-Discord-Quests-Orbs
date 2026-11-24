@@ -309,5 +309,10 @@
 "L.dataMoved": "Dane są teraz w %s.",
 "L.dataMoveFail": "Nie udało się uruchomić ponownie, by przenieść dane: %v",
 "plug.wait": "Plugin {v} zainstalowany – czekam, aż Discord uruchomi się z nową wersją…",
-"plug.stuck": "Discord dalej ma plugin {a}, choć zainstalowano {b}. Uruchom Discorda ponownie albo zainstaluj jeszcze raz."
+"plug.stuck": "Discord dalej ma plugin {a}, choć zainstalowano {b}. Uruchom Discorda ponownie albo zainstaluj jeszcze raz.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Osiągnięcie w aktywności",
+"task.other": "Inne zadanie",
+"q.manual": "Orbek nie umie zrobić tego zadania sam – trzeba je wykonać ręcznie. Automat je pomija.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Tego Orbek nie zrobi: osiągnięcie trzeba zdobyć samemu w aktywności (grze odpalanej w Discordzie). Automat je pomija.",
+"plug.current": "Aktualny"
 }

@@ -309,5 +309,10 @@
 "L.dataMoved": "Veriler artık %s konumunda.",
 "L.dataMoveFail": "Verileri taşımak için yeniden başlatılamadı: %v",
 "plug.wait": "Eklenti {v} kuruldu – Discord'un onunla açılması bekleniyor…",
-"plug.stuck": "Discord, {b} kurulmasına rağmen hâlâ {a} eklentisini kullanıyor. Discord'u yeniden başlatın veya tekrar kurun."
+"plug.stuck": "Discord, {b} kurulmasına rağmen hâlâ {a} eklentisini kullanıyor. Discord'u yeniden başlatın veya tekrar kurun.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Etkinlikte başarım",
+"task.other": "Diğer görev",
+"q.manual": "Orbek bu görevi kendi başına yapamaz – elle yapılması gerekir. Otomat onu atlar.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Bunu Orbek yapamaz: başarımı etkinlikte (Discord içindeki oyunda) kendin kazanmalısın. Otomat onu atlar.",
+"plug.current": "Güncel"
 }

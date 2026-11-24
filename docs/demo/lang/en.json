@@ -309,5 +309,10 @@
 "L.dataMoved": "Data is now in %s.",
 "L.dataMoveFail": "Could not restart to move the data: %v",
 "plug.wait": "Plugin {v} installed – waiting for Discord to start with it…",
-"plug.stuck": "Discord still runs plugin {a} although {b} was installed. Restart Discord, or install again."
+"plug.stuck": "Discord still runs plugin {a} although {b} was installed. Restart Discord, or install again.",
+"task.ACHIEVEMENT_IN_ACTIVITY": "Achievement in an activity",
+"task.other": "Other task",
+"q.manual": "Orbek can't do this task on its own – it has to be done by hand. The automat skips it.",
+"q.manual.ACHIEVEMENT_IN_ACTIVITY": "Orbek can't do this one: you have to earn the achievement yourself in the activity (the game played inside Discord). The automat skips it.",
+"plug.current": "Up to date"
 }

@@ -212,6 +212,12 @@ func (s *server) handleOp(r opReq) map[string]any {
 	case "clearLog":
 		e.log.clear()
 	case "pluginInstall":
+		e.mu.Lock()
+		current := e.connectedLocked() && e.last.Plugin != "" && !newer(pluginVersion(), e.last.Plugin)
+		e.mu.Unlock()
+		if current { // Discord already runs the newest plugin
+			return map[string]any{"ok": false, "err": "current"}
+		}
 		return map[string]any{"ok": e.startSetup(false)}
 	case "setup":
 		return map[string]any{"ok": e.startSetup(true)}
