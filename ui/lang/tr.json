@@ -322,14 +322,5 @@
 "upd.okNow": "✓ Güncel",
 "upd.failShort": "Başarısız",
 "upd.checkedAt": "kontrol: {t}",
-"inst.allOk": "Her şey kurulu – eklenti {v} Discord'da çalışıyor. Burada yapılacak bir şey yok.",
-"rpc.test": "Discord durum testi",
-"rpc.testHint": "Discord'un kabul edip etmediğini görmek için 30 sn test durumu gösterir.",
-"rpc.testBtn": "Test et",
-"rpc.testing": "Test ediliyor… {s} sn",
-"rpc.testOk": "✓ Çalışıyor – Discord durumu kabul etti. Profilinde görünmüyorsa Discord'da aç: Ayarlar → Etkinlik Gizliliği → algılanan etkinlikleri paylaş.",
-"rpc.testBad": "✗ Çalışmıyor: {e}",
-"rpc.testD": "Durum testi",
-"rpc.testS": "Bunu görüyorsan çalışıyor ✓",
-"L.rpcTest": "Discord durum testi (30 sn)"
+"inst.allOk": "Her şey kurulu – eklenti {v} Discord'da çalışıyor. Burada yapılacak bir şey yok."
 }

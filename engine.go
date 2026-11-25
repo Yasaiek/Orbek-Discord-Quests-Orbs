@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var version = "0.4.19"
+var version = "0.4.20"
 
 const appName = "Orbek"
 
@@ -184,18 +184,17 @@ type Engine struct {
 	quit    chan struct{}
 	closing bool // quitting: open windows close themselves
 
-	games        map[string]int64 // games seen in quests (name → last seen)
-	gameIcons    map[string]string
-	warned       map[string]int64 // quests already reminded of
-	alert        expiryAlert      // the last reminder (the panel plays a sound for a new one)
-	rpcState     string           // Discord activity: off | noid | idle | nodiscord | badid | refused | ok
-	rpcTestUntil time.Time        // "Test" in the settings: a test status is shown until then
-	rpcErr       string           // what went wrong the last time, for the settings
-	gamesSaved   time.Time
-	onQuit       func()
-	winGen       int
-	apiKey       string
-	port         int
+	games      map[string]int64 // games seen in quests (name → last seen)
+	gameIcons  map[string]string
+	warned     map[string]int64 // quests already reminded of
+	alert      expiryAlert      // the last reminder (the panel plays a sound for a new one)
+	rpcState   string           // Discord activity: off | noid | idle | nodiscord | badid | refused | ok
+	rpcErr     string           // what went wrong the last time, for the settings
+	gamesSaved time.Time
+	onQuit     func()
+	winGen     int
+	apiKey     string
+	port       int
 }
 
 func newEngine(dir string) *Engine {

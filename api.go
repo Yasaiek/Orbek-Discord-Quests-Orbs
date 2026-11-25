@@ -67,7 +67,7 @@ func (e *Engine) view() map[string]any {
 		"app": appName, "closing": e.closing, "dataDir": e.dir, "dataDefault": dataDirIn(defaultRoot()), "dataCustom": readLocation().Root != "", "version": version, "lang": curLang.Load(), "winGen": e.winGen,
 		"connected": e.connectedLocked(), "lastAt": ms(e.lastAt), "user": s.User, "loaded": s.Loaded, "err": s.Err,
 		"orbs": s.Orbs, "runs": runs, "queue": queue, "desktop": s.Desktop, "plugin": s.Plugin, "pluginWait": e.plugWaitLocked(), "pluginStuck": e.plugStuckLocked(),
-		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != "", "err": e.rpcErr, "test": max(0, time.Until(e.rpcTestUntil).Milliseconds())}, "statsOn": statsURL != "", "alert": e.alert, "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
+		"pluginLatest": pluginVersion(), "vencord": vencord, "usage": currentUsage(), "games": e.gameListLocked(), "rpc": map[string]any{"state": e.rpcState, "ready": discordAppID != "", "err": e.rpcErr}, "statsOn": statsURL != "", "alert": e.alert, "orbTile": e.set.OrbTile, "orbTiles": e.set.OrbTiles, "orbGlyph": e.set.OrbGlyph,
 		"setup":    e.setup.view(),
 		"update":   map[string]any{"state": e.upd.State, "latest": e.upd.Latest, "checked": ms(e.upd.Checked), "doneAt": ms(e.upd.Done), "from": e.upd.From, "got": updGot.Load(), "size": updSize.Load()},
 		"quests":   quests,
@@ -230,11 +230,6 @@ func (s *server) handleOp(r opReq) map[string]any {
 		go s.showMini()
 	case "quit":
 		go e.quitApp()
-	case "rpcTest": // show a test status in Discord for 30 seconds
-		e.mu.Lock()
-		e.rpcTestUntil = time.Now().Add(30 * time.Second)
-		e.mu.Unlock()
-		e.log.Info("L.rpcTest")
 	case "dataOpen":
 		openFolder(e.dir)
 	case "dataPick": // the system folder picker; the program's own folder is made inside the one picked

@@ -322,14 +322,5 @@
 "upd.okNow": "✓ À jour",
 "upd.failShort": "Échec",
 "upd.checkedAt": "vérifié à {t}",
-"inst.allOk": "Tout est installé – le plugin {v} tourne dans Discord. Rien à faire ici.",
-"rpc.test": "Test du statut Discord",
-"rpc.testHint": "Affiche un statut de test pendant 30 s pour vérifier que Discord l'accepte.",
-"rpc.testBtn": "Tester",
-"rpc.testing": "Test… {s} s",
-"rpc.testOk": "✓ Ça marche – Discord a accepté le statut. S'il n'apparaît pas sur votre profil, activez dans Discord : Paramètres → Confidentialité des activités → partager les activités détectées.",
-"rpc.testBad": "✗ Ne marche pas : {e}",
-"rpc.testD": "Test du statut",
-"rpc.testS": "Si vous voyez ceci, ça marche ✓",
-"L.rpcTest": "Test du statut Discord (30 s)"
+"inst.allOk": "Tout est installé – le plugin {v} tourne dans Discord. Rien à faire ici."
 }
