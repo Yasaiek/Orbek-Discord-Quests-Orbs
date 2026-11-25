@@ -17,7 +17,7 @@
     ['d9', 'Win a round of Pocket Chess', 'Pocket Chess', 'Discord', 'ACHIEVEMENT_IN_ACTIVITY', 1, 0, [rw(4, '', 700)], 110],
   ].map(([id, name, game, publisher, task, target, progress, rewards, hours, done]) => ({
     id, name, game, publisher, task, target, progress, rewards, hero: 'art/' + (id === 'd9' ? 'd3' : id) + '.svg', startsAt: now - 40 * H, expiresAt: now + hours * H,
-    enrolledAt: progress ? now - 2 * H : 0, completedAt: done ? now - H : 0, claimedAt: 0, auto: task !== 'ACHIEVEMENT_IN_ACTIVITY', actName: id === 'd9' ? 'Pocket Chess' : '', taskTitle: id === 'd9' ? 'Win a round' : '', taskDesc: '',
+    enrolledAt: progress ? now - 2 * H : 0, completedAt: done ? now - H : 0, claimedAt: 0, auto: task !== 'ACHIEVEMENT_IN_ACTIVITY', actName: id === 'd9' ? '[Prod] pocket-chess' : '', taskTitle: '', taskDesc: '',
     orbs: rewards.reduce((n, r) => n + (r.type === 4 ? r.orbs : 0), 0), cosmetic: rewards.some((r) => r.type === 3),
   }));
   const S = {

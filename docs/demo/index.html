@@ -504,7 +504,7 @@ select { background: var(--card2); color: var(--text); border: 1px solid var(--l
     </div>
   </section>
 </main>
-<script>window.ORBEK_VERSION = "0.4.17"; window.ORBEK_DEMO = true;</script>
+<script>window.ORBEK_VERSION = "0.4.18"; window.ORBEK_DEMO = true;</script>
 <script src="sim.js"></script>
 <script>
 const KEY = 'demo';
@@ -681,7 +681,9 @@ function actions(q) {
   const btn = (cls, label, fn, ic) => { const x = el('button', 'btn sm ' + cls); if (ic) x.append(icon(ic)); x.append(label); x.onclick = (e) => { e.stopPropagation(); fn(); }; acts.append(x); return x; };
   if (!S.connected) return acts;
   if (q.completedAt && !q.claimedAt) btn('ok', t('q.claim'), () => op({ op: 'claim', id: q.id }), 'gift');
-  else if (open(q)) {
+  else if (open(q) && !q.auto) { // done by hand in Discord: accepting it happens there too, so the way there is the only button
+    btn('pri', t('q.show'), () => op({ op: 'show', id: q.id }), 'play');
+  } else if (open(q)) {
     if (!q.enrolledAt) btn('', t('q.enroll'), () => op({ op: 'enroll', id: q.id }), 'plus');
     if (live || queued) btn('bad', t('q.stop'), () => op({ op: 'stop', id: q.id }), 'stop');
     else if (S.settings.autoMode && q.auto) {
@@ -699,16 +701,13 @@ const progText = (q, p) => TIMED.includes(q.task) ? t('q.prog', { a: mins(Math.m
 // why Orbek cannot do a task, what exactly it asks (Discord's own words when it gives them), and a way there
 function manualNote(q) {
   const n = el('div', 'note manual'), tx = el('div', 'mtx');
-  const act = q.actName || q.name;
+  // the activity's name as its developer app is called, e.g. "[Prod] Full-moon": without the build tag, readable
+  let act = (q.actName || '').replace(/^\s*(\[[^\]]*\]\s*)+/, '').replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+  if (act && act === act.toLowerCase()) act = act.replace(/\b\p{L}/gu, (c) => c.toUpperCase());
+  act = act ? act + ' (' + q.name + ')' : q.name;
   tx.append(el('b', '', t('q.manualT')), el('span', '', DICT['q.manual.' + q.task] ? t('q.manual.' + q.task, { act }) : t('q.manual')));
   const goal = [q.taskTitle, q.taskDesc].filter(Boolean).join(' – ');
   if (goal) tx.append(el('span', 'goal', t('q.manualGoal', { g: goal })));
-  else if (q.task === 'ACHIEVEMENT_IN_ACTIVITY' && q.target > 1) tx.append(el('span', 'goal', t('q.manualN', { n: q.target })));
-  if (S.connected) {
-    const go = el('button', 'btn sm'); go.append(icon('play'), t('q.show'));
-    go.onclick = (e) => { e.stopPropagation(); op({ op: 'show', id: q.id }); };
-    tx.append(go);
-  }
   n.append(icon('alert'), tx);
   return n;
 }
@@ -726,7 +725,7 @@ function card(q, i) {
   b.append(el('div', 'qt', q.name));
   const meta = el('div', 'qm'); meta.append([q.game, q.publisher].filter(Boolean).join(' · '));
   if (q.expiresAt) { meta.append(el('span', '', '·'), icon('clock'), left(q.expiresAt)); }
-  b.append(meta, doLine(q));
+  b.append(meta); if (q.auto || !open(q)) b.append(doLine(q)); // a hand-only task gets its own explanation below
   if (q.target > 0) {
     const p = progressOf(q), row = el('div', 'pr');
     const tr = el('div', 'track grow' + (q.completedAt ? ' ok' : '')), f = el('div'); f.style.width = pct(q) + '%'; tr.append(f);

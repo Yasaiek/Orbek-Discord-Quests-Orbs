@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.18
+- Hand-only quests: no "Enroll" button any more (you accept and play them in Discord anyway) – "Show in Discord" is the button now.
+- The activity's name is shown readably: the build tag of its developer app is dropped ("[Prod] Full-moon" → "Full Moon (Werwulf)").
+- The "Do the goal in …" line and the repeated "Needed" count are gone from those cards; the note explains it all.
+
 ## 0.4.17
 - When everything is installed and Discord runs the newest plugin, the Installation page leaves the menu, and if opened it just says all is set (no big install button, no steps or log).
 - It comes back by itself when the plugin is out of date or Discord hasn't connected for a minute (e.g. a Discord update removed Vencord).
