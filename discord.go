@@ -85,6 +85,9 @@ func (e *Engine) presence(now time.Time) (cfg rpcCfg, id string, act *rpcActivit
 	defer e.mu.Unlock()
 	cfg = rpcCfg{e.set.RpcOn, e.set.RpcQuest, e.set.RpcOrbs, e.set.RpcToGet, e.set.RpcBtn}
 	id = discordAppID
+	if now.Before(e.rpcTestUntil) {
+		return cfg, id, rpcTestActivity(e.rpcTestUntil)
+	}
 	if !cfg.On || id == "" || !e.connectedLocked() || len(e.last.Runs) == 0 {
 		return cfg, id, nil // only while a quest is being done
 	}
@@ -174,6 +177,7 @@ type discordRPC struct {
 	sentAt  time.Time
 	retryAt time.Time
 	nonce   int
+	err     string // the last error, shown in the settings
 }
 
 var errDiscordID = errors.New("discord does not know this application id")
@@ -304,7 +308,7 @@ func (e *Engine) discordLoop() {
 		}
 		state := e.discordStep(&d, time.Now())
 		e.mu.Lock()
-		e.rpcState = state
+		e.rpcState, e.rpcErr = state, d.err
 		e.mu.Unlock()
 	}
 }
@@ -336,6 +340,7 @@ func (e *Engine) discordStep(d *discordRPC, now time.Time) string {
 			return e.rpcStateNow()
 		}
 		if err := d.connect(id); err != nil {
+			d.err = err.Error()
 			d.retryAt = now.Add(20 * time.Second)
 			if err == errDiscordID {
 				e.log.Debug("discord: %v", err)
@@ -358,16 +363,19 @@ func (e *Engine) discordStep(d *discordRPC, now time.Time) string {
 	var refused rpcRefused
 	switch {
 	case errors.As(err, &refused):
+		d.err = err.Error()
 		e.log.Debug("discord: %v", err)
 		d.last = string(raw) // sending the same thing again would be refused again
 		return "refused"
 	case err != nil:
+		d.err = err.Error()
 		e.log.Debug("discord: %v", err)
 		d.close()
 		d.retryAt = now.Add(10 * time.Second)
 		return "nodiscord"
 	}
 	d.last = string(raw)
+	d.err = ""
 	return "ok"
 }
 
@@ -375,4 +383,12 @@ func (e *Engine) rpcStateNow() string {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 	return e.rpcState
+}
+
+// rpcTestActivity: what "Test" in the settings shows for 30 seconds, whatever the program is doing.
+func rpcTestActivity(until time.Time) *rpcActivity {
+	return &rpcActivity{Type: 0, Details: rpcText(tr("rpc.testD")), State: rpcText(tr("rpc.testS")),
+		Timestamps: &rpcTimes{Start: until.Add(-30 * time.Second).Unix()},
+		Assets:     &rpcAssets{LargeImage: rpcLogo, LargeText: rpcText(appName + " " + version)},
+		Buttons:    []rpcButton{{Label: rpcText(tr("rpc.btn")), URL: siteURL}, {Label: "GitHub", URL: repoURL}}}
 }

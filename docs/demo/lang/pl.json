@@ -322,5 +322,14 @@
 "upd.okNow": "✓ Masz najnowszą",
 "upd.failShort": "Nie udało się",
 "upd.checkedAt": "sprawdzono {t}",
-"inst.allOk": "Wszystko zainstalowane – plugin {v} działa w Discordzie. Nic tu nie trzeba robić."
+"inst.allOk": "Wszystko zainstalowane – plugin {v} działa w Discordzie. Nic tu nie trzeba robić.",
+"rpc.test": "Test statusu w Discordzie",
+"rpc.testHint": "Pokazuje na 30 s testowy status, żeby sprawdzić, czy Discord go przyjmuje.",
+"rpc.testBtn": "Testuj",
+"rpc.testing": "Testuję… {s} s",
+"rpc.testOk": "✓ Działa – Discord przyjął status. Jeśli nie widzisz go na profilu, włącz w Discordzie: Ustawienia → Prywatność aktywności → udostępnianie wykrytej aktywności.",
+"rpc.testBad": "✗ Nie działa: {e}",
+"rpc.testD": "Test statusu",
+"rpc.testS": "Jeśli to widzisz, działa ✓",
+"L.rpcTest": "Test statusu w Discordzie (30 s)"
 }

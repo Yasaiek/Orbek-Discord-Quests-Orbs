@@ -322,5 +322,14 @@
 "upd.okNow": "✓ Atualizado",
 "upd.failShort": "Falhou",
 "upd.checkedAt": "verificado {t}",
-"inst.allOk": "Tudo instalado – o plugin {v} está rodando no Discord. Nada a fazer aqui."
+"inst.allOk": "Tudo instalado – o plugin {v} está rodando no Discord. Nada a fazer aqui.",
+"rpc.test": "Teste do status no Discord",
+"rpc.testHint": "Mostra um status de teste por 30 s para verificar se o Discord o aceita.",
+"rpc.testBtn": "Testar",
+"rpc.testing": "Testando… {s} s",
+"rpc.testOk": "✓ Funciona – o Discord aceitou o status. Se não aparecer no seu perfil, ative no Discord: Configurações → Privacidade de atividades → compartilhar atividades detectadas.",
+"rpc.testBad": "✗ Não funciona: {e}",
+"rpc.testD": "Teste de status",
+"rpc.testS": "Se você vê isto, funciona ✓",
+"L.rpcTest": "Teste do status no Discord (30 s)"
 }

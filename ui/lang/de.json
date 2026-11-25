@@ -322,5 +322,14 @@
 "upd.okNow": "✓ Aktuell",
 "upd.failShort": "Fehlgeschlagen",
 "upd.checkedAt": "geprüft {t}",
-"inst.allOk": "Alles installiert – Plugin {v} läuft in Discord. Hier ist nichts zu tun."
+"inst.allOk": "Alles installiert – Plugin {v} läuft in Discord. Hier ist nichts zu tun.",
+"rpc.test": "Discord-Statustest",
+"rpc.testHint": "Zeigt 30 s lang einen Teststatus, um zu prüfen, ob Discord ihn annimmt.",
+"rpc.testBtn": "Testen",
+"rpc.testing": "Teste… {s} s",
+"rpc.testOk": "✓ Funktioniert – Discord hat den Status angenommen. Wenn du ihn im Profil nicht siehst, aktiviere in Discord: Einstellungen → Aktivitätsprivatsphäre → erkannte Aktivitäten teilen.",
+"rpc.testBad": "✗ Funktioniert nicht: {e}",
+"rpc.testD": "Statustest",
+"rpc.testS": "Wenn du das siehst, klappt es ✓",
+"L.rpcTest": "Discord-Statustest (30 s)"
 }

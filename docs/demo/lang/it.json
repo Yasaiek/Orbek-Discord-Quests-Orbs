@@ -322,5 +322,14 @@
 "upd.okNow": "✓ Aggiornato",
 "upd.failShort": "Non riuscito",
 "upd.checkedAt": "controllato {t}",
-"inst.allOk": "Tutto installato – il plugin {v} è attivo in Discord. Qui non c'è niente da fare."
+"inst.allOk": "Tutto installato – il plugin {v} è attivo in Discord. Qui non c'è niente da fare.",
+"rpc.test": "Test dello stato Discord",
+"rpc.testHint": "Mostra uno stato di prova per 30 s, per verificare che Discord lo accetti.",
+"rpc.testBtn": "Prova",
+"rpc.testing": "Prova… {s} s",
+"rpc.testOk": "✓ Funziona – Discord ha accettato lo stato. Se non lo vedi sul profilo, attiva in Discord: Impostazioni → Privacy attività → condividi le attività rilevate.",
+"rpc.testBad": "✗ Non funziona: {e}",
+"rpc.testD": "Test stato",
+"rpc.testS": "Se lo vedi, funziona ✓",
+"L.rpcTest": "Test dello stato Discord (30 s)"
 }

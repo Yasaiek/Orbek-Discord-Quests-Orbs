@@ -322,5 +322,14 @@
 "upd.okNow": "✓ 最新です",
 "upd.failShort": "失敗しました",
 "upd.checkedAt": "確認: {t}",
-"inst.allOk": "すべてインストール済みです。プラグイン {v} は Discord で動作中です。ここで行うことはありません。"
+"inst.allOk": "すべてインストール済みです。プラグイン {v} は Discord で動作中です。ここで行うことはありません。",
+"rpc.test": "Discord ステータスのテスト",
+"rpc.testHint": "Discord が受け付けるか確認するため、テスト用ステータスを 30 秒表示します。",
+"rpc.testBtn": "テスト",
+"rpc.testing": "テスト中… {s} 秒",
+"rpc.testOk": "✓ 動作しています。Discord がステータスを受け付けました。プロフィールに表示されない場合は、Discord の 設定 → アクティビティのプライバシー → 検出されたアクティビティを共有 をオンにしてください。",
+"rpc.testBad": "✗ 動作しません: {e}",
+"rpc.testD": "ステータスのテスト",
+"rpc.testS": "これが見えれば動作しています ✓",
+"L.rpcTest": "Discord ステータスのテスト（30 秒）"
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.19
+- Settings → Activity on Discord: a "Test" button shows a test status in Discord for 30 seconds, whatever Orbek is doing, and says what came out (works / Discord not running / Discord refused it, with Discord's reason).
+- The status line also tells what went wrong last time.
+
 ## 0.4.18
 - Hand-only quests: no "Enroll" button any more (you accept and play them in Discord anyway) – "Show in Discord" is the button now.
 - The activity's name is shown readably: the build tag of its developer app is dropped ("[Prod] Full-moon" → "Full Moon (Werwulf)").

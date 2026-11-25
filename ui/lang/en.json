@@ -322,5 +322,14 @@
 "upd.okNow": "✓ Up to date",
 "upd.failShort": "Check failed",
 "upd.checkedAt": "checked {t}",
-"inst.allOk": "Everything is installed – plugin {v} runs in Discord. Nothing to do here."
+"inst.allOk": "Everything is installed – plugin {v} runs in Discord. Nothing to do here.",
+"rpc.test": "Discord status test",
+"rpc.testHint": "Shows a test status for 30 s, to check that Discord accepts it.",
+"rpc.testBtn": "Test",
+"rpc.testing": "Testing… {s} s",
+"rpc.testOk": "✓ Works – Discord accepted the status. If you don't see it on your profile, turn on in Discord: Settings → Activity Privacy → share your detected activities.",
+"rpc.testBad": "✗ Doesn't work: {e}",
+"rpc.testD": "Status test",
+"rpc.testS": "If you can see this, it works ✓",
+"L.rpcTest": "Discord status test (30 s)"
 }
