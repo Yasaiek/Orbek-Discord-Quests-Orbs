@@ -14,11 +14,11 @@
 
 import definePlugin, { PluginNative } from "@utils/types";
 import { filters, find, findStore } from "@webpack";
-import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, RestAPI, UserStore } from "@webpack/common";
+import { ChannelStore, closeAllModals, FluxDispatcher, GuildChannelStore, NavigationRouter, RestAPI, UserStore } from "@webpack/common";
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.5";
+const PLUGIN_VERSION = "0.4.6";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -290,8 +290,25 @@ function unhighlight() {
 }
 
 // okienko „Gratulacje” po odebraniu – zamykamy je, żeby od razu była następna nagroda
+// the reward window after a claim: closed at once, without its reveal and fade animations
+function rewardDialog() {
+    return document.querySelector('[class*="layerContainer"] [role="dialog"], [role="dialog"][aria-modal="true"]');
+}
+function noAnim(ms: number) {
+    let st = document.getElementById("orbek-noanim");
+    if (!st) {
+        st = document.createElement("style");
+        st.id = "orbek-noanim";
+        st.textContent = `[class*="layerContainer"] *, [class*="layerContainer"], [class*="backdrop"] { animation: none !important; transition: none !important; }`;
+        document.head.append(st);
+    }
+    clearTimeout((noAnim as any).t);
+    (noAnim as any).t = setTimeout(() => st?.remove(), ms);
+}
 function closeRewardModal() {
-    const layer = document.querySelector('[class*="layerContainer"] [role="dialog"], [role="dialog"][aria-modal="true"]');
+    noAnim(1500);
+    try { closeAllModals(); } catch (e) { console.warn(TAG, "closeAllModals:", e); }
+    const layer = rewardDialog();
     if (!layer) return;
     const close = layer.querySelector('button[aria-label]:not([aria-label=""])') as HTMLButtonElement | null;
     const label = (close?.getAttribute("aria-label") ?? "").toLowerCase();
@@ -401,7 +418,14 @@ function onClaimed(e: any) {
     const q = known.get(id);
     if (q) { known.set(id, { ...q, claimedAt: Date.now() }); say("claimed", q); }
     claimQueue = claimQueue.filter(x => x !== id);
-    if (id && id === claimCur) setTimeout(() => { closeRewardModal(); setTimeout(() => claimNext(), 350); }, 1600); // chwila, żeby zobaczyć nagrodę
+    // the reward window: closed as soon as it shows up (looked for every 100 ms for 4 s), then the next reward
+    let tries = 0, closed = false;
+    const shut = () => {
+        if (rewardDialog()) { closeRewardModal(); closed = true; }
+        if (++tries < 40 && !(closed && !rewardDialog())) setTimeout(shut, 100);
+        else if (id && id === claimCur) setTimeout(() => claimNext(), 150);
+    };
+    shut();
     lastLoad = 0;
 }
 

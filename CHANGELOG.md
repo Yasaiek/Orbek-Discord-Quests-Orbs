@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.22
+- Plugin 0.4.6: after a reward is claimed, Discord's reward window closes at once – no waiting for its reveal animation – and Orbek goes straight to the next reward.
+
 ## 0.4.21
 - Plugin 0.4.5: "play a game" quests no longer stall until you open Discord's Quests page. When Orbek accepted a quest, Discord's own quest list didn't know it yet, and Discord only counts game time for quests it knows as accepted; now Orbek tells it right away and reloads that list (what opening the Quests page does).
 - If Discord still sends no game-time heartbeat for 75 seconds, Orbek reloads its quest list and shows it the game again.
