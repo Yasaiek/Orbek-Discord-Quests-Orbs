@@ -322,5 +322,7 @@
 "upd.okNow": "✓ Güncel",
 "upd.failShort": "Başarısız",
 "upd.checkedAt": "kontrol: {t}",
-"inst.allOk": "Her şey kurulu – eklenti {v} Discord'da çalışıyor. Burada yapılacak bir şey yok."
+"inst.allOk": "Her şey kurulu – eklenti {v} Discord'da çalışıyor. Burada yapılacak bir şey yok.",
+"set.fastClose": "Ödül penceresini hemen kapat",
+"set.fastCloseHint": "Ödül alındıktan sonra Discord penceresi animasyonsuz hemen kaybolur. Hepsi alınınca eklenti tek bir özet gösterir: ne kazandığın, kaç Orb ve kullanılacak kodlar (Kopyala düğmesiyle)."
 }

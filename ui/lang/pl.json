@@ -322,5 +322,7 @@
 "upd.okNow": "✓ Masz najnowszą",
 "upd.failShort": "Nie udało się",
 "upd.checkedAt": "sprawdzono {t}",
-"inst.allOk": "Wszystko zainstalowane – plugin {v} działa w Discordzie. Nic tu nie trzeba robić."
+"inst.allOk": "Wszystko zainstalowane – plugin {v} działa w Discordzie. Nic tu nie trzeba robić.",
+"set.fastClose": "Zamykaj okno nagrody od razu",
+"set.fastCloseHint": "Po odebraniu nagrody okno Discorda znika natychmiast, bez animacji. Gdy odbierzesz wszystkie, plugin pokaże jedno podsumowanie: co wpadło, ile Orbów i kody do wpisania (z przyciskiem Kopiuj)."
 }

@@ -322,5 +322,7 @@
 "upd.okNow": "✓ Up to date",
 "upd.failShort": "Check failed",
 "upd.checkedAt": "checked {t}",
-"inst.allOk": "Everything is installed – plugin {v} runs in Discord. Nothing to do here."
+"inst.allOk": "Everything is installed – plugin {v} runs in Discord. Nothing to do here.",
+"set.fastClose": "Close the reward window at once",
+"set.fastCloseHint": "After a claim Discord's window disappears straight away, without its animation. Once everything is claimed, the plugin shows one summary: what you got, how many Orbs, and codes to redeem (with a Copy button)."
 }

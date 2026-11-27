@@ -18,7 +18,7 @@ import { ChannelStore, closeAllModals, FluxDispatcher, GuildChannelStore, Naviga
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.6";
+const PLUGIN_VERSION = "0.4.7";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -248,6 +248,7 @@ function discordReload() {
 let refreshMs = 10 * 60_000; // co ile czytać listę zadań od nowa (Orbek to ustawia)
 let claimQueue: string[] = [], claimTotal = 0, claimCur = "", claimFindT: any = null;
 let autoClick = true; // kliknij „Odbierz nagrodę” samo (captchę, jeśli Discord ją pokaże, rozwiązuje człowiek)
+let fastClose = true; // okno nagrody zamyka się od razu, a na końcu wyskakuje podsumowanie pluginu
 const clicked = new Set<string>();
 const HL = "orbek-claim-hl";
 
@@ -259,6 +260,31 @@ function claimCss() {
 .orbek-claim-btn { box-shadow: 0 0 0 3px #fff, 0 0 0 6px #a98bff, 0 0 24px #a98bff !important; }
 .orbek-claim-btn:focus-visible { outline: none !important; }
 .${HL} { outline: 2px solid #a98bff !important; outline-offset: 3px; border-radius: 12px; box-shadow: 0 0 0 6px rgba(150,120,255,.25), 0 0 40px rgba(150,120,255,.45) !important; animation: orbekPulse 1.6s ease-in-out infinite; }
+#orbek-sum { position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center; background: rgba(6,6,12,.62); backdrop-filter: blur(6px); animation: osIn .2s ease; font-family: var(--font-primary, sans-serif); }
+#orbek-sum.out { opacity: 0; transition: opacity .18s; }
+@keyframes osIn { from { opacity: 0; } }
+#orbek-sum .os-card { width: min(520px, 92vw); max-height: 84vh; display: flex; flex-direction: column; border-radius: 20px; padding: 22px 22px 16px; color: #eef0ff; background: linear-gradient(180deg, #1d1b33, #14131f); border: 1px solid rgba(169,139,255,.35); box-shadow: 0 30px 80px -20px rgba(110,80,255,.6); animation: osPop .35s cubic-bezier(.2,.9,.3,1.3); }
+@keyframes osPop { from { transform: scale(.9) translateY(10px); opacity: 0; } }
+#orbek-sum .os-head { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
+#orbek-sum .os-burst { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; background: linear-gradient(135deg, #6c5cff, #b06bff); box-shadow: 0 10px 26px -8px rgba(140,100,255,.9); }
+#orbek-sum h2 { margin: 0; font-size: 20px; font-weight: 800; color: #fff; }
+#orbek-sum .os-head p { margin: 3px 0 0; color: #b9b6d8; font-size: 14px; }
+#orbek-sum .os-head p b { color: #d8c9ff; }
+#orbek-sum .os-list { overflow: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
+#orbek-sum .os-row { display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.07); animation: osRow .35s ease backwards; }
+@keyframes osRow { from { opacity: 0; transform: translateY(6px); } }
+#orbek-sum .os-img { width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: rgba(0,0,0,.3); font-size: 24px; }
+#orbek-sum .os-img img { width: 100%; height: 100%; object-fit: contain; }
+#orbek-sum .os-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+#orbek-sum .os-txt b { font-size: 15px; color: #fff; }
+#orbek-sum .os-txt span { font-size: 12.5px; color: #a9a6c8; }
+#orbek-sum .os-note { color: #f0c36a !important; }
+#orbek-sum .os-code { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+#orbek-sum .os-code code { flex: 1; min-width: 0; overflow-wrap: anywhere; padding: 7px 10px; border-radius: 9px; background: rgba(0,0,0,.4); border: 1px dashed rgba(169,139,255,.5); font: 700 14px/1.3 Consolas, monospace; color: #e7ddff; letter-spacing: .04em; user-select: all; }
+#orbek-sum button { all: unset; cursor: pointer; padding: 7px 14px; border-radius: 10px; font-weight: 700; font-size: 13px; color: #fff; background: rgba(255,255,255,.12); }
+#orbek-sum button:hover { background: rgba(255,255,255,.2); }
+#orbek-sum .os-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; color: #77749a; font-size: 12px; font-weight: 700; }
+#orbek-sum .os-ok { background: linear-gradient(135deg, #5865f2, #a35bff); padding: 9px 22px; }
 @keyframes orbekPulse { 50% { box-shadow: 0 0 0 10px rgba(150,120,255,.12), 0 0 60px rgba(150,120,255,.6); } }
 #orbek-claim-bar { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; align-items: center; gap: 12px; padding: 10px 14px 10px 16px; border-radius: 14px; color: #fff; font: 600 14px/1.3 var(--font-primary, sans-serif); background: linear-gradient(135deg, rgba(88,101,242,.95), rgba(163,91,255,.95)); box-shadow: 0 16px 40px -12px rgba(80,60,200,.8), inset 0 1px 0 rgba(255,255,255,.25); }
 #orbek-claim-bar b { font-weight: 800; } #orbek-claim-bar span.n { opacity: .8; font-weight: 600; }
@@ -393,6 +419,85 @@ function claimEnd(done = false) {
     if (done && claimTotal) say("claimAllDone");
     claimQueue = []; claimCur = ""; claimTotal = 0;
     claimBar(null);
+    if (claimGot.length && fastClose) setTimeout(() => rewardSummary(claimGot.splice(0)), 300);
+    claimGot = [];
+}
+
+// ---------- podsumowanie po odebraniu wszystkich nagród ----------
+// własne okienko pluginu: co wpadło (obrazki, nazwy, Orby razem), a przy nagrodach z kodem sam kod z „Kopiuj”
+type Got = { id: string; code: string };
+let claimGot: Got[] = [];
+const esc = (s: string) => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
+
+// a code in whatever Discord sent with the claim (it is not always there)
+function findCode(v: any, depth = 0): string {
+    if (!v || depth > 5) return "";
+    if (typeof v === "object") {
+        for (const [k, x] of Object.entries(v)) {
+            if (/^(code|reward_code|rewardCode|key)$/i.test(k) && typeof x === "string" && x.length >= 4) return x;
+            const c = findCode(x, depth + 1);
+            if (c) return c;
+        }
+    }
+    return "";
+}
+async function rewardCode(id: string): Promise<string> {
+    try {
+        const res = await RestAPI.get({ url: `/quests/${id}/reward-code` });
+        return findCode(res?.body);
+    } catch { return ""; }
+}
+function copyText(t: string) {
+    try { (window as any).DiscordNative?.clipboard?.copy(t); return; } catch { }
+    try { navigator.clipboard.writeText(t); } catch { }
+}
+
+async function rewardSummary(got: Got[]) {
+    document.getElementById("orbek-sum")?.remove();
+    const items: { q: Quest; r: any; code: string; }[] = [];
+    let orbs = 0;
+    for (const g of got) {
+        const q = known.get(g.id);
+        if (!q) continue;
+        for (const r of q.rewards.length ? q.rewards : [{ type: 0, name: "", orbs: 0, img: "" }]) {
+            let code = "";
+            if (r.type === 1) code = g.code || await rewardCode(g.id); // 1 = a code to redeem
+            orbs += r.orbs || 0;
+            items.push({ q, r, code });
+        }
+    }
+    if (!items.length) return;
+    claimCss();
+    const box = document.createElement("div");
+    box.id = "orbek-sum";
+    const rows = items.map(({ q, r, code }, i) => `
+        <div class="os-row" style="animation-delay:${i * 70}ms">
+          <div class="os-img">${r.img || q.icon ? `<img src="${esc(r.img || q.icon)}" alt="">` : "🎁"}</div>
+          <div class="os-txt">
+            <b>${r.orbs ? `+${r.orbs} Orbów` : esc(r.name || "Nagroda")}</b>
+            <span>${esc(q.name)}${r.orbs && r.name && !/orb/i.test(r.name) ? " · " + esc(r.name) : ""}</span>
+            ${r.type === 1 ? (code
+                ? `<div class="os-code"><code>${esc(code)}</code><button data-code="${esc(code)}">Kopiuj</button></div>`
+                : `<span class="os-note">Kod jest w Discordzie przy tym zadaniu (Zadania → nagroda).</span>`) : ""}
+          </div>
+        </div>`).join("");
+    box.innerHTML = `
+      <div class="os-card">
+        <div class="os-head"><div class="os-burst">🎉</div><div><h2>Odebrano ${got.length} ${got.length === 1 ? "nagrodę" : got.length < 5 ? "nagrody" : "nagród"}</h2>
+          <p>${orbs ? `Razem <b>+${orbs} Orbów</b>` : "Wszystko odebrane"}</p></div></div>
+        <div class="os-list">${rows}</div>
+        <div class="os-foot"><span>Orbek</span><button class="os-ok">Super!</button></div>
+      </div>`;
+    const shut = () => { box.classList.add("out"); setTimeout(() => box.remove(), 180); document.removeEventListener("keydown", key, true); };
+    const key = (e: KeyboardEvent) => { if (e.key === "Escape" || e.key === "Enter") { e.stopPropagation(); shut(); } };
+    box.addEventListener("click", e => {
+        const t = e.target as HTMLElement;
+        if (t === box || t.classList.contains("os-ok")) shut();
+        const c = t.getAttribute?.("data-code");
+        if (c) { copyText(c); t.textContent = "Skopiowano ✓"; setTimeout(() => { t.textContent = "Kopiuj"; }, 1800); }
+    });
+    document.addEventListener("keydown", key, true);
+    document.body.append(box);
 }
 
 function claimStart(ids: string[]) {
@@ -416,16 +521,26 @@ function onClaimFail(e: any) {
 function onClaimed(e: any) {
     const id = String(e?.questId ?? "");
     const q = known.get(id);
+    if (id && claimTotal && !claimGot.some(g => g.id === id)) claimGot.push({ id, code: findCode(e) }); // for the summary at the end
     if (q) { known.set(id, { ...q, claimedAt: Date.now() }); say("claimed", q); }
     claimQueue = claimQueue.filter(x => x !== id);
-    // the reward window: closed as soon as it shows up (looked for every 100 ms for 4 s), then the next reward
-    let tries = 0, closed = false;
-    const shut = () => {
-        if (rewardDialog()) { closeRewardModal(); closed = true; }
-        if (++tries < 40 && !(closed && !rewardDialog())) setTimeout(shut, 100);
-        else if (id && id === claimCur) setTimeout(() => claimNext(), 150);
-    };
-    shut();
+    if (fastClose) { // the reward window: closed as soon as it shows up (looked for every 100 ms for 4 s), then the next reward
+        let tries = 0, closed = false;
+        const shut = () => {
+            if (rewardDialog()) { closeRewardModal(); closed = true; }
+            if (++tries < 40 && !(closed && !rewardDialog())) setTimeout(shut, 100);
+            else if (id && id === claimCur) setTimeout(() => claimNext(), 150);
+        };
+        shut();
+    } else if (id && id === claimCur) { // Discord's own window stays: the next reward once you close it
+        let tries = 0, seen = false;
+        const wait = () => {
+            const open = !!rewardDialog(); seen ||= open;
+            if ((seen && !open) || (!seen && ++tries > 40) || tries > 3000) setTimeout(() => claimNext(), 200);
+            else { if (seen) tries++; setTimeout(wait, 100); }
+        };
+        wait();
+    }
     lastLoad = 0;
 }
 
@@ -679,6 +794,7 @@ async function tick() {
             autoAllowed = !!res.auto;
             if (Number(res.refresh) >= 1) refreshMs = Number(res.refresh) * 60_000;
             autoClick = res.autoClick !== false;
+            fastClose = res.fastClose !== false;
             maxParallel = Math.max(0, Number(res.parallel ?? 1));
             if (!autoAllowed && (runs.size || queue.length)) stopAll();
             for (const c of res.cmds ?? []) await doCmd(c);

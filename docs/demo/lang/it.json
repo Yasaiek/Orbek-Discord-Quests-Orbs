@@ -322,5 +322,7 @@
 "upd.okNow": "✓ Aggiornato",
 "upd.failShort": "Non riuscito",
 "upd.checkedAt": "controllato {t}",
-"inst.allOk": "Tutto installato – il plugin {v} è attivo in Discord. Qui non c'è niente da fare."
+"inst.allOk": "Tutto installato – il plugin {v} è attivo in Discord. Qui non c'è niente da fare.",
+"set.fastClose": "Chiudi subito la finestra della ricompensa",
+"set.fastCloseHint": "Dopo il riscatto la finestra di Discord sparisce subito, senza animazione. Quando hai riscattato tutto, il plugin mostra un riepilogo: cosa hai ottenuto, quanti Orbs e i codici da riscattare (con pulsante Copia)."
 }

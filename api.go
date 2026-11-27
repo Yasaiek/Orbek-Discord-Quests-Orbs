@@ -169,6 +169,8 @@ func (s *server) handleOp(r opReq) map[string]any {
 				e.set.AutoUpdate = boolean(v)
 			case "clickSelf":
 				e.set.ClickSelf = boolean(v)
+			case "fastClose":
+				e.set.FastClose = boolean(v)
 			case "expiryWarn":
 				e.set.ExpiryWarn = boolean(v)
 			case "expiryHours":

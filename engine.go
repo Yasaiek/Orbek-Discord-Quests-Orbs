@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var version = "0.4.22"
+var version = "0.4.23"
 
 const appName = "Orbek"
 
@@ -50,6 +50,8 @@ type Settings struct {
 	ExpiryInit  bool              `json:"expiryInit"`
 	ClickSelf   bool              `json:"clickSelf"` // claiming one by one: the plugin presses "Claim reward" (a captcha stays for the person)
 	ClickInit   bool              `json:"clickInit"`
+	FastClose   bool              `json:"fastClose"` // the reward window closes at once; a summary of everything comes at the end
+	FastInit    bool              `json:"fastInit"`
 	VencordDir  string            `json:"vencordDir"`         // where the Vencord source is (for installing the plugin)
 	OrbTile     string            `json:"orbTile"`            // Discord's own Orbs pictures, as the plugin found them on Discord's quests page:
 	OrbGlyph    string            `json:"orbGlyph"`           // the big reward tile and the small white sign
@@ -204,6 +206,9 @@ func newEngine(dir string) *Engine {
 	if !e.set.RpcInit {
 		e.set.RpcQuest, e.set.RpcOrbs, e.set.RpcToGet, e.set.RpcBtn, e.set.RpcInit = true, true, true, true, true
 	}
+	if !e.set.FastInit {
+		e.set.FastClose, e.set.FastInit = true, true
+	}
 	if !e.set.ClickInit {
 		e.set.ClickSelf, e.set.ClickInit = true, true
 	}
@@ -305,7 +310,7 @@ func (e *Engine) onSync(s Sync) map[string]any {
 	if cmds == nil {
 		cmds = []Cmd{}
 	}
-	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "autoClick": e.set.ClickSelf, "refresh": e.set.RefreshMin, "lang": curLang.Load()}
+	return map[string]any{"cmds": cmds, "auto": e.set.AutoMode, "parallel": e.set.Parallel, "autoClick": e.set.ClickSelf, "fastClose": e.set.FastClose, "refresh": e.set.RefreshMin, "lang": curLang.Load()}
 }
 
 // desktopTask: done by the Discord app on the computer itself.

@@ -322,5 +322,7 @@
 "upd.okNow": "✓ Aktuell",
 "upd.failShort": "Fehlgeschlagen",
 "upd.checkedAt": "geprüft {t}",
-"inst.allOk": "Alles installiert – Plugin {v} läuft in Discord. Hier ist nichts zu tun."
+"inst.allOk": "Alles installiert – Plugin {v} läuft in Discord. Hier ist nichts zu tun.",
+"set.fastClose": "Belohnungsfenster sofort schließen",
+"set.fastCloseHint": "Nach dem Abholen verschwindet Discords Fenster sofort, ohne Animation. Wenn alles abgeholt ist, zeigt das Plugin eine Übersicht: was du bekommen hast, wie viele Orbs und einzulösende Codes (mit Kopieren-Knopf)."
 }

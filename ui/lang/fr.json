@@ -322,5 +322,7 @@
 "upd.okNow": "✓ À jour",
 "upd.failShort": "Échec",
 "upd.checkedAt": "vérifié à {t}",
-"inst.allOk": "Tout est installé – le plugin {v} tourne dans Discord. Rien à faire ici."
+"inst.allOk": "Tout est installé – le plugin {v} tourne dans Discord. Rien à faire ici.",
+"set.fastClose": "Fermer tout de suite la fenêtre de récompense",
+"set.fastCloseHint": "Après une récupération, la fenêtre de Discord disparaît aussitôt, sans animation. Une fois tout récupéré, le plugin affiche un récapitulatif : ce que vous avez obtenu, combien d'Orbs et les codes à utiliser (avec un bouton Copier)."
 }

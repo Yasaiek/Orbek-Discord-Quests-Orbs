@@ -322,5 +322,7 @@
 "upd.okNow": "✓ Atualizado",
 "upd.failShort": "Falhou",
 "upd.checkedAt": "verificado {t}",
-"inst.allOk": "Tudo instalado – o plugin {v} está rodando no Discord. Nada a fazer aqui."
+"inst.allOk": "Tudo instalado – o plugin {v} está rodando no Discord. Nada a fazer aqui.",
+"set.fastClose": "Fechar a janela da recompensa na hora",
+"set.fastCloseHint": "Depois de resgatar, a janela do Discord some na hora, sem animação. Quando tudo for resgatado, o plugin mostra um resumo: o que você ganhou, quantos Orbs e códigos para resgatar (com botão Copiar)."
 }

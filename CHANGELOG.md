@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.23
+- Settings → Claiming: "Close the reward window at once" (on by default). When on, Discord's reward window disappears straight after each claim, and once everything is claimed the plugin shows its own summary: what you got with pictures, the Orbs together, and reward codes with a Copy button.
+- When off, Discord's reward window stays as usual and Orbek moves to the next reward once you close it.
+- Plugin 0.4.7.
+
 ## 0.4.22
 - Plugin 0.4.6: after a reward is claimed, Discord's reward window closes at once – no waiting for its reveal animation – and Orbek goes straight to the next reward.
 
