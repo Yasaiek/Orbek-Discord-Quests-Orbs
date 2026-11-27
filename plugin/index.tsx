@@ -13,12 +13,12 @@
  */
 
 import definePlugin, { PluginNative } from "@utils/types";
-import { findStore } from "@webpack";
+import { filters, find, findStore } from "@webpack";
 import { ChannelStore, FluxDispatcher, GuildChannelStore, NavigationRouter, RestAPI, UserStore } from "@webpack/common";
 
 const Native = VencordNative.pluginHelpers.Orbek as PluginNative<typeof import("./native")>;
 
-const PLUGIN_VERSION = "0.4.4";
+const PLUGIN_VERSION = "0.4.5";
 const TAG = "[Orbek]";
 
 // ---------- zadania ----------
@@ -225,7 +225,20 @@ async function enroll(q: Quest): Promise<Quest> {
     const us = camel(res?.body ?? {});
     const out = { ...q, enrolledAt: time(us.enrolledAt) || Date.now() };
     known.set(q.id, out);
+    // Discord's own quest list must learn it too: its game-time counting only looks at quests it knows as
+    // accepted (otherwise nothing is counted until you open the Quests page, which reloads that list)
+    try { FluxDispatcher.dispatch({ type: "QUESTS_ENROLL_SUCCESS", enrolledQuestUserStatus: us, questId: q.id } as any); } catch { }
+    discordReload();
     return out;
+}
+
+// Discord's own "reload the quests" – what opening the Quests page does
+let questActions: any;
+function discordReload() {
+    try {
+        questActions ??= find(filters.byProps("fetchCurrentQuests"), { isIndirect: true });
+        questActions?.fetchCurrentQuests?.();
+    } catch (e) { console.warn(TAG, "fetchCurrentQuests:", e); }
 }
 
 // ---------- odbieranie nagród po kolei ----------
@@ -470,10 +483,11 @@ async function runDesktop(q: Quest, run: Run, stopped: () => boolean, stream: bo
     } else {
         setFake(q.id, fake);
     }
-    let done = false;
+    let done = false, beatAt = Date.now();
     const onBeat = (data: any) => {
         const qid = data?.questId ?? data?.userStatus?.questId ?? data?.user_status?.quest_id;
         if (qid && qid !== q.id) return;
+        beatAt = Date.now();
         const us = camel(data?.userStatus ?? data?.user_status ?? {});
         const p = q.configVersion === 1 ? Number(us.streamProgressSeconds ?? 0) : Number(us.progress?.[q.task]?.value ?? 0);
         if (p) setProgress(run, q.id, p);
@@ -483,6 +497,14 @@ async function runDesktop(q: Quest, run: Run, stopped: () => boolean, stream: bo
     try {
         while (!stopped() && !done) {
             await sleep(1000);
+            // Discord counts game time with heartbeats about every minute; none for 75 s means it does not
+            // count this quest yet: reload its quest list and show the game to it again
+            if (Date.now() - beatAt > 75_000) {
+                beatAt = Date.now();
+                discordReload();
+                if (!stream) { setFake(q.id, null); await sleep(500); setFake(q.id, { ...fake, start: Date.now() }); }
+                console.info(TAG, "no heartbeat yet – nudged Discord", q.name);
+            }
             const live = known.get(q.id); // Discord może zaktualizować postęp też we własnej pamięci
             if (live && live.progress > run.progress) setProgress(run, q.id, live.progress);
             if (live?.completedAt || run.progress >= q.target) done = true;
